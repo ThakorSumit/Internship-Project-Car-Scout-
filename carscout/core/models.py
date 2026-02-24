@@ -31,11 +31,11 @@ class User(AbstractBaseUser):
 
     email=models.EmailField(unique=True)
     role_choice={
-        ('admin','admin'),
-        ('seller','seller'),
-        ('buyer','buyer'),
+        ('Admin','Admin'),
+        ('Seller','Seller'),
+        ('Buyer','Buyer'),
     }
-    role=models.CharField(max_length=20,choices=role_choice,default='buyer')
+    role=models.CharField(max_length=20,choices=role_choice,default='Buyer')
     is_active=models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
     is_admin=models.BooleanField(default=False)
