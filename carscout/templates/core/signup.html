@@ -2,11 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<form method="post">
+<form method="post" action="{% url 'signup' %}">
     {% csrf_token %}
     <div class="content auth-page">
         {{ form|crispy }}
         <button type="submit" class="btn-primary">Create My Account</button>
+    </div>
+    <div class="foot-text">
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
     </div>
 </form>
 {% endblock content %}
