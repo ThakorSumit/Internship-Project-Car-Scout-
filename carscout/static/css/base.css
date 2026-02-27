@@ -7,15 +7,20 @@
 
 :root {
     /* Core Palette */
-    --brand-primary: #0a0f1e;
-    /* Midnight Navy — deep authority */
+    --brand-primary-rgb: 10, 15, 30;
+    --brand-primary: rgb(var(--brand-primary-rgb));
+    /* #0a0f1e: Midnight Navy — deep authority */
+
     --brand-secondary: #0f1f3d;
     /* Rich Navy — cards, surfaces */
-    --brand-accent: #f59e0b;
-    /* Amber Gold — CTAs, highlights */
+
+    --brand-accent-rgb: 245, 158, 11;
+    --brand-accent: rgb(var(--brand-accent-rgb));
+    /* #f59e0b: Amber Gold — CTAs, highlights */
+
     --brand-accent-hover: #d97706;
     /* Deep Amber — hover states */
-    --brand-accent-soft: rgba(245, 158, 11, 0.12);
+    --brand-accent-soft: rgba(var(--brand-accent-rgb), 0.12);
 
     /* Neutrals */
     --bg-smoke: #f5f3ef;
@@ -23,18 +28,18 @@
     --surface: #ffffff;
     --surface-warm: #fdfbf7;
     /* Slightly warm white for cards */
-    --text-head: #0a0f1e;
+    --text-head: var(--brand-primary);
     --text-body: #374151;
     --text-muted: #6b7280;
     --border-light: #e8e3d9;
     /* Warm border, matches cream bg */
-    --border-gold: rgba(245, 158, 11, 0.3);
+    --border-gold: rgba(var(--brand-accent-rgb), 0.3);
 
     /* Specs */
     --radius-main: 12px;
     --radius-pill: 50px;
-    --shadow-card: 0 1px 3px rgba(10, 15, 30, 0.06), 0 4px 12px rgba(10, 15, 30, 0.04);
-    --shadow-hover: 0 20px 40px rgba(10, 15, 30, 0.12), 0 4px 12px rgba(10, 15, 30, 0.08);
-    --shadow-gold: 0 8px 25px rgba(245, 158, 11, 0.25);
+    --shadow-card: 0 1px 3px rgba(var(--brand-primary-rgb), 0.06), 0 4px 12px rgba(var(--brand-primary-rgb), 0.04);
+    --shadow-hover: 0 20px 40px rgba(var(--brand-primary-rgb), 0.12), 0 4px 12px rgba(var(--brand-primary-rgb), 0.08);
+    --shadow-gold: 0 8px 25px rgba(var(--brand-accent-rgb), 0.25);
     --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
