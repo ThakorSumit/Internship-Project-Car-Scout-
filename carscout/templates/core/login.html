@@ -1,16 +1,58 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-visual">
+            <div class="visual-overlay"></div>
+            <div class="visual-content">
+                <h2>Welcome Back to <span>Car Scout</span></h2>
+                <p>Access your personalized showroom and saved masterpieces.</p>
+            </div>
+        </div>
 
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <div class="content auth-page">
-        {{ form|crispy }}
-        <button type="submit" class="btn-primary">Login</button>
+        <div class="auth-form-wrapper">
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <div class="form-header">
+                    <h1>Log In</h1>
+                    <p>Enter your credentials to manage your account</p>
+                </div>
+
+                {% if form.errors %}
+                <div class="form-errors"
+                    style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="password">Password</label>
+                    </div>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-primary-gold">Enter Showroom</button>
+
+                <p class="auth-footer">
+                    New to Car Scout? <a href="{% url 'signup' %}">Create an Account</a>
+                </p>
+            </form>
+        </div>
     </div>
-    <div class="foot-text">
-        <p>Don't have an account? <a href="{% url 'signup' %}">Signup</a></p>
-    </div>
-</form>
-{% endblock content %}
+</section>
+{% endblock %}

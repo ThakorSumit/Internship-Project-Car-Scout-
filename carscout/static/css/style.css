@@ -1,4 +1,12 @@
 /* --- Global Reset --- */
+@import "base.css";
+@import "admin/admin_dashboard.css";
+@import "auth/signin.css";
+@import "auth/login.css";
+@import "user/buyer.css";
+@import "user/selller.css";
+@import "home.css";
+
 * {
     margin: 0;
     padding: 0;
@@ -33,11 +41,14 @@ body {
 
 /* --- Navbar --- */
 .navbar {
-    background: var(--brand-primary);
-    height: 68px;
+    background: rgba(7, 12, 23, 0.85);
+    /* Deepest navy with transparency */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    height: 72px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(var(--brand-accent-rgb), 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -128,7 +139,7 @@ body {
 }
 
 .form-card {
-    background: var(--surface-warm);
+    background: var(--surface);
     padding: 48px 44px;
     border-radius: var(--radius-main);
     box-shadow: var(--shadow-card);
@@ -186,13 +197,13 @@ label {
 
 input {
     width: 100%;
-    padding: 13px 16px;
+    padding: 14px 16px;
     border: 1.5px solid var(--border-light);
-    border-radius: 8px;
+    border-radius: 12px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.98rem;
+    font-size: 1rem;
     color: var(--text-head);
-    background: #ffffff;
+    background: var(--surface);
     transition: var(--transition);
 }
 
@@ -211,41 +222,24 @@ input::placeholder {
 .btn-primary {
     width: 100%;
     background: var(--brand-primary);
-    color: white;
-    padding: 15px;
+    color: var(--brand-accent);
+    padding: 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
     margin-top: 12px;
     transition: var(--transition);
     letter-spacing: 0.02em;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-primary::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--brand-accent);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
 }
 
 .btn-primary:hover {
-    background: #0f1f3d;
+    background: var(--brand-accent);
+    color: var(--brand-primary);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(10, 15, 30, 0.2);
-}
-
-.btn-primary:hover::after {
-    transform: scaleX(1);
+    box-shadow: var(--shadow-gold);
 }
 
 /* --- Divider --- */
@@ -278,17 +272,17 @@ input::placeholder {
 
 .btn-outline {
     width: 100%;
-    padding: 12px;
-    background: white;
-    border: 1.5px solid var(--border-light);
-    border-radius: 8px;
+    padding: 14px;
+    background: transparent;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    font-size: 0.92rem;
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition);
     color: var(--text-head);
@@ -322,8 +316,8 @@ input::placeholder {
 .main-footer {
     background: var(--brand-primary);
     color: rgba(255, 255, 255, 0.65);
-    padding: 64px 0 30px;
-    border-top: 1px solid rgba(245, 158, 11, 0.15);
+    padding: 80px 0 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .footer-upper {

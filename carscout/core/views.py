@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
 from .forms import UserSignupForm,UserLoginForm
-from django.contrib.auth import authenticate,login
-from django.core.mail import EmailMultiAlternatives,EmailMessage,send_mail
+from django.contrib.auth import authenticate,login,logout
+from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-from os import path
+
 # Create your views here.
 
 def UserSignupView(request):
@@ -13,7 +13,7 @@ def UserSignupView(request):
         if form.is_valid():
             send_mail(
                 subject='Welcome to CarScout',
-                message=render_to_string('welcome.htm',{'user':form.cleaned_data['email']}),
+                message=render_to_string('welcome.html',{'user':form.cleaned_data['email']}),
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[form.cleaned_data['email']],
                 fail_silently=False,
@@ -48,3 +48,12 @@ def UserLoginView(request):
         else:
             form=UserLoginForm()
         return render(request,'core/login.html',{'form':form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+
+
+def home(request):
+    return render(request,'home.html')

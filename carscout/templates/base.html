@@ -4,18 +4,19 @@
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% block extra_css %}{% endblock extra_css %}
+    {% block extra_css %}
+    {% endblock extra_css %}
 </head>
 
 <body>
     {% if request.user.role == 'Buyer' %}
-    {% include 'Scout/Buyer/usernave.html' %}
+        {% include 'Scout/Buyer/usernave.html' %}
     {% elif request.user.role == 'Seller' %}
-    {% include 'Scout/Seller/usernave.html' %}
+        {% include 'Scout/Seller/usernave.html' %}
     {% elif request.user.role == 'Admin' %}
-    {% include 'Scout/Admin/usernave.html' %}
+        {% include 'Scout/Admin/usernave.html' %}
     {% else %}
-
+    {% include 'usernave.html' %}
     {% endif %}
     {% block content %}
     {% endblock content %}

@@ -1,16 +1,21 @@
-<nav class="navbar">
+<nav class="admin-navbar">
     <div class="nav-container">
-        <div class="logo">
-            <a href="#">CAR<span>SCOUT</span></a>
+        <div class="nav-brand">
+            <span class="logo-text">CAR <span class="accent">SCOUT</span></span>
+            <span class="admin-badge">ADMIN</span>
         </div>
 
-        <div class="nav-links">
-            <a href="#" class="nav-link-item">Used Cars</a>
-            <a href="#" class="nav-link-item">New Cars</a>
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="login-link">Login</a>
-                <a href="{% url 'signup' %}" class="btn-signup">Sign Up</a>
-            </div>
+        <ul class="nav-menu">
+            <li><a href="/admin/dashboard/" class="active">Dashboard</a></li>
+            <li><a href="/admin/listings/">Listings</a></li>
+            <li><a href="/admin/users/">Users</a></li>
+            <li><a href="/admin/reports/">AI Reports</a></li>
+        </ul>
+
+
+        <div class="user-profile">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
         </div>
+    </div>
     </div>
 </nav>

@@ -1,16 +1,24 @@
-<nav class="navbar">
+<nav class="seller-navbar">
     <div class="nav-container">
-        <div class="logo">
-            <a href="#">CAR<span>SCOUT</span></a>
-        </div>
+        <a href="{% url 'seller_dashboard' %}" class="logo">
+            CAR <span>SCOUT</span> <small class="seller-label">SELLER</small>
+        </a>
 
-        <div class="nav-links">
-            <a href="#" class="nav-link-item">Used Cars</a>
-            <a href="#" class="nav-link-item">New Cars</a>
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="login-link">Login</a>
-                <a href="{% url 'signup' %}" class="btn-signup">Sign Up</a>
-            </div>
+        <ul class="seller-links">
+            <li><a href="/seller/dashboard/">Inventory</a></li>
+            <li><a href="/seller/inquiries/">Inquiries <span class="msg-count">5</span></a></li>
+            <li><a href="/seller/analytics/">Performance</a></li>
+        </ul>
+
+        <div class="seller-actions">
+            <form action="{% url 'logout' %}" method="post" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-link">Logout</button>
+            </form>
+
+            <a href="/seller/add-listing/" class="btn-sell-car">
+                + List New Car
+            </a>
         </div>
     </div>
 </nav>

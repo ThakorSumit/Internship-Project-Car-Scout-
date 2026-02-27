@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/seller.css' %}">
+
+<div class="dashboard-wrapper">
+    <aside class="dash-sidebar">
+        <div class="sidebar-logo">CAR<span>SCOUT</span></div>
+        <nav class="dash-nav">
+            <a href="#" class="nav-item active">Inventory Console</a>
+            <a href="#" class="nav-item">Analytics</a>
+            <a href="#" class="nav-item">Messages <span class="badge">5</span></a>
+            <a href="#" class="nav-item">List New Car</a>
+        </nav>
+    </aside>
+
+    <main class="dash-content">
+        <header class="content-header">
+            <div class="welcome">
+                <h1>Seller <span>Command</span></h1>
+                <p>Track your automotive assets and incoming inquiries.</p>
+            </div>
+            <button class="btn-primary-gold">+ List New Vehicle</button>
+        </header>
+
+        <section class="performance-bar">
+            <div class="metric-card">
+                <span class="m-label">Total Reach</span>
+                <span class="m-value">4.2k <small>views</small></span>
+            </div>
+            <div class="metric-card">
+                <span class="m-label">Active Leads</span>
+                <span class="m-value">12 <small>inquiries</small></span>
+            </div>
+            <div class="metric-card">
+                <span class="m-label">Avg. AI Score</span>
+                <span class="m-value">9.4/10</span>
+            </div>
+        </section>
+
+        <section class="inventory-section">
+            <div class="section-title">
+                <h2>Active Inventory</h2>
+            </div>
+            <div class="table-container">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Status</th>
+                            <th>AI Report</th>
+                            <th>Price</th>
+                            <th>Views</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="cell-car">
+                                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=100"
+                                        alt="Porsche">
+                                    <div><strong>2022 Porsche 911</strong><br><small>VIN: ...4920</small></div>
+                                </div>
+                            </td>
+                            <td><span class="status-tag live">Live</span></td>
+                            <td><span class="ai-status verified">✓ Certified</span></td>
+                            <td>$142,000</td>
+                            <td>1,204</td>
+                            <td><button class="btn-text">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-car">
+                                    <img src="https://images.unsplash.com/photo-1526726538690-5cbf2299cd1e?auto=format&fit=crop&q=80&w=100"
+                                        alt="Audi">
+                                    <div><strong>2021 Audi RS6</strong><br><small>VIN: ...1102</small></div>
+                                </div>
+                            </td>
+                            <td><span class="status-tag pending">Processing</span></td>
+                            <td><span class="ai-status scanning">AI Scanning...</span></td>
+                            <td>$108,000</td>
+                            <td>--</td>
+                            <td><button class="btn-text">Cancel</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock content %}

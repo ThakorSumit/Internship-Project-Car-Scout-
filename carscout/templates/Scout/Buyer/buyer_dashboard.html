@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/buyer_dashboard.css' %}">
+{% endblock extra_css %}
+
+
+<div class="dashboard-wrapper">
+    <aside class="dash-sidebar">
+        <nav class="dash-nav">
+            <a href="#" class="nav-item active">
+                <i class="icon-garage"></i> My Garage
+            </a>
+            <a href="#" class="nav-item">
+                <i class="icon-search"></i> Browse Inventory
+            </a>
+            <a href="#" class="nav-item">
+                <i class="icon-chat"></i> Negotiations
+                <span class="badge">2</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="icon-settings"></i> Preferences
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dash-content">
+        <header class="content-header">
+            <div class="welcome">
+                <h1>Welcome back, <span class="user-name">{{user.username}}</span></h1>
+                <p>You have 3 active offers and 1 scheduled test drive.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-outline">Search Cars</button>
+            </div>
+        </header>
+
+        <section class="quick-stats">
+            <div class="q-card">
+                <span class="q-label">Saved Vehicles</span>
+                <span class="q-value">12</span>
+            </div>
+            <div class="q-card">
+                <span class="q-label">Price Alerts</span>
+                <span class="q-value-alert">3 New</span>
+            </div>
+            <div class="q-card">
+                <span class="q-label">Buying Power</span>
+                <span class="q-value">$85,000</span>
+            </div>
+        </section>
+
+        <section class="watchlist">
+            <div class="section-title">
+                <h2>Your Watchlist</h2>
+                <a href="#">View All</a>
+            </div>
+
+            <div class="car-grid">
+                <article class="car-card">
+                    <div class="car-image">
+                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=600"
+                            alt="BMW M4">
+                        <div class="ai-badge">AI Score: 9.8</div>
+                    </div>
+                    <div class="car-info">
+                        <h3>2023 BMW M4 Competition</h3>
+                        <p class="car-price">$78,500 <span>$82,000</span></p>
+                        <div class="car-meta">
+                            <span>12,400 mi</span> • <span>Automatic</span>
+                        </div>
+                        <button class="btn-view">View Details</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock content %}

@@ -1,15 +1,95 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
-<form method="post" action="{% url 'signup' %}">
-    {% csrf_token %}
-    <div class="content auth-page">
-        {{ form|crispy }}
-        <button type="submit" class="btn-primary">Create My Account</button>
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-visual signup-visual">
+            <div class="visual-overlay"></div>
+            <div class="visual-content">
+                <h2>Join the <span>Elite Circle</span></h2>
+                <p>Whether you are looking to buy a masterpiece or sell a legend, you're in the right place.</p>
+            </div>
+        </div>
+
+        <div class="auth-form-wrapper">
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                <div class="form-header">
+                    <h1>Create Account</h1>
+                    <p>Start your premium automotive journey today</p>
+                </div>
+
+                {% if form.errors %}
+                <div class="form-errors"
+                    style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
+                    {% for field in form %}
+                    {% for error in field.errors %}
+                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="role-selector">
+                    <input type="radio" name="role" value="Buyer" id="role-buyer" checked>
+                    <label for="role-buyer" class="role-card">
+                        <span class="role-icon">🔍</span>
+                        <span class="role-label">I want to Buy</span>
+                    </label>
+
+                    <input type="radio" name="role" value="Seller" id="role-seller">
+                    <label for="role-seller" class="role-card">
+                        <span class="role-icon">💰</span>
+                        <span class="role-label">I want to Sell</span>
+                    </label>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="group-label">Gender</label>
+                    <div class="gender-selector">
+                        <input type="radio" name="gender" value="Male" id="gender-male" required>
+                        <label for="gender-male" class="gender-tile">
+                            <span class="tile-text">Male</span>
+                        </label>
+
+                        <input type="radio" name="gender" value="Female" id="gender-female">
+                        <label for="gender-female" class="gender-tile">
+                            <span class="tile-text">Female</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="name@luxury.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password1">Create Password</label>
+                    <input type="password" id="password1" name="password1" placeholder="Min. 8 characters" required>
+                </div>
+                <div class="input-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" id="password2" name="password2" placeholder="Min. 8 characters" required>
+                </div>
+
+                <button type="submit" class="btn-primary-gold">Create My Account</button>
+
+                <p class="auth-footer">
+                    Already a member? <a href="{% url 'login' %}">Sign In here</a>
+                </p>
+            </form>
+        </div>
     </div>
-    <div class="foot-text">
-        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-    </div>
-</form>
-{% endblock content %}
+</section>
+{% endblock %}

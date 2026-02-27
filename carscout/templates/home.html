@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="hero-showroom">
+    <div class="hero-overlay"></div>
+    <div class="hero-container">
+        <h1 class="hero-title">Engineering <span>Transparency</span> into the Luxury Market.</h1>
+        <p class="hero-lead">The first AI-powered marketplace for certified masterpieces.</p>
+
+        <div class="search-wrap">
+            <form class="main-search">
+                <div class="search-input">
+                    <label>Make & Model</label>
+                    <input type="text" placeholder="e.g. Porsche 911">
+                </div>
+                <div class="search-input">
+                    <label>Budget</label>
+                    <select>
+                        <option>Any Price</option>
+                        <option>$50k - $100k</option>
+                        <option>$100k+</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-hero-search">Find My Car</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="ai-highlight">
+    <div class="content">
+        <div class="ai-grid">
+            <div class="ai-text">
+                <span class="badge-gold">Exclusive Tech</span>
+                <h2>AI-Powered Diagnostics</h2>
+                <p>Don't just look at photos. Our system analyzes 360° virtual tours and historical data to give every
+                    car a <strong>Condition Score</strong> you can trust.</p>
+                <ul class="ai-list">
+                    <li>✓ Instant Mechanical Analysis</li>
+                    <li>✓ Accident History Verification</li>
+                    <li>✓ Market Depreciation Forecast</li>
+                </ul>
+            </div>
+            <div class="ai-visual">
+                <div class="ai-scan-mockup">
+                    <div class="scanning-line"></div>
+                    <img src="https://images.unsplash.com/photo-149323850fd44-87039a63ba00?auto=format&fit=crop&q=80&w=800"
+                        alt="Car Scan">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="inventory-preview">
+    <div class="content">
+        <div class="section-header">
+            <h2>Featured Masterpieces</h2>
+            <a href="/browse" class="text-link">Browse Full Inventory →</a>
+        </div>
+        <div class="car-grid">
+            <article class="car-card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=600"
+                        alt="Supercar">
+                    <div class="ai-score-tag">Score: 9.9</div>
+                </div>
+                <div class="card-body">
+                    <h3>2024 Chevrolet Corvette Z06</h3>
+                    <p class="price">$124,900</p>
+                    <div class="meta"><span>New</span> • <span>0.5k miles</span></div>
+                    <button class="btn-outline-gold">View Details</button>
+                </div>
+            </article>
+
+            <article class="car-card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=600"
+                        alt="Porsche">
+                    <div class="ai-score-tag">Score: 9.6</div>
+                </div>
+                <div class="card-body">
+                    <h3>2022 Porsche 911 Carrera S</h3>
+                    <p class="price">$142,000</p>
+                    <div class="meta"><span>Used</span> • <span>4,300 miles</span></div>
+                    <button class="btn-outline-gold">View Details</button>
+                </div>
+            </article>
+
+            <article class="car-card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1621252178351-4191bb9de53c?auto=format&fit=crop&q=80&w=600"
+                        alt="Audi">
+                    <div class="ai-score-tag">Score: 9.2</div>
+                </div>
+                <div class="card-body">
+                    <h3>2021 Audi RS Q8</h3>
+                    <p class="price">$115,500</p>
+                    <div class="meta"><span>Used</span> • <span>12,000 miles</span></div>
+                    <button class="btn-outline-gold">View Details</button>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

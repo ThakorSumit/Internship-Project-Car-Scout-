@@ -1,0 +1,53 @@
+/* Custom Background for Signup Visual */
+.signup-visual {
+    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1000') center/cover no-repeat !important;
+}
+
+/* Role Selector Logic */
+.role-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.role-selector input[type="radio"] {
+    display: none;
+    /* Hide actual radio button */
+}
+
+.role-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.role-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.role-label {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* Selection States */
+.role-selector input[type="radio"]:checked+.role-card {
+    border-color: var(--brand-accent);
+    background: var(--brand-accent-soft);
+    color: var(--brand-primary);
+}
+
+/* Form Layout Tweak */
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}

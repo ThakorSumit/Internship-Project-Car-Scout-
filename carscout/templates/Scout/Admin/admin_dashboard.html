@@ -1,1 +1,54 @@
-<p>Admin_dashbaord</p>
+{% extends 'base.html' %}
+{% block content %}
+<div class="admin-dashboard">
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">CAR<span>SCOUT</span> Admin</div>
+        <nav class="sidebar-nav">
+            <a href="#overview" class="active">Overview</a>
+            <a href="#listings">Inventory Management</a>
+            <a href="#users">User Roles</a>
+            <a href="#inspections">Diagnostic Reports</a>
+            <a href="#transactions">Negotiations</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h2>Marketplace Overview</h2>
+            <div class="admin-profile">Admin Mode</div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Listings</h3>
+                <p class="dynamic-value" id="total-listings">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Inspections</h3>
+                <p class="dynamic-value" id="pending-inspections">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Negotiations</h3>
+                <p class="dynamic-value" id="active-deals">0</p>
+            </div>
+        </section>
+
+        <section class="data-table-container">
+            <h3>Recent Vehicle Submissions</h3>
+            <table id="dynamic-car-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle</th>
+                        <th>Seller Type</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="car-data-body">
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+{% endblock content %}

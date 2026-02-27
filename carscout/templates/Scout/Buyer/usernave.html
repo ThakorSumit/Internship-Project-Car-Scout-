@@ -1,16 +1,24 @@
-<nav class="navbar">
+<nav class="buyer-navbar">
     <div class="nav-container">
-        <div class="logo">
-            <a href="#">CAR<span>SCOUT</span></a>
+        <a href="/" class="logo">
+            CAR <span>SCOUT</span>
+        </a>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search by model, brand, or year...">
+            <button type="submit">🔍</button>
         </div>
 
-        <div class="nav-links">
-            <a href="#" class="nav-link-item">Used Cars</a>
-            <a href="#" class="nav-link-item">New Cars</a>
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="login-link">Login</a>
-                <a href="{% url 'signup' %}" class="btn-signup">Sign Up</a>
-            </div>
+        <div class="nav-actions">
+            <a href="/wishlist/" class="nav-link">Wishlist</a>
+            <a href="/my-bookings/" class="nav-link">My Bookings</a>
+
+            <form action="{% url 'logout' %}" method="post" class="logout-wrapper">
+                {% csrf_token %}
+                <button type="submit" class="direct-logout-btn">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
 </nav>

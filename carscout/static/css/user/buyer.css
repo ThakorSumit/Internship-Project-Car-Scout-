@@ -1,0 +1,363 @@
+.dashboard-wrapper {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    background-color: var(--bg-smoke);
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.dash-sidebar {
+    background: var(--brand-primary);
+    padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.sidebar-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.5px;
+}
+
+.sidebar-logo span {
+    color: var(--brand-accent);
+}
+
+.dash-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: var(--transition);
+    font-weight: 500;
+    gap: 12px;
+}
+
+.nav-item.active,
+.nav-item:hover {
+    background: var(--brand-accent-soft);
+    color: var(--brand-accent);
+}
+
+.badge {
+    background: var(--brand-accent);
+    color: var(--brand-primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+/* Main Content Area */
+.dash-content {
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.welcome h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: var(--text-muted);
+}
+
+.user-name {
+    color: var(--brand-accent);
+}
+
+/* Quick Stats Bar */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.q-card {
+    background: var(--surface);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    border: 1px solid var(--border-light);
+}
+
+.q-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.q-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.q-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+}
+
+.q-value-alert {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #dc2626;
+    /* Kept red for alerts */
+}
+
+/* Feature Sections */
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+}
+
+.section-title h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+.section-title a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.section-title a:hover {
+    color: var(--brand-accent-hover);
+}
+
+/* Car Cards */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.car-card {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: var(--transition);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-card);
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.car-image {
+    position: relative;
+    height: 220px;
+}
+
+.car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ai-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(10, 15, 30, 0.85);
+    backdrop-filter: blur(4px);
+    color: var(--brand-accent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.car-info {
+    padding: 20px;
+}
+
+.car-info h3 {
+    font-size: 1.1rem;
+    color: var(--brand-primary);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.car-price {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: 12px;
+}
+
+.car-price span {
+    font-size: 0.95rem;
+    text-decoration: line-through;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.car-meta {
+    display: flex;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.btn-view {
+    width: 100%;
+    padding: 12px;
+    background: var(--surface-warm);
+    border: 1.5px solid var(--border-light);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: var(--brand-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-view:hover {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    color: white;
+}
+
+/*-----------------------------------*/
+
+:root {
+    --brand-navy: #0a0f1e;
+    --brand-gold: #f59e0b;
+    --brand-gold-hover: #d97706;
+    --text-light: #ffffff;
+}
+
+.buyer-navbar {
+    background: var(--brand-navy);
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.logo span {
+    color: var(--brand-gold);
+}
+
+/* Search Bar - Center */
+.search-bar {
+    display: flex;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    padding: 5px 15px;
+    width: 40%;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.search-bar input {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    width: 100%;
+    outline: none;
+}
+
+.search-bar button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* Nav Actions */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--brand-gold);
+}
+
+/* Direct Logout Button */
+.direct-logout-btn {
+    background: transparent;
+    border: 1px solid var(--brand-gold);
+    color: var(--brand-gold);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.direct-logout-btn:hover {
+    background: var(--brand-gold);
+    color: var(--brand-navy);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}

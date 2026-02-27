@@ -7,39 +7,45 @@
 
 :root {
     /* Core Palette */
-    --brand-primary-rgb: 10, 15, 30;
+    --brand-primary-rgb: 7, 12, 23;
     --brand-primary: rgb(var(--brand-primary-rgb));
-    /* #0a0f1e: Midnight Navy — deep authority */
+    /* #070c17: Deepest Midnight Navy — authoritative & ultra-premium */
 
-    --brand-secondary: #0f1f3d;
-    /* Rich Navy — cards, surfaces */
+    --brand-secondary: #111e38;
+    /* Rich Indigo Navy — for sidebar surfaces and headers */
 
-    --brand-accent-rgb: 245, 158, 11;
+    --brand-accent-rgb: 218, 165, 32;
     --brand-accent: rgb(var(--brand-accent-rgb));
-    /* #f59e0b: Amber Gold — CTAs, highlights */
+    /* #daa520: Metallic Goldenrod — luxurious, less orange than original amber */
 
-    --brand-accent-hover: #d97706;
-    /* Deep Amber — hover states */
-    --brand-accent-soft: rgba(var(--brand-accent-rgb), 0.12);
+    --brand-accent-hover: #b8860b;
+    /* Dark Goldenrod — classy hover states */
+    --brand-accent-soft: rgba(var(--brand-accent-rgb), 0.1);
 
     /* Neutrals */
-    --bg-smoke: #f5f3ef;
-    /* Warm Cream — feels premium, not cold */
+    --bg-smoke: #f8f6f0;
+    /* Alabaster Cream — softer white, feels custom */
     --surface: #ffffff;
-    --surface-warm: #fdfbf7;
-    /* Slightly warm white for cards */
-    --text-head: var(--brand-primary);
-    --text-body: #374151;
-    --text-muted: #6b7280;
-    --border-light: #e8e3d9;
-    /* Warm border, matches cream bg */
-    --border-gold: rgba(var(--brand-accent-rgb), 0.3);
+    --surface-warm: #faf8f5;
+    /* Slightly warm custom white for cards */
 
-    /* Specs */
-    --radius-main: 12px;
+    /* Typography Colors */
+    --text-head: var(--brand-primary);
+    --text-body: #475569;
+    --text-muted: #94a3b8;
+
+    /* Structural Elements */
+    --border-light: #f1ede4;
+    /* Very subtle warm border line */
+    --border-gold: rgba(var(--brand-accent-rgb), 0.4);
+
+    /* Specs & Physics */
+    --radius-main: 16px;
     --radius-pill: 50px;
-    --shadow-card: 0 1px 3px rgba(var(--brand-primary-rgb), 0.06), 0 4px 12px rgba(var(--brand-primary-rgb), 0.04);
-    --shadow-hover: 0 20px 40px rgba(var(--brand-primary-rgb), 0.12), 0 4px 12px rgba(var(--brand-primary-rgb), 0.08);
-    --shadow-gold: 0 8px 25px rgba(var(--brand-accent-rgb), 0.25);
-    --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-card: 0 4px 20px rgba(7, 12, 23, 0.04), 0 1px 3px rgba(7, 12, 23, 0.02);
+    --shadow-hover: 0 24px 48px rgba(7, 12, 23, 0.1), 0 8px 16px rgba(7, 12, 23, 0.04);
+    --shadow-gold: 0 12px 30px rgba(var(--brand-accent-rgb), 0.3);
+
+    /* Butter-smooth luxury easing */
+    --transition: all 0.35s cubic-bezier(0.25, 1.0, 0.3, 1.0);
 }
