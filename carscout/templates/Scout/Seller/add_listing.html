@@ -1,0 +1,477 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="listing-page">
+    <div class="listing-container">
+        <div class="listing-header">
+            <a href="{% url 'seller_dashboard' %}" class="back-link">← Back to Dashboard</a>
+            <h1>List a New <span>Vehicle</span></h1>
+            <p>Fill in accurate details — our AI will analyze and certify your listing automatically.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="listing-form">
+            {% csrf_token %}
+
+            {% if vehicle_form.errors or listing_form.errors or inspection_form.errors %}
+            <div class="form-error-banner">
+                ⚠️ Please fix the errors below before submitting.
+            </div>
+            {% endif %}
+
+            <!-- Section 1: Vehicle Identity -->
+            <div class="form-section">
+                <div class="section-label">
+                    <span class="step-num">01</span>
+                    <div>
+                        <h2>Vehicle Identity</h2>
+                        <p>Basic identification and specs</p>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field-group full-width">
+                        <label>VIN Number *</label>
+                        {{ vehicle_form.vin }}
+                        {% if vehicle_form.vin.errors %}<span class="field-error">{{ vehicle_form.vin.errors.0
+                            }}</span>{% endif %}
+                    </div>
+                    <div class="field-group">
+                        <label>Make (Brand) *</label>
+                        {{ vehicle_form.company }}
+                        {% if vehicle_form.company.errors %}<span class="field-error">{{ vehicle_form.company.errors.0
+                            }}</span>{% endif %}
+                    </div>
+                    <div class="field-group">
+                        <label>Model *</label>
+                        {{ vehicle_form.model }}
+                        {% if vehicle_form.model.errors %}<span class="field-error">{{ vehicle_form.model.errors.0
+                            }}</span>{% endif %}
+                    </div>
+                    <div class="field-group">
+                        <label>Year *</label>
+                        {{ vehicle_form.year }}
+                        {% if vehicle_form.year.errors %}<span class="field-error">{{ vehicle_form.year.errors.0
+                            }}</span>{% endif %}
+                    </div>
+                    <div class="field-group">
+                        <label>Color *</label>
+                        {{ vehicle_form.color }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Technical Specs -->
+            <div class="form-section">
+                <div class="section-label">
+                    <span class="step-num">02</span>
+                    <div>
+                        <h2>Technical Specs</h2>
+                        <p>Engine, transmission, and performance</p>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field-group">
+                        <label>Fuel Type *</label>
+                        {{ vehicle_form.fuel_type }}
+                    </div>
+                    <div class="field-group">
+                        <label>Transmission *</label>
+                        {{ vehicle_form.transmission }}
+                    </div>
+                    <div class="field-group">
+                        <label>Engine Size</label>
+                        {{ vehicle_form.engine_size }}
+                    </div>
+                    <div class="field-group">
+                        <label>Mileage (miles) *</label>
+                        {{ vehicle_form.mileage }}
+                    </div>
+                    <div class="field-group">
+                        <label>Number of Doors</label>
+                        {{ vehicle_form.num_doors }}
+                    </div>
+                    <div class="field-group">
+                        <label>Seating Capacity</label>
+                        {{ vehicle_form.seating_capacity }}
+                    </div>
+                    <div class="field-group">
+                        <label>Condition *</label>
+                        {{ vehicle_form.condition }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Description -->
+            <div class="form-section">
+                <div class="section-label">
+                    <span class="step-num">03</span>
+                    <div>
+                        <h2>Description & Notes</h2>
+                        <p>The more detail, the higher your AI score</p>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field-group full-width">
+                        <label>Vehicle Description *</label>
+                        {{ vehicle_form.description }}
+                        {% if vehicle_form.description.errors %}<span class="field-error">{{
+                            vehicle_form.description.errors.0 }}</span>{% endif %}
+                    </div>
+                    <div class="field-group full-width">
+                        <label>Modifications / Upgrades</label>
+                        {{ vehicle_form.modifications }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: History -->
+            <div class="form-section">
+                <div class="section-label">
+                    <span class="step-num">04</span>
+                    <div>
+                        <h2>Vehicle History</h2>
+                        <p>Honesty here builds buyer trust and improves AI score</p>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field-group full-width checkbox-group">
+                        <label class="checkbox-label">
+                            {{ inspection_form.accident_history }}
+                            <span>This vehicle has been in an accident</span>
+                        </label>
+                    </div>
+                    <div class="field-group full-width">
+                        <label>Accident Details (if any)</label>
+                        {{ inspection_form.accident_details }}
+                    </div>
+                    <div class="field-group full-width">
+                        <label>Service History</label>
+                        {{ inspection_form.service_history }}
+                    </div>
+                    <div class="field-group">
+                        <label>Number of Previous Owners</label>
+                        {{ inspection_form.previous_owners }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Pricing & Photo -->
+            <div class="form-section">
+                <div class="section-label">
+                    <span class="step-num">05</span>
+                    <div>
+                        <h2>Pricing & Photo</h2>
+                        <p>Set your asking price and upload a primary photo</p>
+                    </div>
+                </div>
+                <div class="fields-grid">
+                    <div class="field-group">
+                        <label>Asking Price (USD) *</label>
+                        <div class="price-input-wrap">
+                            <span class="currency-sign">$</span>
+                            {{ listing_form.price }}
+                        </div>
+                        {% if listing_form.price.errors %}<span class="field-error">{{ listing_form.price.errors.0
+                            }}</span>{% endif %}
+                    </div>
+                    <div class="field-group">
+                        <label>Primary Photo</label>
+                        {{ listing_form.image }}
+                        <small class="field-hint">JPG/PNG recommended. Max 5MB.</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-submit">
+                <div class="ai-notice">
+                    <span class="ai-icon">🤖</span>
+                    <div>
+                        <strong>AI Inspection will run automatically</strong>
+                        <p>After submission, our AI will analyze your vehicle and generate a Condition Report. Your
+                            listing will go live once complete.</p>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit-listing">Submit for AI Inspection →</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .listing-page {
+        background: var(--bg-smoke);
+        min-height: 100vh;
+        padding: 60px 5%;
+    }
+
+    .listing-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .listing-header {
+        margin-bottom: 48px;
+    }
+
+    .back-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 20px;
+        transition: var(--transition);
+    }
+
+    .back-link:hover {
+        color: var(--brand-accent);
+    }
+
+    .listing-header h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+        margin-bottom: 8px;
+    }
+
+    .listing-header h1 span {
+        color: var(--brand-accent);
+    }
+
+    .listing-header p {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+    }
+
+    .form-error-banner {
+        background: #fef2f2;
+        border: 1px solid #fca5a5;
+        color: #dc2626;
+        padding: 14px 20px;
+        border-radius: 10px;
+        margin-bottom: 32px;
+        font-weight: 600;
+    }
+
+    .form-section {
+        background: var(--surface);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-card);
+    }
+
+    .section-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .step-num {
+        font-family: 'Syne', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--border-light);
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .section-label h2 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin-bottom: 4px;
+    }
+
+    .section-label p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .fields-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .field-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .field-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .field-group label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+        padding: 13px 16px;
+        border: 1.5px solid var(--border-light);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.98rem;
+        color: var(--brand-primary);
+        background: var(--surface);
+        transition: var(--transition);
+        width: 100%;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+        border-color: var(--brand-accent);
+        outline: none;
+        box-shadow: 0 0 0 3px var(--brand-accent-soft);
+    }
+
+    .field-group textarea {
+        resize: vertical;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 0.82rem;
+        margin-top: 4px;
+    }
+
+    .field-hint {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin-top: 4px;
+    }
+
+    .checkbox-group {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--brand-primary);
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    .price-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .currency-sign {
+        position: absolute;
+        left: 16px;
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 1rem;
+        pointer-events: none;
+    }
+
+    .price-input-wrap input {
+        padding-left: 32px;
+    }
+
+    .form-submit {
+        background: var(--surface);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-card);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    .ai-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        flex: 1;
+    }
+
+    .ai-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+
+    .ai-notice strong {
+        display: block;
+        color: var(--brand-primary);
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .ai-notice p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .btn-submit-listing {
+        background: var(--brand-primary);
+        color: var(--brand-accent);
+        border: none;
+        padding: 18px 36px;
+        border-radius: 12px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    .btn-submit-listing:hover {
+        background: var(--brand-accent);
+        color: var(--brand-primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-gold);
+    }
+
+    @media (max-width: 768px) {
+        .fields-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-submit {
+            flex-direction: column;
+        }
+
+        .btn-submit-listing {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+{% endblock content %}

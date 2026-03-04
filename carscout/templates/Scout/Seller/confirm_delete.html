@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex; align-items:center; justify-content:center; min-height:60vh; background:var(--bg-smoke);">
+    <div
+        style="background:var(--surface); padding:48px; border-radius:20px; max-width:480px; width:90%; text-align:center; border:1px solid var(--border-light); box-shadow:var(--shadow-hover);">
+        <div style="font-size:3rem; margin-bottom:16px;">🗑️</div>
+        <h2 style="font-family:'Syne',sans-serif; font-size:1.5rem; color:var(--brand-primary); margin-bottom:10px;">
+            Delete Listing?</h2>
+        <p style="color:var(--text-muted); margin-bottom:32px; line-height:1.6;">
+            This will permanently delete the listing for <strong>{{ listing.vehicle }}</strong> and all associated data.
+            This cannot be undone.
+        </p>
+        <div style="display:flex; gap:12px; justify-content:center;">
+            <a href="{% url 'seller_dashboard' %}"
+                style="padding:14px 28px; border:2px solid var(--border-light); border-radius:10px; font-weight:700; color:var(--brand-primary); text-decoration:none; font-family:'DM Sans',sans-serif;">Cancel</a>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit"
+                    style="padding:14px 28px; background:#dc2626; color:white; border:none; border-radius:10px; font-weight:700; font-family:'DM Sans',sans-serif; cursor:pointer;">Yes,
+                    Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

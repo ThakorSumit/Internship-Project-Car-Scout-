@@ -1,0 +1,619 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="listing-detail-page">
+    <div class="detail-container">
+        <div class="detail-header">
+            <a href="{% url 'seller_dashboard' %}" class="back-link">← Back to Dashboard</a>
+            <div class="header-main">
+                <div>
+                    <h1>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h1>
+                    <p class="vin-tag">VIN: {{ listing.vehicle.vin }}</p>
+                </div>
+                <div class="header-badges">
+                    {% if listing.status == 'live' %}
+                    <span class="status-badge live">● Live</span>
+                    {% elif listing.status == 'ai_scanning' %}
+                    <span class="status-badge scanning">⟳ AI Scanning...</span>
+                    {% else %}
+                    <span class="status-badge pending">{{ listing.status|capfirst }}</span>
+                    {% endif %}
+                    <span class="price-badge">${{ listing.price|floatformat:0 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-grid">
+            <!-- Left: Vehicle Info -->
+            <div class="detail-left">
+                <!-- Photo -->
+                <div class="vehicle-photo">
+                    {% if listing.image %}
+                    <img src="{{ listing.image.url }}" alt="{{ listing.vehicle }}">
+                    {% else %}
+                    <div class="no-photo">
+                        <span>🚗</span>
+                        <p>No photo uploaded</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Specs -->
+                <div class="specs-card">
+                    <h3>Vehicle Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Condition</span>
+                            <span class="spec-value">{{ listing.vehicle.condition }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Mileage</span>
+                            <span class="spec-value">{{ listing.vehicle.mileage|floatformat:0 }} mi</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Fuel Type</span>
+                            <span class="spec-value">{{ listing.vehicle.fuel_type }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Transmission</span>
+                            <span class="spec-value">{{ listing.vehicle.transmission }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Engine</span>
+                            <span class="spec-value">{{ listing.vehicle.engine_size|default:"N/A" }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Color</span>
+                            <span class="spec-value">{{ listing.vehicle.color }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Doors</span>
+                            <span class="spec-value">{{ listing.vehicle.num_doors }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Seats</span>
+                            <span class="spec-value">{{ listing.vehicle.seating_capacity }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="specs-card">
+                    <h3>Description</h3>
+                    <p class="description-text">{{ listing.vehicle.description }}</p>
+                    {% if listing.vehicle.modifications %}
+                    <h4
+                        style="margin-top:16px; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
+                        Modifications</h4>
+                    <p class="description-text">{{ listing.vehicle.modifications }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right: AI Inspection Report -->
+            <div class="detail-right">
+                {% if listing.status == 'ai_scanning' %}
+                <div class="ai-scanning-card">
+                    <div class="scanning-animation">⟳</div>
+                    <h3>AI Inspection Running</h3>
+                    <p>Our AI is analyzing your vehicle data. This usually takes under 30 seconds. Refresh the page to
+                        see your report.</p>
+                    <button onclick="location.reload()" class="btn-refresh">Refresh Page</button>
+                </div>
+
+                {% elif inspection and listing.status == 'live' %}
+                <!-- AI Score Hero -->
+                <div class="ai-score-hero">
+                    <div class="score-ring">
+                        <span class="score-number">{{ inspection.score }}</span>
+                        <span class="score-denom">/10</span>
+                    </div>
+                    <div class="score-details">
+                        <h3>AI Condition Score</h3>
+                        <p>{{ inspection.overall_condition }} Condition</p>
+                        <span class="risk-badge risk-{{ inspection.risk_level|lower }}">{{ inspection.risk_level }}
+                            Risk</span>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="report-card">
+                    <h3>AI Summary</h3>
+                    <p>{{ inspection.ai_summary }}</p>
+                    <div class="recommendation-tag">
+                        <strong>Recommendation:</strong> {{ inspection.recommendation }}
+                    </div>
+                </div>
+
+                <!-- Positives & Issues -->
+                <div class="report-split">
+                    <div class="report-card positive-card">
+                        <h3>✓ Positives</h3>
+                        <ul>
+                            {% for item in inspection.positives %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="report-card issue-card">
+                        <h3>⚠ Issues Detected</h3>
+                        {% if inspection.issues_detected %}
+                        <ul>
+                            {% for item in inspection.issues_detected %}
+                            <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="no-issues">No significant issues detected.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Assessments -->
+                <div class="report-card">
+                    <h3>Market Assessments</h3>
+                    <div class="assessment-row">
+                        <span class="assess-label">Mileage</span>
+                        <span class="assess-value">{{ inspection.mileage_assessment }}</span>
+                    </div>
+                    <div class="assessment-row">
+                        <span class="assess-label">Price</span>
+                        <span class="assess-value">{{ inspection.price_assessment }}</span>
+                    </div>
+                    <div class="assessment-row">
+                        <span class="assess-label">Accident Impact</span>
+                        <span class="assess-value">{{ inspection.accident_impact }}</span>
+                    </div>
+                </div>
+
+                <!-- Buyer Tips -->
+                <div class="report-card">
+                    <h3>💡 Buyer Tips</h3>
+                    <ul class="tips-list">
+                        {% for tip in inspection.buyer_tips %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {% else %}
+                <div class="report-card">
+                    <p style="color: var(--text-muted);">Inspection report not available yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .listing-detail-page {
+        background: var(--bg-smoke);
+        min-height: 100vh;
+        padding: 60px 5%;
+    }
+
+    .detail-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .detail-header {
+        margin-bottom: 40px;
+    }
+
+    .back-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .back-link:hover {
+        color: var(--brand-accent);
+    }
+
+    .header-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .header-main h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+        margin-bottom: 6px;
+    }
+
+    .vin-tag {
+        color: var(--text-muted);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+    }
+
+    .header-badges {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .status-badge.live {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.scanning {
+        background: #fef9c3;
+        color: #854d0e;
+        animation: pulse 1.5s infinite;
+    }
+
+    .status-badge.pending {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .price-badge {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 32px;
+    }
+
+    .vehicle-photo {
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        height: 280px;
+    }
+
+    .vehicle-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-photo {
+        width: 100%;
+        height: 100%;
+        background: var(--border-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--text-muted);
+        font-size: 2rem;
+    }
+
+    .no-photo p {
+        font-size: 0.9rem;
+    }
+
+    .specs-card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border-light);
+    }
+
+    .specs-card h3 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .specs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .spec-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .spec-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    .spec-value {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--brand-primary);
+    }
+
+    .description-text {
+        color: var(--text-body);
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    /* AI Report Cards */
+    .ai-scanning-card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 48px;
+        text-align: center;
+        border: 1px solid var(--border-light);
+        margin-bottom: 20px;
+    }
+
+    .scanning-animation {
+        font-size: 3rem;
+        animation: spin 2s linear infinite;
+        display: inline-block;
+        color: var(--brand-accent);
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .ai-scanning-card h3 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin: 16px 0 8px;
+    }
+
+    .ai-scanning-card p {
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    .btn-refresh {
+        background: var(--brand-primary);
+        color: var(--brand-accent);
+        border: none;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .btn-refresh:hover {
+        background: var(--brand-accent);
+        color: var(--brand-primary);
+    }
+
+    .ai-score-hero {
+        background: var(--brand-primary);
+        border-radius: 16px;
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin-bottom: 20px;
+    }
+
+    .score-ring {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+    }
+
+    .score-number {
+        font-family: 'Syne', sans-serif;
+        font-size: 4rem;
+        font-weight: 800;
+        color: var(--brand-accent);
+    }
+
+    .score-denom {
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .score-details h3 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 4px;
+    }
+
+    .score-details p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 12px;
+    }
+
+    .risk-badge {
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .risk-badge.risk-low {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+    }
+
+    .risk-badge.risk-medium {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+    }
+
+    .risk-badge.risk-high {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+
+    .report-card {
+        background: var(--surface);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 16px;
+        border: 1px solid var(--border-light);
+    }
+
+    .report-card h3 {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin-bottom: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .report-card p {
+        color: var(--text-body);
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    .recommendation-tag {
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: var(--brand-accent-soft);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--brand-primary);
+        border-left: 3px solid var(--brand-accent);
+    }
+
+    .report-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .positive-card ul,
+    .issue-card ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .positive-card ul li {
+        padding: 6px 0;
+        color: var(--text-body);
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .positive-card ul li:last-child,
+    .issue-card ul li:last-child {
+        border-bottom: none;
+    }
+
+    .positive-card ul li::before {
+        content: '✓ ';
+        color: #059669;
+        font-weight: 700;
+    }
+
+    .issue-card ul li::before {
+        content: '⚠ ';
+        color: #d97706;
+        font-weight: 700;
+    }
+
+    .no-issues {
+        color: #059669;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .assessment-row {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .assessment-row:last-child {
+        border-bottom: none;
+    }
+
+    .assess-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+    }
+
+    .assess-value {
+        font-size: 0.92rem;
+        color: var(--text-body);
+        line-height: 1.5;
+    }
+
+    .tips-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .tips-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--text-body);
+        font-size: 0.92rem;
+        line-height: 1.5;
+    }
+
+    .tips-list li:last-child {
+        border-bottom: none;
+    }
+
+    .tips-list li::before {
+        content: '💡 ';
+    }
+
+    @media (max-width: 900px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .report-split {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% endblock content %}

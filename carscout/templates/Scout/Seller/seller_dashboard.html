@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/seller.css' %}">
 
 <div class="dashboard-wrapper">
     <aside class="dash-sidebar">
@@ -9,8 +8,8 @@
         <nav class="dash-nav">
             <a href="{% url 'seller_dashboard' %}" class="nav-item active">Inventory Console</a>
             <a href="#" class="nav-item">Analytics</a>
-            <a href="#" class="nav-item">Messages <span class="badge">5</span></a>
-            <a href="{% url 'select_vehicle' %}" class="nav-item">List New Car</a>
+            <a href="#" class="nav-item">Messages <span class="badge">0</span></a>
+            <a href="{% url 'add_listing' %}" class="nav-item">+ List New Car</a>
         </nav>
     </aside>
 
@@ -20,21 +19,22 @@
                 <h1>Seller <span>Command</span></h1>
                 <p>Track your automotive assets and incoming inquiries.</p>
             </div>
-            <a href="{% url 'select_vehicle' %}" class="btn-primary-gold">+ List New Vehicle</a>
+            <a href="{% url 'add_listing' %}" class="btn-primary-gold"
+                style="text-decoration:none; padding: 14px 28px; border-radius: 10px;">+ List New Vehicle</a>
         </header>
 
         <section class="performance-bar">
             <div class="metric-card">
                 <span class="m-label">Total Listings</span>
-                <span class="m-value">{{ listings.count }} <small>vehicles</small></span>
+                <span class="m-value">{{ total_listings }} <small>vehicles</small></span>
             </div>
             <div class="metric-card">
-                <span class="m-label">Available</span>
-                <span class="m-value">{{ listings|length }} <small>active</small></span>
+                <span class="m-label">Live Listings</span>
+                <span class="m-value">{{ live_listings }} <small>active</small></span>
             </div>
             <div class="metric-card">
-                <span class="m-label">Seller</span>
-                <span class="m-value">{{ request.user.name }}</span>
+                <span class="m-label">Total Reach</span>
+                <span class="m-value">{{ total_views }} <small>views</small></span>
             </div>
         </section>
 
@@ -42,13 +42,17 @@
             <div class="section-title">
                 <h2>Active Inventory</h2>
             </div>
+
+            {% if listings %}
             <div class="table-container">
                 <table class="inventory-table">
                     <thead>
                         <tr>
                             <th>Vehicle</th>
                             <th>Status</th>
+                            <th>AI Report</th>
                             <th>Price</th>
+                            <th>Views</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -58,43 +62,134 @@
                             <td>
                                 <div class="cell-car">
                                     {% if listing.image %}
-                                    <img src="{{ listing.image.url }}"
-                                        alt="{{ listing.vehicle.company }} {{ listing.vehicle.model }}">
+                                    <img src="{{ listing.image.url }}" alt="{{ listing.vehicle }}">
                                     {% else %}
-                                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=100"
-                                        alt="No Image">
+                                    <div class="no-img-placeholder">🚗</div>
                                     {% endif %}
                                     <div>
                                         <strong>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{
                                             listing.vehicle.model }}</strong>
-                                        <br>
-                                        <small>VIN: {{ listing.vehicle.vin }}</small>
+                                        <br><small>VIN: ...{{ listing.vehicle.vin|slice:"-4:" }}</small>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span
-                                    class="status-tag {% if listing.status == 'available' %}live{% else %}pending{% endif %}">
-                                    {{ listing.status|title }}
-                                </span>
+                                {% if listing.status == 'live' %}
+                                <span class="status-tag live">Live</span>
+                                {% elif listing.status == 'ai_scanning' %}
+                                <span class="status-tag pending">AI Scanning</span>
+                                {% elif listing.status == 'pending' %}
+                                <span class="status-tag pending">Pending</span>
+                                {% elif listing.status == 'sold' %}
+                                <span class="status-tag sold">Sold</span>
+                                {% else %}
+                                <span class="status-tag">{{ listing.status|capfirst }}</span>
+                                {% endif %}
                             </td>
-                            <td>${{ listing.price }}</td>
                             <td>
-                                <a href="{% url 'listing_detail' listing.id %}" class="btn-text">View</a>
+                                {% if listing.inspection and listing.status == 'live' %}
+                                <span class="ai-status verified">✓ Score: {{ listing.inspection.score }}/10</span>
+                                {% elif listing.status == 'ai_scanning' %}
+                                <span class="ai-status scanning">⟳ AI Scanning...</span>
+                                {% else %}
+                                <span style="color: var(--text-muted);">—</span>
+                                {% endif %}
                             </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" style="text-align:center; padding: 40px; color: var(--text-muted);">
-                                No listings yet.
-                                <a href="{% url 'select_vehicle' %}">Add your first vehicle →</a>
+                            <td><strong>${{ listing.price|floatformat:0 }}</strong></td>
+                            <td>{{ listing.views_count }}</td>
+                            <td>
+                                <a href="{% url 'seller_listing_detail' listing.id %}" class="btn-text">View</a>
+                                <form method="POST" action="{% url 'delete_listing' listing.id %}"
+                                    style="display:inline;" onsubmit="return confirm('Delete this listing?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-text btn-danger-text">Delete</button>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🚗</div>
+                <h3>No listings yet</h3>
+                <p>Start by adding your first vehicle to the marketplace.</p>
+                <a href="{% url 'add_listing' %}" class="btn-primary-gold"
+                    style="text-decoration:none; padding: 14px 28px; border-radius: 10px; display:inline-block; margin-top: 16px;">+
+                    List Your First Car</a>
+            </div>
+            {% endif %}
         </section>
     </main>
 </div>
+
+<style>
+    .no-img-placeholder {
+        width: 60px;
+        height: 45px;
+        background: var(--bg-smoke);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .btn-text {
+        background: none;
+        border: none;
+        color: var(--brand-accent-hover);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        font-family: inherit;
+        text-decoration: none;
+    }
+
+    .btn-text:hover {
+        color: var(--brand-primary);
+    }
+
+    .btn-danger-text {
+        color: #dc2626 !important;
+    }
+
+    .btn-danger-text:hover {
+        color: #991b1b !important;
+    }
+
+    .status-tag.sold {
+        background: #dbeafe;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: var(--surface);
+        border-radius: 16px;
+        border: 1px solid var(--border-light);
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.4rem;
+        color: var(--brand-primary);
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: var(--text-muted);
+    }
+</style>
+
 {% endblock content %}
