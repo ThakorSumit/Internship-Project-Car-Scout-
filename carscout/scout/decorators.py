@@ -7,7 +7,7 @@ def role_required(allowed_roles=[]):
         def wrapper_func(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect("login")  #urls.py name
-            if request.user.role in allowed_roles:
+            if request.user.role in allowed_roles or (request.user.is_admin and 'Admin' in allowed_roles):
                 return view_func(request, *args, **kwargs)   
             else:
                 return HttpResponse("You are not authorized to view this page")

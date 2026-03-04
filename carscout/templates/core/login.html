@@ -25,7 +25,7 @@
                     style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
                     {% for field in form %}
                     {% for error in field.errors %}
-                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    <p style="margin: 0; font-size: 0.9em;"><strong>{{ field.label }}:</strong> {{ error }}</p>
                     {% endfor %}
                     {% endfor %}
                     {% for error in form.non_field_errors %}

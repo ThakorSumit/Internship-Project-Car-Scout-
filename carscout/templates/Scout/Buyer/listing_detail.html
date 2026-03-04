@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container"
+    style="max-width: 800px; margin: 50px auto; padding: 30px; background: #1a1a1a; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: white;">
+    <h2 style="color: #d4af37; text-align: center; margin-bottom: 20px; font-family: 'Outfit', sans-serif;">{{
+        listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h2>
+
+    {% if listing.image %}
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ listing.image.url }}" alt="Vehicle Image" style="max-width: 100%; border-radius: 8px;">
+    </div>
+    {% else %}
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800"
+            alt="Placeholder Vehicle Image" style="max-width: 100%; border-radius: 8px;">
+    </div>
+    {% endif %}
+
+    <div
+        style="display: flex; justify-content: space-between; font-size: 1.2em; margin-bottom: 20px; border-top: 1px solid #444; border-bottom: 1px solid #444; padding: 15px 0;">
+        <div style="text-align: center; flex: 1;">
+            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Price
+            </p>
+            <p style="color: #d4af37; font-weight: bold; margin: 5px 0 0;">${{ listing.price }}</p>
+        </div>
+        <div style="text-align: center; flex: 1; border-left: 1px solid #444; border-right: 1px solid #444;">
+            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">VIN</p>
+            <p style="margin: 5px 0 0;">{{ listing.vehicle.vin }}</p>
+        </div>
+        <div style="text-align: center; flex: 1;">
+            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Fuel
+                Type</p>
+            <p style="margin: 5px 0 0;">{{ listing.vehicle.FuelType }}</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
+        <p
+            style="display: inline-block; padding: 5px 15px; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 20px; color: #d4af37;">
+            Status: {{ listing.status|title }}</p>
+    </div>
+
+    {% if request.user.is_authenticated and request.user.role == 'Buyer' %}
+    <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+        <a href="{% url 'test_drive' listing.id %}" class="btn btn-primary"
+            style="background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 15px 40px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s ease;">Book
+            a Test Drive</a>
+        <a href="{% url 'offer' listing.id %}" class="btn btn-primary"
+            style="background: linear-gradient(135deg, #d4af37, #f3e5ab); border: none; color: #000; padding: 15px 40px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s ease;">Make
+            an Offer</a>
+    </div>
+    {% elif not request.user.is_authenticated %}
+    <p style="text-align: center; color: #888; margin-top: 30px;">Please <a href="{% url 'login' %}"
+            style="color: #d4af37;">log in</a> as a buyer to make an offer or book a test drive.</p>
+    {% endif %}
+</div>
+{% endblock %}

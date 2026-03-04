@@ -7,10 +7,10 @@
     <aside class="dash-sidebar">
         <div class="sidebar-logo">CAR<span>SCOUT</span></div>
         <nav class="dash-nav">
-            <a href="#" class="nav-item active">Inventory Console</a>
+            <a href="{% url 'seller_dashboard' %}" class="nav-item active">Inventory Console</a>
             <a href="#" class="nav-item">Analytics</a>
             <a href="#" class="nav-item">Messages <span class="badge">5</span></a>
-            <a href="#" class="nav-item">List New Car</a>
+            <a href="{% url 'select_vehicle' %}" class="nav-item">List New Car</a>
         </nav>
     </aside>
 
@@ -20,21 +20,21 @@
                 <h1>Seller <span>Command</span></h1>
                 <p>Track your automotive assets and incoming inquiries.</p>
             </div>
-            <button class="btn-primary-gold">+ List New Vehicle</button>
+            <a href="{% url 'select_vehicle' %}" class="btn-primary-gold">+ List New Vehicle</a>
         </header>
 
         <section class="performance-bar">
             <div class="metric-card">
-                <span class="m-label">Total Reach</span>
-                <span class="m-value">4.2k <small>views</small></span>
+                <span class="m-label">Total Listings</span>
+                <span class="m-value">{{ listings.count }} <small>vehicles</small></span>
             </div>
             <div class="metric-card">
-                <span class="m-label">Active Leads</span>
-                <span class="m-value">12 <small>inquiries</small></span>
+                <span class="m-label">Available</span>
+                <span class="m-value">{{ listings|length }} <small>active</small></span>
             </div>
             <div class="metric-card">
-                <span class="m-label">Avg. AI Score</span>
-                <span class="m-value">9.4/10</span>
+                <span class="m-label">Seller</span>
+                <span class="m-value">{{ request.user.name }}</span>
             </div>
         </section>
 
@@ -48,41 +48,49 @@
                         <tr>
                             <th>Vehicle</th>
                             <th>Status</th>
-                            <th>AI Report</th>
                             <th>Price</th>
-                            <th>Views</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for listing in listings %}
                         <tr>
                             <td>
                                 <div class="cell-car">
-                                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=100"
-                                        alt="Porsche">
-                                    <div><strong>2022 Porsche 911</strong><br><small>VIN: ...4920</small></div>
+                                    {% if listing.image %}
+                                    <img src="{{ listing.image.url }}"
+                                        alt="{{ listing.vehicle.company }} {{ listing.vehicle.model }}">
+                                    {% else %}
+                                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=100"
+                                        alt="No Image">
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{
+                                            listing.vehicle.model }}</strong>
+                                        <br>
+                                        <small>VIN: {{ listing.vehicle.vin }}</small>
+                                    </div>
                                 </div>
                             </td>
-                            <td><span class="status-tag live">Live</span></td>
-                            <td><span class="ai-status verified">✓ Certified</span></td>
-                            <td>$142,000</td>
-                            <td>1,204</td>
-                            <td><button class="btn-text">Edit</button></td>
-                        </tr>
-                        <tr>
                             <td>
-                                <div class="cell-car">
-                                    <img src="https://images.unsplash.com/photo-1526726538690-5cbf2299cd1e?auto=format&fit=crop&q=80&w=100"
-                                        alt="Audi">
-                                    <div><strong>2021 Audi RS6</strong><br><small>VIN: ...1102</small></div>
-                                </div>
+                                <span
+                                    class="status-tag {% if listing.status == 'available' %}live{% else %}pending{% endif %}">
+                                    {{ listing.status|title }}
+                                </span>
                             </td>
-                            <td><span class="status-tag pending">Processing</span></td>
-                            <td><span class="ai-status scanning">AI Scanning...</span></td>
-                            <td>$108,000</td>
-                            <td>--</td>
-                            <td><button class="btn-text">Cancel</button></td>
+                            <td>${{ listing.price }}</td>
+                            <td>
+                                <a href="{% url 'listing_detail' listing.id %}" class="btn-text">View</a>
+                            </td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align:center; padding: 40px; color: var(--text-muted);">
+                                No listings yet.
+                                <a href="{% url 'select_vehicle' %}">Add your first vehicle →</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

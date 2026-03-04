@@ -51,3 +51,38 @@
     grid-template-columns: 1fr;
     gap: 15px;
 }
+
+/* Gender Selector Logic */
+.gender-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.gender-selector input[type="radio"] {
+    display: none;
+}
+
+.gender-tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tile-text {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* Selection States */
+.gender-selector input[type="radio"]:checked + .gender-tile {
+    border-color: var(--brand-accent);
+    background: var(--brand-accent-soft);
+    color: var(--brand-primary);
+}

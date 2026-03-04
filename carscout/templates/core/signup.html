@@ -25,7 +25,7 @@
                     style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
                     {% for field in form %}
                     {% for error in field.errors %}
-                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
+                    <p style="margin: 0; font-size: 0.9em;"><strong>{{ field.label }}:</strong> {{ error }}</p>
                     {% endfor %}
                     {% endfor %}
                     {% for error in form.non_field_errors %}
@@ -67,6 +67,16 @@
                             <span class="tile-text">Female</span>
                         </label>
                     </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="123 Luxury Lane" required>
                 </div>
 
                 <div class="input-group">

@@ -1,61 +1,185 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Car Scout</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 
-<body
-    style="margin: 0; padding: 0; background-color: #f5f3ef; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-            <td align="center" style="padding: 20px 0;">
-                <table border="0" cellpadding="0" cellspacing="0" width="600"
-                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e8e3d9;">
+<body style="margin:0;padding:0;background-color:#0d1117;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0d1117;padding:40px 0;">
+        <tr>
+            <td align="center">
+                <table width="620" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;width:100%;">
+
+                    <!-- HEADER -->
                     <tr>
-                        <td align="center"
-                            style="background-color: #0a0f1e; padding: 40px 40px; border-top: 4px solid #f59e0b;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: -1px;">CAR <span
-                                    style="color: #f59e0b;">SCOUT</span></h1>
-                            <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin-top: 10px;">Your journey to
-                                the perfect drive starts here.</p>
+                        <td
+                            style="background:linear-gradient(135deg,#0a0f1e 0%,#111827 100%);border-radius:20px 20px 0 0;padding:48px 48px 40px;border-top:3px solid #daa520;text-align:center;">
+                            <!-- Logo -->
+                            <p
+                                style="margin:0 0 24px;font-size:13px;letter-spacing:6px;color:#daa520;font-weight:700;text-transform:uppercase;">
+                                ✦ Premium Automotive</p>
+                            <h1
+                                style="margin:0;font-size:38px;font-weight:900;letter-spacing:-2px;color:#ffffff;line-height:1;">
+                                CAR<span style="color:#daa520;">SCOUT</span>
+                            </h1>
+                            <div
+                                style="margin:20px auto 0;width:48px;height:2px;background:linear-gradient(90deg,transparent,#daa520,transparent);">
+                            </div>
                         </td>
                     </tr>
 
+                    <!-- HERO BANNER -->
                     <tr>
-                        <td style="padding: 40px; color: #374151; line-height: 1.6;">
-                            <h2 style="color: #0a0f1e; font-size: 22px;">Welcome to the Inner Circle!</h2>
-                            <p>Thank you for signing up for <strong>Car Scout</strong>. You now have access to advanced
-                                car-buying tools, AI-powered diagnostics, and seamless negotiation features[cite: 7, 18,
-                                24].</p>
+                        <td
+                            style="background:linear-gradient(160deg,#1a1f2e 0%,#0f1623 60%,#1a1208 100%);padding:52px 48px 44px;text-align:center;position:relative;">
+                            <!-- Decorative circle -->
+                            <div
+                                style="display:inline-block;background:rgba(218,165,32,0.06);border:1px solid rgba(218,165,32,0.15);border-radius:50%;width:88px;height:88px;line-height:88px;font-size:36px;margin-bottom:28px;">
+                                🏎️</div>
+                            <h2
+                                style="margin:0 0 16px;font-size:28px;font-weight:800;color:#ffffff;letter-spacing:-1px;line-height:1.2;">
+                                Welcome to the<br><span style="color:#daa520;">Inner Circle</span>
+                            </h2>
+                            <p
+                                style="margin:0;font-size:16px;color:rgba(255,255,255,0.6);line-height:1.7;max-width:440px;display:inline-block;">
+                                Your account is live. You now have access to the most intelligent car marketplace ever
+                                built.
+                            </p>
+                        </td>
 
-                            <table border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
+                    </tr>
+                    <!-- CAR IMAGE -->
+                    <tr>
+                        <td
+                            style="background:linear-gradient(160deg,#1a1f2e 0%,#0f1623 60%,#1a1208 100%);padding:0 48px 44px;">
+                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=620"
+                                alt="Porsche 911" width="524"
+                                style="width:100%;max-width:524px;border-radius:14px;display:block;border:1px solid rgba(218,165,32,0.2);box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+                        </td>
+                    </tr>
+                    <!-- DIVIDER LINE -->
+                    <tr>
+                        <td style="background:#111827;padding:0 48px;">
+                            <div
+                                style="height:1px;background:linear-gradient(90deg,transparent,rgba(218,165,32,0.4),transparent);">
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- FEATURES -->
+                    <tr>
+                        <td style="background:#111827;padding:40px 48px;">
+                            <p
+                                style="margin:0 0 28px;font-size:11px;letter-spacing:4px;color:#daa520;font-weight:700;text-transform:uppercase;">
+                                What You Unlock</p>
+
+                            <!-- Feature 1 -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
                                 <tr>
-                                    <td align="center" bgcolor="#f59e0b" style="border-radius: 6px;">
-                                        <a href="https://yourproject.com/dashboard" target="_blank"
-                                            style="padding: 15px 25px; color: #0a0f1e; text-decoration: none; font-weight: bold; display: inline-block;">Browse
-                                            Car Listings</a>
+                                    <td width="52" valign="top">
+                                        <div
+                                            style="width:44px;height:44px;background:rgba(218,165,32,0.1);border:1px solid rgba(218,165,32,0.25);border-radius:10px;text-align:center;line-height:44px;font-size:20px;">
+                                            🤖</div>
+                                    </td>
+                                    <td style="padding-left:16px;" valign="top">
+                                        <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;">
+                                            AI-Powered Diagnostics</p>
+                                        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;">
+                                            Every car gets a Condition Score based on 360° tours and full history
+                                            analysis.</p>
                                     </td>
                                 </tr>
                             </table>
 
-                            <p style="font-size: 14px; color: #6b7280;">Need help? Reply to this email or visit our
-                                support center.</p>
+                            <!-- Feature 2 -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                                <tr>
+                                    <td width="52" valign="top">
+                                        <div
+                                            style="width:44px;height:44px;background:rgba(218,165,32,0.1);border:1px solid rgba(218,165,32,0.25);border-radius:10px;text-align:center;line-height:44px;font-size:20px;">
+                                            📋</div>
+                                    </td>
+                                    <td style="padding-left:16px;" valign="top">
+                                        <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;">Accident
+                                            History Verification</p>
+                                        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;">
+                                            Full transparency on every listing — zero surprises, total confidence.</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Feature 3 -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+                                <tr>
+                                    <td width="52" valign="top">
+                                        <div
+                                            style="width:44px;height:44px;background:rgba(218,165,32,0.1);border:1px solid rgba(218,165,32,0.25);border-radius:10px;text-align:center;line-height:44px;font-size:20px;">
+                                            💬</div>
+                                    </td>
+                                    <td style="padding-left:16px;" valign="top">
+                                        <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;">Seamless
+                                            Negotiation Tools</p>
+                                        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;">
+                                            Make offers and close deals directly inside the platform.</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Feature 4 -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td width="52" valign="top">
+                                        <div
+                                            style="width:44px;height:44px;background:rgba(218,165,32,0.1);border:1px solid rgba(218,165,32,0.25);border-radius:10px;text-align:center;line-height:44px;font-size:20px;">
+                                            📈</div>
+                                    </td>
+                                    <td style="padding-left:16px;" valign="top">
+                                        <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;">Market
+                                            Depreciation Forecast</p>
+                                        <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;">
+                                            Know exactly what a car is worth today — and in 5 years.</p>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
 
+                    <!-- CTA -->
                     <tr>
-                        <td align="center"
-                            style="background-color: #fdfbf7; padding: 20px; border-top: 1px solid #e8e3d9; color: #6b7280; font-size: 12px;">
-                            © 2026 Car Scout. All rights reserved. [cite: 119]<br>
-                            You received this because you signed up on our platform.
+                        <td style="background:#111827;padding:0 48px 48px;text-align:center;">
+                            <div
+                                style="height:1px;background:linear-gradient(90deg,transparent,rgba(218,165,32,0.3),transparent);margin-bottom:36px;">
+                            </div>
+                            <a href="http://localhost:8000" target="_blank"
+                                style="display:inline-block;background:linear-gradient(135deg,#daa520,#f59e0b);color:#0a0f1e;text-decoration:none;font-weight:800;font-size:15px;letter-spacing:0.5px;padding:18px 44px;border-radius:10px;box-shadow:0 8px 32px rgba(218,165,32,0.3);">
+                                Browse Car Listings &rarr;
+                            </a>
+                            <p style="margin:20px 0 0;font-size:13px;color:rgba(255,255,255,0.3);">
+                                Need help? Reply to this email or visit our support center.
+                            </p>
                         </td>
                     </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td
+                            style="background:#0a0f1e;border-radius:0 0 20px 20px;padding:28px 48px;text-align:center;border-top:1px solid rgba(255,255,255,0.06);">
+                            <p
+                                style="margin:0 0 8px;font-size:16px;font-weight:800;letter-spacing:-0.5px;color:#ffffff;">
+                                CAR<span style="color:#daa520;">SCOUT</span>
+                            </p>
+                            <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.25);line-height:1.8;">
+                                © 2026 Car Scout Inc. All rights reserved.<br>
+                                You received this because you signed up on our platform.
+                            </p>
+                        </td>
+                    </tr>
+
                 </table>
             </td>
         </tr>
