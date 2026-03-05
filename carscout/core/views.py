@@ -64,7 +64,7 @@ def user_logout(request):
 
 def home(request):
     listings = Listing.objects.filter(
-        status='available',
+        status='live',
         seller__isnull=False       # ← only listings with a valid seller
     ).select_related('vehicle', 'seller').order_by('-id')  # ← efficient DB query
     return render(request, 'home.html', {'listings': listings})

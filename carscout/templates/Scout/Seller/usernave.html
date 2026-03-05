@@ -1,24 +1,184 @@
 <nav class="seller-navbar">
-    <div class="nav-container">
-        <a href="{% url 'seller_dashboard' %}" class="logo">
-            CAR <span>SCOUT</span> <small class="seller-label">SELLER</small>
+    <div class="seller-nav-container">
+
+        <a href="{% url 'seller_dashboard' %}" class="seller-nav-logo">
+            CAR<span>SCOUT</span>
+            <small>SELLER</small>
         </a>
 
-        <ul class="seller-links">
-            <li><a href="/seller/dashboard/">Inventory</a></li>
-            <li><a href="/seller/inquiries/">Inquiries <span class="msg-count">5</span></a></li>
-            <li><a href="/seller/analytics/">Performance</a></li>
-        </ul>
-
-        <div class="seller-actions">
-            <form action="{% url 'logout' %}" method="post" class="inline-form">
-                {% csrf_token %}
-                <button type="submit" class="logout-link">Logout</button>
-            </form>
-
-            <a href="/seller/add-listing/" class="btn-sell-car">
-                + List New Car
+        <nav class="seller-nav-links">
+            <a href="{% url 'seller_dashboard' %}" class="seller-nav-link">
+                <span class="snl-icon">🚗</span> Inventory
             </a>
+            <a href="{% url 'seller_offers' %}" class="seller-nav-link">
+                <span class="snl-icon">🤝</span> Offers
+            </a>
+            <a href="{% url 'seller_inbox' %}" class="seller-nav-link">
+                <span class="snl-icon">💬</span> Messages
+            </a>
+            <a href="#" class="seller-nav-link">
+                <span class="snl-icon">📊</span> Analytics
+            </a>
+        </nav>
+
+        <div class="seller-nav-right">
+            <span class="seller-nav-user">{{ request.user.name }}</span>
+            <a href="{% url 'add_listing' %}" class="seller-nav-list-btn">+ List Car</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="seller-nav-logout">Logout</button>
+            </form>
         </div>
+
     </div>
 </nav>
+
+<style>
+    .seller-navbar {
+        background: var(--brand-primary);
+        border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .seller-nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .seller-nav-logo {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #fff;
+        text-decoration: none;
+        letter-spacing: 1.5px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0;
+    }
+
+    .seller-nav-logo span {
+        color: var(--brand-accent);
+    }
+
+    .seller-nav-logo small {
+        font-size: 0.55rem;
+        font-weight: 700;
+        color: rgba(218, 165, 32, 0.5);
+        letter-spacing: 2px;
+        margin-left: 8px;
+        border: 1px solid rgba(218, 165, 32, 0.25);
+        padding: 2px 6px;
+        border-radius: 4px;
+        align-self: center;
+    }
+
+    .seller-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+    }
+
+    .seller-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .seller-nav-link:hover {
+        background: rgba(218, 165, 32, 0.1);
+        color: var(--brand-accent);
+    }
+
+    .seller-nav-link.active {
+        background: rgba(218, 165, 32, 0.12);
+        color: var(--brand-accent);
+    }
+
+    .snl-icon {
+        font-size: 0.9rem;
+    }
+
+    .seller-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+        padding-left: 20px;
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .seller-nav-user {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .seller-nav-list-btn {
+        background: var(--brand-accent);
+        color: var(--brand-primary);
+        text-decoration: none;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 8px 16px;
+        border-radius: 7px;
+        transition: opacity 0.2s;
+        white-space: nowrap;
+    }
+
+    .seller-nav-list-btn:hover {
+        opacity: 0.85;
+    }
+
+    .seller-nav-logout {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 7px 14px;
+        border-radius: 7px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .seller-nav-logout:hover {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+    }
+
+    @media (max-width: 768px) {
+        .seller-nav-links {
+            display: none;
+        }
+
+        .seller-nav-user {
+            display: none;
+        }
+
+        .seller-nav-container {
+            padding: 0 16px;
+            gap: 16px;
+        }
+    }
+</style>

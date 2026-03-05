@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vehicle, Listing, InspectionReport
+from .models import Vehicle, Listing, InspectionReport, Offer
 
 
 class VehicleForm(forms.ModelForm):
@@ -59,4 +59,31 @@ class InspectionInputForm(forms.ModelForm):
                 'placeholder': 'List service records, maintenance history...'
             }),
             'previous_owners': forms.NumberInput(attrs={'min': 1}),
+        }
+
+
+#-------offer------
+class MakeOfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ['amount', 'comment']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'placeholder': 'Your offer amount'}),
+            'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Optional message to the seller...'}),
+        }
+
+class CounterOfferForm(forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ['counter_amount', 'counter_comment']
+        widgets = {
+            'counter_amount': forms.NumberInput(attrs={
+                'placeholder': 'Your counter amount',
+                'style': 'width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 14px; font-family:DM Sans,sans-serif; font-size:0.92rem; color:#fff; outline:none; box-sizing:border-box;'
+            }),
+            'counter_comment': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Message to the buyer...',
+                'style': 'width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 14px; font-family:DM Sans,sans-serif; font-size:0.92rem; color:#fff; outline:none; box-sizing:border-box; resize:vertical;'
+            }),
         }

@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="buyer-shell">
+
+    <aside class="buyer-sidebar">
+        <div class="sidebar-brand">CAR<span>SCOUT</span></div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'buyer_dashboard' %}" class="snav-item"><span class="snav-icon">🏠</span> Dashboard</a>
+            <a href="{% url 'browse_listings' %}" class="snav-item"><span class="snav-icon">🔍</span> Browse Cars</a>
+            <a href="#" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
+            <a href="{% url 'buyer_inbox' %}" class="snav-item active"><span class="snav-icon">💬</span> Messages</a>
+            <a href="{% url 'buyer_offers' %}" class="snav-item"><span class="snav-icon">🤝</span> My Offers</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="buyer-main">
+        <header class="buyer-header">
+            <div>
+                <h1 class="buyer-welcome">My <span>Messages</span></h1>
+                <p class="buyer-sub">Your conversations with sellers.</p>
+            </div>
+        </header>
+
+        {% if inbox %}
+        <div class="inbox-list">
+            {% for item in inbox %}
+            <a href="{% url 'buyer_chat' item.listing.id %}"
+                class="inbox-row {% if item.unread %}inbox-unread{% endif %}">
+                <div class="inbox-thumb">
+                    {% if item.listing.image %}
+                    <img src="{{ item.listing.image.url }}" alt="">
+                    {% else %}<span>🚗</span>{% endif %}
+                </div>
+                <div class="inbox-info">
+                    <div class="inbox-title-row">
+                        <h4>{{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{ item.listing.vehicle.model }}</h4>
+                        {% if item.unread %}<span class="inbox-badge">{{ item.unread }}</span>{% endif %}
+                    </div>
+                    <p class="inbox-seller">Seller: {{ item.listing.seller.name }}</p>
+                    {% if item.last_msg %}
+                    <p class="inbox-preview">
+                        {% if item.last_msg.sender == request.user %}You: {% endif %}
+                        {{ item.last_msg.body|truncatechars:60 }}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="inbox-meta">
+                    {% if item.last_msg %}
+                    <span class="inbox-time">{{ item.last_msg.created_at|date:"M d" }}</span>
+                    {% endif %}
+                    <span class="inbox-arrow">→</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>No conversations yet</h3>
+            <p>Browse a listing and message the seller to start a conversation.</p>
+            <a href="{% url 'browse_listings' %}" class="btn-browse">Browse Cars</a>
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<style>
+    .inbox-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .inbox-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--surface);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        padding: 16px 20px;
+        text-decoration: none;
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .inbox-row:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-1px);
+    }
+
+    .inbox-unread {
+        border-left: 4px solid var(--brand-accent);
+    }
+
+    .inbox-thumb {
+        width: 60px;
+        height: 44px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f1ede4;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+
+    .inbox-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .inbox-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .inbox-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 3px;
+    }
+
+    .inbox-title-row h4 {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .inbox-badge {
+        background: var(--brand-accent);
+        color: var(--brand-primary);
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        flex-shrink: 0;
+    }
+
+    .inbox-seller {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin: 0 0 3px;
+    }
+
+    .inbox-preview {
+        font-size: 0.83rem;
+        color: var(--text-body);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .inbox-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .inbox-time {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .inbox-arrow {
+        font-size: 0.9rem;
+        color: var(--brand-accent);
+        font-weight: 700;
+    }
+</style>
+{% endblock %}

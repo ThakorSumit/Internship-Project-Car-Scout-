@@ -13,4 +13,24 @@ urlpatterns = [
 
     # Buyer
     path('buyer/', views.BuyerDashboardView, name='buyer_dashboard'),
+    path('buyer/browse/', views.BrowseListingsView, name='browse_listings'),
+    path('buyer/listing/<int:listing_id>/', views.BuyerListingDetailView, name='buyer_listing_detail'),
+    path('buyer/listing/<int:listing_id>/toggle-wishlist/', views.ToggleWishlistView, name='toggle_wishlist'),
+
+    # Offer URLs
+    path('buyer/offer/<int:listing_id>/', views.MakeOfferView, name='make_offer'),
+    path('buyer/offers/', views.BuyerOffersView, name='buyer_offers'),
+    path('buyer/offer/<int:offer_id>/accept/', views.AcceptCounterView, name='accept_counter'),
+    path('buyer/offer/<int:offer_id>/withdraw/', views.WithdrawOfferView, name='withdraw_offer'),
+
+    path('seller/offers/', views.SellerOffersView, name='seller_offers'),
+    path('seller/offer/<int:offer_id>/accept/', views.AcceptOfferView, name='accept_offer'),
+    path('seller/offer/<int:offer_id>/reject/', views.RejectOfferView, name='reject_offer'),
+    path('seller/offer/<int:offer_id>/counter/', views.CounterOfferView, name='counter_offer'),
+
+    # Messaging URLs
+    path('buyer/inbox/', views.BuyerInboxView, name='buyer_inbox'),
+    path('buyer/chat/<int:listing_id>/', views.BuyerChatView, name='buyer_chat'),
+    path('seller/inbox/', views.SellerInboxView, name='seller_inbox'),
+    path('seller/chat/<int:listing_id>/<int:buyer_id>/', views.SellerChatView, name='seller_chat'),
 ]

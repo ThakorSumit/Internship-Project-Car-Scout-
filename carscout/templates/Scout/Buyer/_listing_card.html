@@ -1,0 +1,43 @@
+{% load static %}
+<article class="car-card">
+    <div class="card-img-wrap">
+        {% if listing.image %}
+        <img src="{{ listing.image.url }}" alt="{{ listing.vehicle.company }} {{ listing.vehicle.model }}">
+        {% else %}
+        <div class="card-no-img">🚗</div>
+        {% endif %}
+
+        {% if listing.inspection %}
+        <div class="ai-score-badge score-{{ listing.inspection.risk_level|lower }}">
+            ⚡ {{ listing.inspection.score }}/10
+        </div>
+        {% endif %}
+
+        {% if listing.is_featured %}
+        <div class="featured-ribbon">Featured</div>
+        {% endif %}
+
+        <!-- Wishlist heart -->
+        <a href="{% url 'toggle_wishlist' listing.id %}?next={{ request.path }}"
+            class="wishlist-btn {% if in_wishlist %}wishlisted{% endif %}"
+            title="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+            {% if in_wishlist %}❤️{% else %}🤍{% endif %}
+        </a>
+    </div>
+
+    <div class="card-body">
+        <h3 class="card-title">{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
+        <p class="card-price">${{ listing.price|floatformat:0 }}</p>
+        <div class="card-meta">
+            <span>{{ listing.vehicle.mileage|floatformat:0 }} mi</span>
+            <span>{{ listing.vehicle.transmission }}</span>
+            <span>{{ listing.vehicle.fuel_type }}</span>
+        </div>
+        {% if listing.inspection %}
+        <div class="card-risk risk-{{ listing.inspection.risk_level|lower }}">
+            {{ listing.inspection.risk_level }} Risk
+        </div>
+        {% endif %}
+        <a href="{% url 'buyer_listing_detail' listing.id %}" class="card-cta">View Details →</a>
+    </div>
+</article>

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="buyer-shell">
+
+    <!-- Sidebar -->
+    <aside class="buyer-sidebar">
+        <div class="sidebar-brand">CAR<span>SCOUT</span></div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'buyer_dashboard' %}" class="snav-item">
+                <span class="snav-icon">🏠</span> Dashboard
+            </a>
+            <a href="{% url 'browse_listings' %}" class="snav-item active">
+                <span class="snav-icon">🔍</span> Browse Cars
+            </a>
+            <a href="#" class="snav-item">
+                <span class="snav-icon">❤️</span> Wishlist
+            </a>
+            <a href="#" class="snav-item">
+                <span class="snav-icon">💬</span> Messages
+            </a>
+            <a href="#" class="snav-item">
+                <span class="snav-icon">🤝</span> My Offers
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="buyer-main">
+
+        <header class="buyer-header">
+            <div>
+                <h1 class="buyer-welcome">Browse <span>Inventory</span></h1>
+                <p class="buyer-sub">{{ total }} live listing{{ total|pluralize }} available</p>
+            </div>
+        </header>
+
+        <!-- Filter bar -->
+        <form method="GET" action="{% url 'browse_listings' %}" class="filter-bar">
+            <div class="filter-search">
+                <input type="text" name="q" placeholder="Search make, model, VIN..." value="{{ filter_q }}">
+                <button type="submit" class="filter-search-btn">Search</button>
+            </div>
+
+            <div class="filter-chips">
+
+                <select name="fuel">
+                    <option value="">All Fuel Types</option>
+                    <option value="Petrol" {% if filter_fuel == "Petrol" %}selected{% endif %}>Petrol</option>
+                    <option value="Diesel" {% if filter_fuel == "Diesel" %}selected{% endif %}>Diesel</option>
+                    <option value="Electric" {% if filter_fuel == "Electric" %}selected{% endif %}>Electric</option>
+                    <option value="Hybrid" {% if filter_fuel == "Hybrid" %}selected{% endif %}>Hybrid</option>
+                </select>
+
+                <select name="transmission">
+                    <option value="">All Transmissions</option>
+                    <option value="Automatic" {% if filter_transmission == "Automatic" %}selected{% endif %}>Automatic
+                    </option>
+                    <option value="Manual" {% if filter_transmission == "Manual" %}selected{% endif %}>Manual</option>
+                </select>
+
+                <select name="condition">
+                    <option value="">All Conditions</option>
+                    <option value="New" {% if filter_condition == "New" %}selected{% endif %}>New</option>
+                    <option value="Used" {% if filter_condition == "Used" %}selected{% endif %}>Used</option>
+                    <option value="Certified" {% if filter_condition == "Certified" %}selected{% endif %}>Certified
+                        Pre-Owned</option>
+                </select>
+
+                <input type="number" name="min_price" placeholder="Min $" value="{{ filter_min_price }}"
+                    class="price-input">
+                <input type="number" name="max_price" placeholder="Max $" value="{{ filter_max_price }}"
+                    class="price-input">
+
+                <button type="submit" class="btn-filter-apply">Apply</button>
+                {% if filter_q or filter_fuel or filter_transmission or filter_condition or filter_min_price or filter_max_price %}
+                <a href="{% url 'browse_listings' %}" class="btn-filter-clear">Clear</a>
+                {% endif %}
+
+            </div>
+        </form>
+
+        <!-- Grid -->
+        {% if listings %}
+        <div class="car-grid car-grid-browse">
+            {% for listing in listings %}
+            {% if listing.id in wishlist_ids %}
+            {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=True %}
+            {% else %}
+            {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=False %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3>No listings found</h3>
+            <p>Try adjusting your filters or search terms.</p>
+            <a href="{% url 'browse_listings' %}" class="btn-browse">Clear Filters</a>
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+{% endblock %}

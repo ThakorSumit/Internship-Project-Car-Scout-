@@ -75,10 +75,10 @@
                     <h3>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
                     <p class="price">${{ listing.price }}</p>
                     <div class="meta"><span>VIN: {{ listing.vehicle.vin }}</span> • <span>Fuel: {{
-                            listing.vehicle.FuelType }}</span></div>
+                            listing.vehicle.fuel_type }}</span></div>
 
                     <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <a href="{% url 'listing_detail' listing.id %}" class="btn-outline-gold"
+                        <a href="{% url 'seller_listing_detail' listing.id %}" class="btn-outline-gold"
                             style="flex: 1; text-align: center; text-decoration: none;">View Details</a>
                     </div>
                 </div>

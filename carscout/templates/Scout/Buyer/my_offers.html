@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="buyer-shell">
+
+    <aside class="buyer-sidebar">
+        <div class="sidebar-brand">CAR<span>SCOUT</span></div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'buyer_dashboard' %}" class="snav-item"><span class="snav-icon">🏠</span> Dashboard</a>
+            <a href="{% url 'browse_listings' %}" class="snav-item"><span class="snav-icon">🔍</span> Browse Cars</a>
+            <a href="#" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
+            <a href="#" class="snav-item"><span class="snav-icon">💬</span> Messages</a>
+            <a href="{% url 'buyer_offers' %}" class="snav-item active"><span class="snav-icon">🤝</span> My Offers</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
+        </div>
+    </aside>
+
+    <main class="buyer-main">
+
+        <header class="buyer-header">
+            <div>
+                <h1 class="buyer-welcome">My <span>Offers</span></h1>
+                <p class="buyer-sub">Track and manage all your submitted offers.</p>
+            </div>
+        </header>
+
+        {% if offers %}
+        <div class="offers-list">
+            {% for offer in offers %}
+            <div class="offer-row status-{{ offer.status }}">
+
+                <!-- Vehicle info -->
+                <div class="offer-vehicle">
+                    <div class="offer-thumb">
+                        {% if offer.listing.image %}
+                        <img src="{{ offer.listing.image.url }}" alt="">
+                        {% else %}
+                        <span>🚗</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{
+                            offer.listing.vehicle.model }}</h4>
+                        <p>Listed at <strong>${{ offer.listing.price|floatformat:0 }}</strong></p>
+                        <a href="{% url 'buyer_listing_detail' offer.listing.id %}" class="offer-view-link">View Listing
+                            →</a>
+                    </div>
+                </div>
+
+                <!-- Offer amounts -->
+                <div class="offer-amounts">
+                    <div class="offer-amount-block">
+                        <span class="oa-label">Your Offer</span>
+                        <span class="oa-value">${{ offer.amount|floatformat:0 }}</span>
+                    </div>
+                    {% if offer.counter_amount %}
+                    <div class="offer-amount-block counter">
+                        <span class="oa-label">Counter Offer</span>
+                        <span class="oa-value">${{ offer.counter_amount|floatformat:0 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Status -->
+                <div class="offer-status-block">
+                    <span class="offer-status-tag tag-{{ offer.status }}">{{ offer.status|title }}</span>
+                    <span class="offer-date">{{ offer.updated_at|date:"M d, Y" }}</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="offer-row-actions">
+                    {% if offer.status == "countered" %}
+                    <form method="POST" action="{% url 'accept_counter' offer.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-offer-action accept">Accept Counter</button>
+                    </form>
+                    <form method="POST" action="{% url 'withdraw_offer' offer.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-offer-action withdraw">Withdraw</button>
+                    </form>
+                    {% elif offer.status == "pending" %}
+                    <form method="POST" action="{% url 'withdraw_offer' offer.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-offer-action withdraw">Withdraw</button>
+                    </form>
+                    {% elif offer.status == "accepted" %}
+                    <span class="offer-final">✓ Deal accepted</span>
+                    {% elif offer.status == "rejected" %}
+                    <a href="{% url 'make_offer' offer.listing.id %}" class="btn-offer-action retry">New Offer</a>
+                    {% endif %}
+                </div>
+
+                <!-- Counter message -->
+                {% if offer.counter_comment %}
+                <div class="offer-counter-msg">
+                    <strong>Seller says:</strong> {{ offer.counter_comment }}
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🤝</div>
+            <h3>No offers yet</h3>
+            <p>Browse listings and make your first offer.</p>
+            <a href="{% url 'browse_listings' %}" class="btn-browse">Browse Cars</a>
+        </div>
+        {% endif %}
+
+    </main>
+</div>
+
+<style>
+    .offers-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .offer-row {
+        background: var(--surface);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        gap: 20px;
+        align-items: center;
+        border-left: 4px solid var(--border-light);
+    }
+
+    .offer-row.status-pending {
+        border-left-color: #f59e0b;
+    }
+
+    .offer-row.status-accepted {
+        border-left-color: #22c55e;
+    }
+
+    .offer-row.status-rejected {
+        border-left-color: #ef4444;
+    }
+
+    .offer-row.status-countered {
+        border-left-color: #3b82f6;
+    }
+
+    .offer-row.status-withdrawn {
+        border-left-color: #94a3b8;
+        opacity: 0.6;
+    }
+
+    .offer-vehicle {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .offer-thumb {
+        width: 70px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f1ede4;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .offer-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .offer-vehicle h4 {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        margin: 0 0 4px;
+    }
+
+    .offer-vehicle p {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin: 0 0 4px;
+    }
+
+    .offer-vehicle p strong {
+        color: var(--brand-accent);
+    }
+
+    .offer-view-link {
+        font-size: 0.78rem;
+        color: var(--brand-accent);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .offer-amounts {
+        display: flex;
+        gap: 16px;
+    }
+
+    .offer-amount-block {
+        text-align: center;
+    }
+
+    .offer-amount-block.counter {
+        background: #eff6ff;
+        border-radius: 8px;
+        padding: 6px 12px;
+    }
+
+    .oa-label {
+        display: block;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .oa-value {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+
+    .offer-amount-block.counter .oa-value {
+        color: #2563eb;
+    }
+
+    .offer-status-block {
+        text-align: center;
+    }
+
+    .offer-status-tag {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 4px;
+    }
+
+    .tag-pending {
+        background: #fef9c3;
+        color: #854d0e;
+    }
+
+    .tag-accepted {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .tag-rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .tag-countered {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .tag-withdrawn {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    .offer-date {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .offer-row-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-offer-action {
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-offer-action.accept {
+        background: var(--brand-accent);
+        color: var(--brand-primary);
+    }
+
+    .btn-offer-action.withdraw {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .btn-offer-action.retry {
+        background: var(--brand-primary);
+        color: var(--brand-accent);
+    }
+
+    .btn-offer-action:hover {
+        opacity: 0.82;
+    }
+
+    .offer-final {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #22c55e;
+    }
+
+    .offer-counter-msg {
+        grid-column: 1/-1;
+        background: #eff6ff;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+    }
+</style>
+{% endblock %}
