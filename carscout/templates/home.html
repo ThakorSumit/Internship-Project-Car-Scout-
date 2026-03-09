@@ -2,90 +2,318 @@
 {% load static %}
 {% block content %}
 
-<section class="hero-showroom">
-    <div class="hero-overlay"></div>
-    <div class="hero-container">
-        <h1 class="hero-title">Engineering <span>Transparency</span> into the Luxury Market.</h1>
-        <p class="hero-lead">The first AI-powered marketplace for certified masterpieces.</p>
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero__bg">
+        <div class="hero__gradient"></div>
+        <div class="hero__grid"></div>
+    </div>
 
-        <div class="search-wrap">
-            <form class="main-search">
-                <div class="search-input">
-                    <label>Make & Model</label>
-                    <input type="text" placeholder="e.g. Porsche 911">
-                </div>
-                <div class="search-input">
-                    <label>Budget</label>
-                    <select>
-                        <option>Any Price</option>
-                        <option>$50k - $100k</option>
-                        <option>$100k+</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-hero-search">Find My Car</button>
-            </form>
+    <div class="hero__body">
+        <div class="hero__eyebrow">
+            <span class="hero__badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="4" fill="#daa520" />
+                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#daa520" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                AI-Powered Marketplace
+            </span>
         </div>
+
+        <h1 class="hero__title">
+            Find Your Perfect Car<br>
+            <em>With Confidence</em>
+        </h1>
+
+        <p class="hero__lead">
+            Every listing is AI-inspected. Every price is validated.<br>
+            Buy and sell premium cars without the guesswork.
+        </p>
+
+        <!-- Search Bar -->
+        <form class="hero__search" method="get" action="#">
+            {% csrf_token %}
+            <div class="hero__search-field">
+                <label class="hero__search-label">Make & Model</label>
+                <input class="hero__search-input" type="text" placeholder="e.g. Porsche 911, BMW M3…">
+            </div>
+            <div class="hero__search-divider"></div>
+            <div class="hero__search-field">
+                <label class="hero__search-label">Budget</label>
+                <select class="hero__search-input hero__search-select">
+                    <option value="">Any Price</option>
+                    <option value="0-50">Under $50,000</option>
+                    <option value="50-100">$50k – $100k</option>
+                    <option value="100+">$100k+</option>
+                </select>
+            </div>
+            <button type="submit" class="hero__search-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+                    <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Search
+            </button>
+        </form>
+
+        <!-- Stats -->
+        <div class="hero__stats">
+            <div class="hero__stat">
+                <span class="hero__stat-num">2,400+</span>
+                <span class="hero__stat-label">Verified Listings</span>
+            </div>
+            <div class="hero__stat-sep"></div>
+            <div class="hero__stat">
+                <span class="hero__stat-num">98%</span>
+                <span class="hero__stat-label">Inspection Accuracy</span>
+            </div>
+            <div class="hero__stat-sep"></div>
+            <div class="hero__stat">
+                <span class="hero__stat-num">14 days</span>
+                <span class="hero__stat-label">Avg. Time to Sell</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="hero__scroll">
+        <div class="hero__scroll-line"></div>
+        <span>Scroll</span>
     </div>
 </section>
 
-<section class="ai-highlight">
-    <div class="content">
-        <div class="ai-grid">
-            <div class="ai-text">
-                <span class="badge-gold">Exclusive Tech</span>
-                <h2>AI-Powered Diagnostics</h2>
-                <p>Don't just look at photos. Our system analyzes 360° virtual tours and historical data to give every
-                    car a <strong>Condition Score</strong> you can trust.</p>
-                <ul class="ai-list">
-                    <li>✓ Instant Mechanical Analysis</li>
-                    <li>✓ Accident History Verification</li>
-                    <li>✓ Market Depreciation Forecast</li>
+
+<!-- ═══════════════════════════════════════
+     AI INSPECTION SECTION
+════════════════════════════════════════ -->
+<section class="ai-section">
+    <div class="container">
+        <div class="ai-section__grid">
+
+            <!-- Visual -->
+            <div class="ai-section__visual">
+                <div class="ai-scan">
+                    <div class="ai-scan__frame">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqFAiZcVb-VWOs8L9nbwBEQ35D5YFmrxoT7g&s"
+                            alt="AI Car Scan">
+                        <div class="ai-scan__line"></div>
+                        <div class="ai-scan__corner ai-scan__corner--tl"></div>
+                        <div class="ai-scan__corner ai-scan__corner--tr"></div>
+                        <div class="ai-scan__corner ai-scan__corner--bl"></div>
+                        <div class="ai-scan__corner ai-scan__corner--br"></div>
+                    </div>
+                    <!-- Score pill -->
+                    <div class="ai-scan__score">
+                        <span class="ai-scan__score-num">9.2</span>
+                        <span class="ai-scan__score-label">AI Score</span>
+                    </div>
+                    <!-- Tag -->
+                    <div class="ai-scan__tag">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="#daa520" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="#daa520" stroke-width="2" />
+                        </svg>
+                        Analysis Complete
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <div class="ai-section__text">
+                <span class="section-badge">Exclusive Technology</span>
+                <h2 class="section-title">AI That Reads<br>Every Car's Story</h2>
+                <p class="section-body">
+                    Our Gemini-powered engine analyzes accident history, service records,
+                    mileage patterns, and market data — producing a trust score you can
+                    actually rely on before you spend a rupee.
+                </p>
+
+                <ul class="ai-section__list">
+                    <li>
+                        <div class="ai-section__list-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 12l2 2 4-4M12 3l1.5 3 3.5.5-2.5 2.5.5 3.5L12 11l-3 1.5.5-3.5L7 6.5l3.5-.5z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Mechanical Analysis</strong>
+                            <span>Engine, transmission, and systems assessed instantly</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="ai-section__list-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Accident History Verification</strong>
+                            <span>Cross-referenced against reported incidents</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="ai-section__list-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3v18h18M7 16l4-4 4 4 4-6" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Price Fairness Score</strong>
+                            <span>Market-benchmarked so you never overpay</span>
+                        </div>
+                    </li>
                 </ul>
             </div>
-            <div class="ai-visual">
-                <div class="ai-scan-mockup">
-                    <div class="scanning-line"></div>
-                    <img src="https://th.bing.com/th/id/OIP.-I-MzKxBvt4OkPpU3N2HZwHaE8?w=259&h=180&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3"
-                        alt="Car Scan">
-                </div>
-            </div>
+
         </div>
     </div>
 </section>
 
-<section class="inventory-preview">
-    <div class="content">
+
+<!-- ═══════════════════════════════════════
+     FEATURED LISTINGS
+════════════════════════════════════════ -->
+<section class="listings-section">
+    <div class="container">
         <div class="section-header">
-            <h2>Featured Masterpieces</h2>
-            <a href="/browse" class="text-link">Browse Full Inventory →</a>
+            <div>
+                <span class="section-badge">Live Inventory</span>
+                <h2 class="section-title">Featured Listings</h2>
+            </div>
+            <a href="/browse" class="link-arrow">
+                Browse All
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
         </div>
-        <div class="car-grid">
+
+        <div class="listings-grid">
             {% for listing in listings %}
             <article class="car-card">
-                <div class="card-img-wrap">
+                <div class="car-card__img-wrap">
                     {% if listing.image %}
                     <img src="{{ listing.image.url }}" alt="{{ listing.vehicle.company }} {{ listing.vehicle.model }}">
                     {% else %}
                     <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=600"
-                        alt="Placeholder">
+                        alt="Car">
                     {% endif %}
-                    <div class="ai-score-tag">Available</div>
+                    <div class="car-card__status">Available</div>
+                    {% if listing.is_featured %}
+                    <div class="car-card__featured">Featured</div>
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <h3>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
-                    <p class="price">${{ listing.price }}</p>
-                    <div class="meta"><span>VIN: {{ listing.vehicle.vin }}</span> • <span>Fuel: {{
-                            listing.vehicle.fuel_type }}</span></div>
-
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <a href="{% url 'seller_listing_detail' listing.id %}" class="btn-outline-gold"
-                            style="flex: 1; text-align: center; text-decoration: none;">View Details</a>
+                <div class="car-card__body">
+                    <div class="car-card__meta">
+                        <span>{{ listing.vehicle.fuel_type }}</span>
+                        <span>{{ listing.vehicle.transmission }}</span>
+                        <span>{{ listing.vehicle.condition }}</span>
                     </div>
+                    <h3 class="car-card__title">
+                        {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}
+                    </h3>
+                    <p class="car-card__price">${{ listing.price|floatformat:0 }}</p>
+                    <div class="car-card__vin">VIN · {{ listing.vehicle.vin }}</div>
+                    <a href="{% url 'seller_listing_detail' listing.id %}" class="car-card__btn">
+                        View Details
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
                 </div>
             </article>
             {% empty %}
-            <p style="color: #fff; text-align: center; width: 100%;">No available listings right now.</p>
+            <div class="listings-empty">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17" stroke="#daa520" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="7.5" cy="17.5" r="1.5" fill="#daa520" />
+                    <circle cx="16.5" cy="17.5" r="1.5" fill="#daa520" />
+                </svg>
+                <p>No listings available right now. Check back soon.</p>
+            </div>
             {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════ -->
+<section class="how-section">
+    <div class="container">
+        <div class="how-section__head">
+            <span class="section-badge">Simple Process</span>
+            <h2 class="section-title">How CarScout Works</h2>
+        </div>
+
+        <div class="how-grid">
+            <div class="how-card">
+                <div class="how-card__num">01</div>
+                <div class="how-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+                        <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <h3>Browse & Search</h3>
+                <p>Filter by make, model, price, fuel type, and more. Every listing is verified.</p>
+            </div>
+            <div class="how-card__connector"></div>
+            <div class="how-card">
+                <div class="how-card__num">02</div>
+                <div class="how-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <h3>Read the AI Report</h3>
+                <p>Get a full breakdown — condition score, accident impact, price assessment.</p>
+            </div>
+            <div class="how-card__connector"></div>
+            <div class="how-card">
+                <div class="how-card__num">03</div>
+                <div class="how-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" />
+                    </svg>
+                </div>
+                <h3>Make an Offer</h3>
+                <p>Negotiate directly with sellers. Transparent, fast, and secure.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════════ -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <div class="cta-card__bg"></div>
+            <div class="cta-card__body">
+                <h2>Ready to Buy or Sell?</h2>
+                <p>Join thousands of buyers and sellers who trust CarScout's AI-verified marketplace.</p>
+                <div class="cta-card__actions">
+                    <a href="{% url 'signup' %}" class="btn-gold">Create Free Account</a>
+                    <a href="#browse" class="btn-ghost">Browse Cars</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>

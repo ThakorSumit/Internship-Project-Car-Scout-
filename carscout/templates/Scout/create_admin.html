@@ -1,0 +1,357 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Setup</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #070c17;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #070c17;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .logo-text em {
+            font-style: normal;
+            color: #daa520;
+        }
+
+        .card {
+            background: #111e38;
+            border: 1px solid rgba(218, 165, 32, 0.12);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-head {
+            margin-bottom: 2rem;
+        }
+
+        .card-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #daa520;
+            background: rgba(218, 165, 32, 0.08);
+            border: 1px solid rgba(218, 165, 32, 0.15);
+            padding: 4px 10px;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-head h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .card-head p {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 0.35rem;
+        }
+
+        /* Success state */
+        .success-box {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(218, 165, 32, 0.1);
+            border: 1px solid rgba(218, 165, 32, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            color: #daa520;
+        }
+
+        .success-box h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-box p {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-login {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #070c17;
+            background: linear-gradient(135deg, #daa520, #c8920e);
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        /* Errors */
+        .errors {
+            background: rgba(220, 38, 38, 0.08);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 8px;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .errors p {
+            font-size: 0.83rem;
+            color: #f87171;
+            line-height: 1.6;
+        }
+
+        /* Form */
+        .group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.03em;
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.7rem 0.875rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        input:focus {
+            border-color: rgba(218, 165, 32, 0.4);
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.08);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #070c17;
+            background: linear-gradient(135deg, #daa520, #c8920e);
+            border: none;
+            padding: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 18px rgba(218, 165, 32, 0.3);
+            transition: filter 0.2s, transform 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            filter: brightness(1.07);
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+            margin-top: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrap">
+
+        <!-- Logo -->
+        <a href="/" class="logo">
+            <span class="logo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17M9 7L8 4H16L15 7" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="7.5" cy="17.5" r="1.5" fill="currentColor" />
+                    <circle cx="16.5" cy="17.5" r="1.5" fill="currentColor" />
+                </svg>
+            </span>
+            <span class="logo-text">Car<em>Scout</em></span>
+        </a>
+
+        <div class="card">
+
+            {% if created %}
+            <!-- Success State -->
+            <div class="success-box">
+                <div class="success-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                    </svg>
+                </div>
+                <h2>Admin Created</h2>
+                <p>The admin account has been set up successfully. You can now log in.</p>
+                <a href="{% url 'login' %}" class="btn-login">
+                    Go to Login
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+
+            {% else %}
+            <!-- Form State -->
+            <div class="card-head">
+                <span class="card-eyebrow">System Setup</span>
+                <h1>Create Admin</h1>
+                <p>This page is not publicly listed anywhere.</p>
+            </div>
+
+            {% if errors %}
+            <div class="errors">
+                {% for error in errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="key" value="{{ key }}">
+
+                <div class="group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="{{ name|default:'' }}" placeholder="Admin Name" required>
+                </div>
+
+                <div class="group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ email|default:'' }}" placeholder="admin@carscout.com"
+                        required>
+                </div>
+
+                <div class="row">
+                    <div class="group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" value="{{ phone|default:'' }}" placeholder="+1 555 000" required>
+                    </div>
+                    <div class="group">
+                        <label>Address</label>
+                        <input type="text" name="address" value="{{ address|default:'' }}" placeholder="City, Country"
+                            required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Min. 8 chars" required>
+                    </div>
+                    <div class="group">
+                        <label>Confirm</label>
+                        <input type="password" name="confirm" placeholder="Repeat" required>
+                    </div>
+                </div>
+
+                <button type="submit">
+                    Create Admin Account
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </form>
+
+            <p class="footer-note">restricted access · do not share this url</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+</body>
+
+</html>

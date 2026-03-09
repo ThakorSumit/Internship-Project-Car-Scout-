@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="td-page">
+    <div class="td-card">
+        <div class="td-header">
+            <div class="td-icon">🤝</div>
+            <h2>Complete Your Purchase</h2>
+            <p class="td-sub">
+                {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}
+            </p>
+        </div>
+
+        <!-- Deal Summary -->
+        <div class="txn-summary">
+            <div class="txn-row">
+                <span class="txn-label">Seller</span>
+                <span class="txn-value">{{ listing.seller.name }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Agreed Price</span>
+                <span class="txn-value txn-price">${{ offer.amount|floatformat:0 }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Listing Price Was</span>
+                <span class="txn-value">${{ listing.price|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        <form method="post" class="td-form">
+            {% csrf_token %}
+            <div class="td-field">
+                <label>Payment Method</label>
+                {{ form.method }}
+            </div>
+            <div class="td-field">
+                <label>Notes <span class="td-optional">(optional)</span></label>
+                {{ form.notes }}
+            </div>
+            <div class="txn-notice">
+                ⚠️ By clicking <strong>Confirm Purchase</strong> you confirm the deal is agreed and the listing will be
+                marked <strong>Sold</strong>.
+            </div>
+            <div class="td-actions">
+                <button type="submit" class="btn-gold">Confirm Purchase</button>
+                <a href="{% url 'buyer_offers' %}" class="btn-ghost">Back to Offers</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

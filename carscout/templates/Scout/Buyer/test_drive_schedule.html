@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+
+<div class="td-page">
+    <div class="td-card">
+        <div class="td-header">
+            <div class="td-icon">🚗</div>
+            <h2>Book a Test Drive</h2>
+            <p class="td-sub">
+                {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}
+                &mdash; <span class="td-price">${{ listing.price|floatformat:0 }}</span>
+            </p>
+        </div>
+
+        <form method="post" class="td-form">
+            {% csrf_token %}
+            <div class="td-field">
+                <label>Preferred Date & Time</label>
+                {{ form.scheduled_date }}
+                {% if form.scheduled_date.errors %}
+                <span class="td-error">{{ form.scheduled_date.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <div class="td-field">
+                <label>Location</label>
+                {{ form.location }}
+                {% if form.location.errors %}
+                <span class="td-error">{{ form.location.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <div class="td-field">
+                <label>Notes <span class="td-optional">(optional)</span></label>
+                {{ form.notes }}
+            </div>
+            <div class="td-actions">
+                <button type="submit" class="btn-gold">Confirm Booking</button>
+                <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

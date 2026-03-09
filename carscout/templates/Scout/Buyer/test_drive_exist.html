@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="td-page">
+    <div class="td-card" style="text-align:center;">
+        <div class="td-icon">⚠️</div>
+        <h2>Already Requested</h2>
+        <p class="td-sub">You already have a <strong>{{ test_drive.get_status_display }}</strong> test drive for this
+            vehicle.</p>
+        <div class="td-info-row">
+            <span>📅 {{ test_drive.scheduled_date|date:"D, d M Y — H:i" }}</span>
+            <span>📍 {{ test_drive.location }}</span>
+        </div>
+        <div class="td-actions" style="justify-content:center; margin-top:2rem;">
+            <a href="{% url 'buyer_test_drives' %}" class="btn-gold">View My Test Drives</a>
+            <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+
+<div class="seller-page">
+    <div class="seller-page-header">
+        <h2>Test Drive Requests</h2>
+        <a href="{% url 'seller_dashboard' %}" class="btn-outline-gold">← Dashboard</a>
+    </div>
+
+    {% if test_drives %}
+    <div class="td-seller-list">
+        {% for td in test_drives %}
+        <div class="td-seller-card td-seller-{{ td.status }}">
+            <div class="td-seller-top">
+                <div>
+                    <h3>{{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}
+                    </h3>
+                    <p class="td-seller-buyer">Requested by: <strong>{{ td.buyer.name }}</strong> ({{ td.buyer.email }})
+                    </p>
+                </div>
+                <span class="td-badge td-badge-{{ td.status }}">{{ td.get_status_display }}</span>
+            </div>
+
+            <div class="td-seller-details">
+                <span>📅 {{ td.scheduled_date|date:"D, d M Y" }} at {{ td.scheduled_date|time:"H:i" }}</span>
+                <span>📍 {{ td.location }}</span>
+                {% if td.notes %}<span>📝 {{ td.notes }}</span>{% endif %}
+                <span class="td-created">Requested {{ td.created_at|timesince }} ago</span>
+            </div>
+
+            {% if td.status == 'pending' %}
+            <div class="td-seller-actions">
+                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="confirmed">
+                    <button type="submit" class="btn-confirm">✓ Confirm</button>
+                </form>
+                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="cancelled">
+                    <button type="submit" class="btn-reject">✗ Decline</button>
+                </form>
+            </div>
+            {% elif td.status == 'confirmed' %}
+            <div class="td-seller-actions">
+                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="completed">
+                    <button type="submit" class="btn-confirm">✓ Mark Completed</button>
+                </form>
+                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="cancelled">
+                    <button type="submit" class="btn-reject">✗ Cancel</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="td-empty" style="text-align:center; padding:4rem 0;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🗓️</div>
+        <h3 style="color:rgba(255,255,255,0.7);">No test drive requests yet</h3>
+        <p style="color:rgba(255,255,255,0.4);">When buyers request test drives on your listings, they'll appear here.
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

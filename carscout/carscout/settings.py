@@ -130,6 +130,10 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+# Media files (user-uploaded images)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 #crispy tag
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -145,6 +149,9 @@ EMAIL_HOST_PASSWORD = 'sfdc kckw djks kchd'
 
 
 
-# Media files (user-uploaded images)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+#admin key
+
+ADMIN_CREATION_KEY = 'carscout'
+
+
+

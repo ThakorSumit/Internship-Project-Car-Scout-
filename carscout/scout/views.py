@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from scout.decorators import role_required
-from scout.models import Listing, Vehicle, InspectionReport, Wishlist, Offer, Message
-from scout.forms import VehicleForm, ListingForm, InspectionInputForm, MakeOfferForm, CounterOfferForm
+from scout.models import Listing, Vehicle, InspectionReport, Wishlist, Offer, Message, TestDrive,Transaction
+from scout.forms import VehicleForm, ListingForm, InspectionInputForm, MakeOfferForm, CounterOfferForm, TestDriveForm,TransactionForm
 from scout.gemini_service import run_ai_inspection
 from django.db.models import Q
-
+from django.utils import timezone
+from django.http import HttpResponseForbidden,Http404
+import uuid
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.contrib import messages
 
 # ─── Admin ───────────────────────────────────────────────────────────────────
 
@@ -14,6 +19,66 @@ def AdminDashboardView(request):
     return render(request, 'Scout/Admin/admin_dashboard.html')
 
 
+
+User = get_user_model()
+
+def CreateAdminView(request):
+    # Wrong or missing key → hard 404, looks like page doesn't exist
+    key = request.GET.get('key', '')
+    if key != settings.ADMIN_CREATION_KEY:
+        raise Http404
+
+    if request.method == 'POST':
+        # Re-validate key via hidden field on POST too
+        if request.POST.get('key') != settings.ADMIN_CREATION_KEY:
+            raise Http404
+
+        name     = request.POST.get('name', '').strip()
+        email    = request.POST.get('email', '').strip()
+        phone    = request.POST.get('phone', '').strip()
+        address  = request.POST.get('address', '').strip()
+        password = request.POST.get('password', '')
+        confirm  = request.POST.get('confirm', '')
+
+        errors = []
+        if not all([name, email, phone, address, password]):
+            errors.append('All fields are required.')
+        if password != confirm:
+            errors.append('Passwords do not match.')
+        if len(password) < 8:
+            errors.append('Password must be at least 8 characters.')
+        if User.objects.filter(email=email).exists():
+            errors.append('An account with this email already exists.')
+
+        if errors:
+            return render(request, 'scout/create_admin.html', {
+                'errors': errors,
+                'key': key,
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'address': address,
+            })
+
+        user = User.objects.create_user(
+            email=email,
+            password=password,
+            name=name,
+            phone=phone,
+            address=address,
+            gender='Male',     # default, admin profile doesn't need this
+            role='Admin',
+            is_active=True,
+            is_staff=True,
+            is_admin=True,
+        )
+        messages.success(request, f'Admin account created for {email}.')
+        return redirect('home')
+
+    return render(request, 'scout/create_admin.html', {
+        'key': key,
+        'created': request.GET.get('created'),
+    })
 # ─── Seller ──────────────────────────────────────────────────────────────────
 
 @role_required(allowed_roles=['Seller'])
@@ -117,7 +182,8 @@ def BuyerDashboardView(request):
 def BrowseListingsView(request):
     listings = Listing.objects.filter(status='live').select_related('vehicle', 'inspection').order_by('-created_at')
 
-    # --- filters ---
+    # ───────────filters────────────────────────────────────────────────────────
+
     q = request.GET.get('q', '').strip()
     fuel = request.GET.get('fuel', '')
     transmission = request.GET.get('transmission', '')
@@ -186,8 +252,7 @@ def ToggleWishlistView(request, listing_id):
         obj.delete()
     # redirect back to wherever the user came from
     next_url = request.GET.get('next') or request.META.get('HTTP_REFERER') or 'browse_listings'
-    from django.shortcuts import redirect as _redirect
-    return _redirect(next_url)
+    return redirect(next_url)
 
 # ── BUYER: Make an offer on a listing ────────────────────────────────────────
 @role_required(allowed_roles=['Buyer'])
@@ -421,3 +486,153 @@ def SellerChatView(request, listing_id, buyer_id):
         'other_user': buyer,
     }
     return render(request, 'Scout/Seller/chat.html', context)
+
+
+# ─── BUYER: Schedule a test drive ────────────────────────────────────────────
+
+@role_required(allowed_roles=['Buyer'])
+def ScheduleTestDriveView(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id, status='live')
+
+    # Prevent duplicate pending requests
+    existing = TestDrive.objects.filter(
+        listing=listing,
+        buyer=request.user,
+        status__in=['pending', 'confirmed']
+    ).first()
+
+    if existing:
+        return render(request, 'Scout/Buyer/test_drive_exists.html', {
+            'listing': listing,
+            'test_drive': existing,
+        })
+
+    if request.method == 'POST':
+        form = TestDriveForm(request.POST)
+        if form.is_valid():
+            td = form.save(commit=False)
+            td.listing = listing
+            td.buyer = request.user
+            td.status = 'pending'
+            td.save()
+            return redirect('buyer_test_drives')
+    else:
+        form = TestDriveForm()
+
+    return render(request, 'Scout/Buyer/test_drive_schedule.html', {
+        'form': form,
+        'listing': listing,
+    })
+
+
+@role_required(allowed_roles=['Buyer'])
+def BuyerTestDrivesView(request):
+    test_drives = TestDrive.objects.filter(
+        buyer=request.user
+    ).select_related('listing', 'listing__vehicle', 'listing__seller').order_by('-created_at')
+
+    return render(request, 'Scout/Buyer/my_test_drives.html', {
+        'test_drives': test_drives,
+    })
+
+
+@role_required(allowed_roles=['Buyer'])
+def CancelTestDriveView(request, td_id):
+    td = get_object_or_404(TestDrive, id=td_id, buyer=request.user)
+    if request.method == 'POST':
+        if td.status in ['pending', 'confirmed']:
+            td.status = 'cancelled'
+            td.save()
+    return redirect('buyer_test_drives')
+
+
+# ─── SELLER: Manage test drives ──────────────────────────────────────────────
+
+@role_required(allowed_roles=['Seller'])
+def SellerTestDrivesView(request):
+    test_drives = TestDrive.objects.filter(
+        listing__seller=request.user
+    ).select_related('listing', 'listing__vehicle', 'buyer').order_by('-created_at')
+
+    return render(request, 'Scout/Seller/test_drives.html', {
+        'test_drives': test_drives,
+    })
+
+
+@role_required(allowed_roles=['Seller'])
+def UpdateTestDriveView(request, td_id):
+    td = get_object_or_404(TestDrive, id=td_id, listing__seller=request.user)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in ['confirmed', 'completed', 'cancelled']:
+            td.status = new_status
+            td.save()
+    return redirect('seller_test_drives')
+
+
+# ─── BUYER: View accepted offers, initiate transaction ───────────────────────
+
+@role_required(allowed_roles=['Buyer'])
+def BuyerOffersView(request):
+    offers = Offer.objects.filter(
+        buyer=request.user
+    ).select_related('listing', 'listing__vehicle', 'listing__seller').order_by('-created_at')
+
+    return render(request, 'Scout/Buyer/my_offers.html', {'offers': offers})
+
+
+@role_required(allowed_roles=['Buyer'])
+def InitiateTransactionView(request, offer_id):
+    offer = get_object_or_404(Offer, id=offer_id, buyer=request.user, status='accepted')
+
+    # Block if transaction already exists
+    if hasattr(offer, 'transaction'):
+        return redirect('buyer_transactions')
+
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            txn = form.save(commit=False)
+            txn.listing = offer.listing
+            txn.buyer = request.user
+            txn.offer = offer
+            txn.amount = offer.amount
+            txn.status = 'completed'
+            txn.reference_number = str(uuid.uuid4()).replace('-', '').upper()[:16]
+            txn.save()
+            # Signal in signals.py handles listing.status = 'sold'
+            return redirect('transaction_receipt', txn.id)
+    else:
+        form = TransactionForm()
+
+    return render(request, 'Scout/Buyer/initiate_transaction.html', {
+        'form': form,
+        'offer': offer,
+        'listing': offer.listing,
+    })
+
+
+@role_required(allowed_roles=['Buyer'])
+def TransactionReceiptView(request, txn_id):
+    txn = get_object_or_404(Transaction, id=txn_id, buyer=request.user)
+    return render(request, 'Scout/Buyer/transaction_receipt.html', {'txn': txn})
+
+
+@role_required(allowed_roles=['Buyer'])
+def BuyerTransactionsView(request):
+    transactions = Transaction.objects.filter(
+        buyer=request.user
+    ).select_related('listing', 'listing__vehicle', 'listing__seller', 'offer').order_by('-date')
+
+    return render(request, 'Scout/Buyer/my_transactions.html', {'transactions': transactions})
+
+
+# ─── SELLER: View their sales history ────────────────────────────────────────
+
+@role_required(allowed_roles=['Seller'])
+def SellerTransactionsView(request):
+    transactions = Transaction.objects.filter(
+        listing__seller=request.user
+    ).select_related('listing', 'listing__vehicle', 'buyer', 'offer').order_by('-date')
+
+    return render(request, 'Scout/Seller/transactions.html', {'transactions': transactions})

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vehicle, Listing, InspectionReport, Offer
+from .models import Vehicle, Listing, InspectionReport, Offer, TestDrive,Transaction
 
 
 class VehicleForm(forms.ModelForm):
@@ -85,5 +85,41 @@ class CounterOfferForm(forms.ModelForm):
                 'rows': 3,
                 'placeholder': 'Message to the buyer...',
                 'style': 'width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:9px; padding:11px 14px; font-family:DM Sans,sans-serif; font-size:0.92rem; color:#fff; outline:none; box-sizing:border-box; resize:vertical;'
+            }),
+        }
+
+#-----------------test_drive------------------------------
+
+class TestDriveForm(forms.ModelForm):
+    scheduled_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            'type': 'datetime-local',
+            'class': 'form-control',
+        }),
+        input_formats=['%Y-%m-%dT%H:%M'],
+    )
+
+    class Meta:
+        model = TestDrive
+        fields = ['scheduled_date', 'location', 'notes']
+        widgets = {
+            'location': forms.TextInput(attrs={
+                'placeholder': 'e.g. Seller\'s address or preferred meetup point',
+            }),
+            'notes': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Any special requests or questions for the seller...',
+            }),
+        }
+
+#-----------------transaction------------------------------
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['method', 'notes']
+        widgets = {
+            'notes': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Any payment notes or reference details...',
             }),
         }

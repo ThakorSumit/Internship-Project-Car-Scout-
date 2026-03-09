@@ -1,19 +1,57 @@
-<footer class="main-footer">
-    <div class="footer-upper">
-        <div class="footer-container">
-            <div class="footer-col brand-col">
-                <div class="logo-brand">CAR<span>SCOUT</span></div>
-                <p>Revolutionizing the car buying experience with AI-powered diagnostics and 360° virtual tours.</p>
-                <div class="social-links">
-                    <a href="https:///facebook.com" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https:///twitter.com" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="https:///instagram.com" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+{% load static %}
+{% load tz %}
+
+<footer class="cs-footer">
+    <div class="cs-footer__glow"></div>
+
+    <div class="cs-footer__upper">
+        <div class="cs-footer__container">
+
+            <!-- Brand Col -->
+            <div class="cs-footer__brand">
+                <a href="{% url 'home' %}" class="cs-footer__logo">
+                    <span class="cs-footer__logo-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17M9 7L8 4H16L15 7"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="7.5" cy="17.5" r="1.5" fill="currentColor" />
+                            <circle cx="16.5" cy="17.5" r="1.5" fill="currentColor" />
+                        </svg>
+                    </span>
+                    Car<em>Scout</em>
+                </a>
+                <p class="cs-footer__tagline">
+                    AI-powered diagnostics and verified listings — so every car purchase feels certain.
+                </p>
+                <div class="cs-footer__socials">
+                    <a href="https://facebook.com" class="cs-footer__social" aria-label="Facebook">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                    <a href="https://twitter.com" class="cs-footer__social" aria-label="X / Twitter">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" />
+                        </svg>
+                    </a>
+                    <a href="https://instagram.com" class="cs-footer__social" aria-label="Instagram">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8" />
+                            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" />
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+                        </svg>
+                    </a>
                 </div>
             </div>
 
-            <div class="footer-col">
-                <h4>Buy & Sell</h4>
-                <ul>
+            <!-- Buy & Sell -->
+            <div class="cs-footer__col">
+                <h4 class="cs-footer__col-title">Buy & Sell</h4>
+                <ul class="cs-footer__links">
                     <li><a href="#">Certified Used Cars</a></li>
                     <li><a href="#">New Car Launches</a></li>
                     <li><a href="#">Sell Your Car</a></li>
@@ -21,9 +59,10 @@
                 </ul>
             </div>
 
-            <div class="footer-col">
-                <h4>Car Scout Plus</h4>
-                <ul>
+            <!-- CarScout Plus -->
+            <div class="cs-footer__col">
+                <h4 class="cs-footer__col-title">CarScout Plus</h4>
+                <ul class="cs-footer__links">
                     <li><a href="#">AI Condition Reports</a></li>
                     <li><a href="#">360° Virtual Tours</a></li>
                     <li><a href="#">Financing Options</a></li>
@@ -31,24 +70,42 @@
                 </ul>
             </div>
 
-            <div class="footer-col newsletter">
-                <h4>Stay Updated</h4>
-                <p>Get price alerts and new arrivals.</p>
-                <form class="footer-subscribe">
-                    <input type="email" placeholder="Email address">
-                    <button type="submit">Join</button>
+            <!-- Newsletter -->
+            <div class="cs-footer__col cs-footer__newsletter">
+                <h4 class="cs-footer__col-title">Stay Updated</h4>
+                <p class="cs-footer__newsletter-text">Price alerts and new arrivals — straight to your inbox.</p>
+                <form class="cs-footer__subscribe">
+                    {% csrf_token %}
+                    <div class="cs-footer__subscribe-wrap">
+                        <input type="email" placeholder="your@email.com" required>
+                        <button type="submit">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
                 </form>
             </div>
+
         </div>
     </div>
 
-    <div class="footer-bottom">
-        <div class="footer-container">
-            <p>&copy;{%now "Y"%} Car Scout Inc. All rights reserved.</p>
-            <div class="legal-links">
+    <!-- Divider -->
+    <div class="cs-footer__divider"></div>
+
+    <!-- Bottom Bar -->
+    <div class="cs-footer__bottom">
+        <div class="cs-footer__container cs-footer__bottom-inner">
+            <p class="cs-footer__copy">
+                &copy; {% now "Y" %} CarScout Inc. All rights reserved.
+            </p>
+            <div class="cs-footer__legal">
                 <a href="#">Privacy Policy</a>
+                <span class="cs-footer__legal-dot"></span>
                 <a href="#">Terms of Service</a>
             </div>
         </div>
     </div>
+
 </footer>

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="seller-page">
+    <div class="seller-page-header">
+        <h2>Sales History</h2>
+        <a href="{% url 'seller_dashboard' %}" class="btn-outline-gold">← Dashboard</a>
+    </div>
+
+    {% if transactions %}
+    <div class="td-seller-list">
+        {% for txn in transactions %}
+        <div class="td-seller-card td-seller-confirmed">
+            <div class="td-seller-top">
+                <div>
+                    <h3>{{ txn.listing.vehicle.year }} {{ txn.listing.vehicle.company }} {{ txn.listing.vehicle.model }}
+                    </h3>
+                    <p class="td-seller-buyer">Sold to: <strong>{{ txn.buyer.name }}</strong> ({{ txn.buyer.email }})
+                    </p>
+                </div>
+                <span
+                    style="font-family:'JetBrains Mono',monospace; color:var(--brand-accent); font-size:1.2rem; font-weight:700;">${{
+                    txn.amount|floatformat:0 }}</span>
+            </div>
+            <div class="td-seller-details">
+                <span>💳 {{ txn.get_method_display }}</span>
+                <span>🗓️ {{ txn.date|date:"d M Y, H:i" }}</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem;">Ref: {{ txn.reference_number
+                    }}</span>
+                {% if txn.notes %}<span>📝 {{ txn.notes }}</span>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="td-empty" style="text-align:center; padding:4rem 0;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🧾</div>
+        <h3 style="color:rgba(255,255,255,0.7);">No sales yet</h3>
+        <p style="color:rgba(255,255,255,0.4);">When a buyer completes a purchase, it will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

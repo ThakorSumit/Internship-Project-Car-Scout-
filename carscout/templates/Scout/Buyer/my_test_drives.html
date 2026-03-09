@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+
+<div class="td-page">
+    <div class="td-list-header">
+        <h2>My Test Drives</h2>
+        <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">← Dashboard</a>
+    </div>
+
+    {% if test_drives %}
+    <div class="td-list">
+        {% for td in test_drives %}
+        <div class="td-item td-status-{{ td.status }}">
+            <div class="td-item-left">
+                {% if td.listing.image %}
+                <img src="{{ td.listing.image.url }}" alt="car" class="td-thumb">
+                {% else %}
+                <div class="td-thumb-placeholder">🚗</div>
+                {% endif %}
+            </div>
+            <div class="td-item-body">
+                <h3>{{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}</h3>
+                <p class="td-meta">Seller: {{ td.listing.seller.name }}</p>
+                <div class="td-details">
+                    <span>📅 {{ td.scheduled_date|date:"D, d M Y" }} at {{ td.scheduled_date|time:"H:i" }}</span>
+                    <span>📍 {{ td.location }}</span>
+                    {% if td.notes %}<span>📝 {{ td.notes }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="td-item-right">
+                <span class="td-badge td-badge-{{ td.status }}">{{ td.get_status_display }}</span>
+                {% if td.status in 'pending,confirmed' %}
+                <form method="post" action="{% url 'cancel_test_drive' td.id %}"
+                    onsubmit="return confirm('Cancel this test drive?')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-cancel-small">Cancel</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="td-empty">
+        <div class="td-empty-icon">🗓️</div>
+        <h3>No Test Drives Yet</h3>
+        <p>Browse listings and book a test drive to see them here.</p>
+        <a href="{% url 'buyer_dashboard' %}" class="btn-gold">Browse Listings</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

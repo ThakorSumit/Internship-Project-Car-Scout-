@@ -9,3 +9,4 @@ def update_listing_status(sender, instance, created, **kwargs):
         listing = instance.listing
         listing.status = 'sold' # Matches STATUS_CHOICES in Listing [cite: 2]
         listing.save()
+

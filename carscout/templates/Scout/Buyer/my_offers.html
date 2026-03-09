@@ -91,7 +91,13 @@
                         <button type="submit" class="btn-offer-action withdraw">Withdraw</button>
                     </form>
                     {% elif offer.status == "accepted" %}
-                    <span class="offer-final">✓ Deal accepted</span>
+                    {% if offer.transaction %}
+                    <a href="{% url 'transaction_receipt' offer.transaction.id %}" class="btn-offer-action accept">View
+                        Receipt</a>
+                    {% else %}
+                    <a href="{% url 'initiate_transaction' offer.id %}" class="btn-offer-action accept">💳 Complete
+                        Purchase</a>
+                    {% endif %}
                     {% elif offer.status == "rejected" %}
                     <a href="{% url 'make_offer' offer.listing.id %}" class="btn-offer-action retry">New Offer</a>
                     {% endif %}
@@ -119,6 +125,7 @@
 
     </main>
 </div>
+
 
 <style>
     .offers-list {
@@ -344,4 +351,5 @@
         border: 1px solid #bfdbfe;
     }
 </style>
+
 {% endblock %}

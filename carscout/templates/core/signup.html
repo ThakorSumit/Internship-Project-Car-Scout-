@@ -2,104 +2,233 @@
 {% load static %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-container">
-        <div class="auth-visual signup-visual">
-            <div class="visual-overlay"></div>
-            <div class="visual-content">
-                <h2>Join the <span>Elite Circle</span></h2>
-                <p>Whether you are looking to buy a masterpiece or sell a legend, you're in the right place.</p>
+<section class="signup-page">
+
+    <!-- Left Panel -->
+    <div class="signup-panel">
+        <div class="signup-panel__glow"></div>
+        <div class="signup-panel__body">
+
+            <a href="{% url 'home' %}" class="signup-panel__logo">
+                <span class="signup-panel__logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17M9 7L8 4H16L15 7" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="7.5" cy="17.5" r="1.5" fill="currentColor" />
+                        <circle cx="16.5" cy="17.5" r="1.5" fill="currentColor" />
+                    </svg>
+                </span>
+                Car<em>Scout</em>
+            </a>
+
+            <div class="signup-panel__text">
+                <h2>Join the<br><span>Elite Circle</span></h2>
+                <p>Whether buying a masterpiece or selling a legend — you're in the right place.</p>
             </div>
+
+            <ul class="signup-panel__perks">
+                <li>
+                    <span class="signup-panel__perk-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
+                    </span>
+                    AI-verified inspection on every car
+                </li>
+                <li>
+                    <span class="signup-panel__perk-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
+                    </span>
+                    Direct messaging with buyers & sellers
+                </li>
+                <li>
+                    <span class="signup-panel__perk-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
+                    </span>
+                    Real-time offers and price alerts
+                </li>
+                <li>
+                    <span class="signup-panel__perk-icon">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
+                    </span>
+                    Schedule test drives in two clicks
+                </li>
+            </ul>
         </div>
+    </div>
 
-        <div class="auth-form-wrapper">
-            <form method="POST" class="auth-form">
+    <!-- Right Form -->
+    <div class="signup-form-side">
+        <div class="signup-form-wrap">
+
+            <div class="signup-form-wrap__head">
+                <h1>Create Account</h1>
+                <p>Start your premium automotive journey today</p>
+            </div>
+
+            <!-- Errors -->
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="signup-form">
                 {% csrf_token %}
-                <div class="form-header">
-                    <h1>Create Account</h1>
-                    <p>Start your premium automotive journey today</p>
+
+                <!-- Role -->
+                <div class="signup-form__group">
+                    <label class="signup-form__label">I want to…</label>
+                    <div class="role-toggle">
+                        <input type="radio" name="role" value="Buyer" id="role-buyer" checked>
+                        <label for="role-buyer" class="role-toggle__btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+                                <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                            </svg>
+                            Buy a Car
+                        </label>
+                        <input type="radio" name="role" value="Seller" id="role-seller">
+                        <label for="role-seller" class="role-toggle__btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor"
+                                    stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                            Sell a Car
+                        </label>
+                    </div>
                 </div>
 
-                {% if form.errors %}
-                <div class="form-errors"
-                    style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
-                    {% for field in form %}
-                    {% for error in field.errors %}
-                    <p style="margin: 0; font-size: 0.9em;"><strong>{{ field.label }}:</strong> {{ error }}</p>
-                    {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="role-selector">
-                    <input type="radio" name="role" value="Buyer" id="role-buyer" checked>
-                    <label for="role-buyer" class="role-card">
-                        <span class="role-icon">🔍</span>
-                        <span class="role-label">I want to Buy</span>
-                    </label>
-
-                    <input type="radio" name="role" value="Seller" id="role-seller">
-                    <label for="role-seller" class="role-card">
-                        <span class="role-icon">💰</span>
-                        <span class="role-label">I want to Sell</span>
-                    </label>
-                </div>
-
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="name">Full Name</label>
+                <!-- Name -->
+                <div class="signup-form__group">
+                    <label class="signup-form__label" for="name">Full Name</label>
+                    <div class="signup-form__input-wrap">
+                        <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" />
+                            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8" />
+                        </svg>
                         <input type="text" id="name" name="name" placeholder="John Doe" required>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label class="group-label">Gender</label>
-                    <div class="gender-selector">
-                        <input type="radio" name="gender" value="Male" id="gender-male" required>
-                        <label for="gender-male" class="gender-tile">
-                            <span class="tile-text">Male</span>
-                        </label>
 
+                <!-- Gender -->
+                <div class="signup-form__group">
+                    <label class="signup-form__label">Gender</label>
+                    <div class="gender-toggle">
+                        <input type="radio" name="gender" value="Male" id="gender-male" required>
+                        <label for="gender-male" class="gender-toggle__btn">Male</label>
                         <input type="radio" name="gender" value="Female" id="gender-female">
-                        <label for="gender-female" class="gender-tile">
-                            <span class="tile-text">Female</span>
-                        </label>
+                        <label for="gender-female" class="gender-toggle__btn">Female</label>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" required>
+                <!-- Phone + Address row -->
+                <div class="signup-form__row">
+                    <div class="signup-form__group">
+                        <label class="signup-form__label" for="phone">Phone</label>
+                        <div class="signup-form__input-wrap">
+                            <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" required>
+                        </div>
+                    </div>
+                    <div class="signup-form__group">
+                        <label class="signup-form__label" for="address">Address</label>
+                        <div class="signup-form__input-wrap">
+                            <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor"
+                                    stroke-width="1.8" />
+                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.8" />
+                            </svg>
+                            <input type="text" id="address" name="address" placeholder="123 Main St" required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" placeholder="123 Luxury Lane" required>
+                <!-- Email -->
+                <div class="signup-form__group">
+                    <label class="signup-form__label" for="email">Email Address</label>
+                    <div class="signup-form__input-wrap">
+                        <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="name@luxury.com" required>
+                <!-- Passwords row -->
+                <div class="signup-form__row">
+                    <div class="signup-form__group">
+                        <label class="signup-form__label" for="password1">Password</label>
+                        <div class="signup-form__input-wrap">
+                            <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"
+                                    stroke-width="1.8" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <input type="password" id="password1" name="password1" placeholder="Min. 8 characters"
+                                required>
+                        </div>
+                    </div>
+                    <div class="signup-form__group">
+                        <label class="signup-form__label" for="password2">Confirm</label>
+                        <div class="signup-form__input-wrap">
+                            <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"
+                                    stroke-width="1.8" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <input type="password" id="password2" name="password2" placeholder="Repeat password"
+                                required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label for="password1">Create Password</label>
-                    <input type="password" id="password1" name="password1" placeholder="Min. 8 characters" required>
-                </div>
-                <div class="input-group">
-                    <label for="password2">Confirm Password</label>
-                    <input type="password" id="password2" name="password2" placeholder="Min. 8 characters" required>
-                </div>
+                <button type="submit" class="signup-form__submit">
+                    Create My Account
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
 
-                <button type="submit" class="btn-primary-gold">Create My Account</button>
-
-                <p class="auth-footer">
-                    Already a member? <a href="{% url 'login' %}">Sign In here</a>
+                <p class="signup-form__footer">
+                    Already a member? <a href="{% url 'login' %}">Sign in here</a>
                 </p>
+
             </form>
         </div>
     </div>
+
 </section>
 {% endblock %}

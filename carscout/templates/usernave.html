@@ -1,34 +1,70 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-{% block content %}
-<nav class="navbar">
-    <div class="nav-container">
-        <div class="logo">
-            <a href="{% url 'home' %}">CAR<span>SCOUT</span></a>
-        </div>
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 
-        <div class="nav-links">
-            <a href="#browse" class="nav-link-item">Browse Cars</a>
-            <a href="#sell" class="nav-link-item">Sell My Car</a>
-            <a href="#inspections" class="nav-link-item">Inspections</a>
-            <a href="#financing" class="nav-link-item">Financing</a>
-        </div>
+<nav class="cs-nav" id="csNav">
+    <div class="cs-nav__inner">
 
-        <div class="auth-buttons">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="cs-nav__logo">
+            <span class="cs-nav__logo-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17M9 7L8 4H16L15 7" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="7.5" cy="17.5" r="1.5" fill="currentColor" />
+                    <circle cx="16.5" cy="17.5" r="1.5" fill="currentColor" />
+                </svg>
+            </span>
+            <span class="cs-nav__logo-text">Car<em>Scout</em></span>
+        </a>
+
+        <!-- Center Links -->
+        <ul class="cs-nav__links">
+            <li><a href="#browse" class="cs-nav__link">Browse Cars</a></li>
+            <li><a href="#sell" class="cs-nav__link">Sell My Car</a></li>
+            <li><a href="#inspections" class="cs-nav__link">Inspections</a></li>
+            <li><a href="#financing" class="cs-nav__link">Financing</a></li>
+        </ul>
+
+        <!-- Auth -->
+        <div class="cs-nav__auth">
             {% if not user.is_authenticated %}
-            <a href="{% url 'login' %}" class="login-link">Log In</a>
-            <a href="{% url 'signup' %}" class="btn-signup">Get Started</a>
+            <a href="{% url 'login' %}" class="cs-nav__login">Log In</a>
+            <a href="{% url 'signup' %}" class="cs-nav__cta">
+                <span>Get Started</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
             {% else %}
-            <a href="{% url 'logout' %}" class="nav-link-item">logout</a>
+            <a href="{% url 'logout' %}" class="cs-nav__login">Log Out</a>
             {% endif %}
         </div>
 
-        <button class="mobile-toggle" aria-label="Toggle Menu">
-            <span> </span>
-            <span> </span>
-            <span> </span>
+        <!-- Mobile Toggle -->
+        <button class="cs-nav__burger" id="csBurger" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="cs-nav__drawer" id="csDrawer">
+        <ul class="cs-nav__drawer-links">
+            <li><a href="#browse">Browse Cars</a></li>
+            <li><a href="#sell">Sell My Car</a></li>
+            <li><a href="#inspections">Inspections</a></li>
+            <li><a href="#financing">Financing</a></li>
+        </ul>
+        <div class="cs-nav__drawer-auth">
+            {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}" class="cs-nav__drawer-login">Log In</a>
+            <a href="{% url 'signup' %}" class="cs-nav__drawer-cta">Get Started</a>
+            {% else %}
+            <a href="{% url 'logout' %}" class="cs-nav__drawer-login">Log Out</a>
+            {% endif %}
+        </div>
     </div>
 </nav>
-
-{% endblock content %}

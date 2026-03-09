@@ -840,10 +840,10 @@
                 <span class="nav-icon">🚗</span> Inventory
                 <span class="nav-badge">24</span>
             </a>
-            <a href="/admin/core/user/" class="nav-item-admin">
+            <a href="/django-admin/core/user/" class="nav-item-admin">
                 <span class="nav-icon">👤</span> Users
             </a>
-            <a href="#inspections" class="nav-item-admin">
+            <a href="/django-admin/scout/inspectionreport/" class="nav-item-admin">
                 <span class="nav-icon">🔬</span> AI Reports
                 <span class="nav-badge">7</span>
             </a>
@@ -854,7 +854,7 @@
 
         <div class="sidebar-section-label" style="margin-top: 8px;">System</div>
         <nav class="sidebar-nav">
-            <a href="/admin/" class="nav-item-admin">
+            <a href="/django-admin/" class="nav-item-admin">
                 <span class="nav-icon">⚙️</span> Django Admin
             </a>
             <a href="{% url 'logout' %}" class="nav-item-admin" style="color: rgba(239,68,68,0.6);">
@@ -867,7 +867,7 @@
                 <div class="admin-avatar">A</div>
                 <div class="admin-info-text">
                     <strong>{{ request.user.email|truncatechars:20 }}</strong>
-                    <span>Super Admin</span>
+                    <span>{{ request.user.role }}</span>
                 </div>
             </div>
         </div>
@@ -884,7 +884,7 @@
             </div>
             <div class="topbar-actions">
                 <button class="btn-admin-outline">Export Report</button>
-                <a href="/admin/core/user/" class="btn-admin-gold"
+                <a href="/django-admin/core/user/" class="btn-admin-gold"
                     style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">+ Add User</a>
             </div>
         </div>
@@ -1024,7 +1024,7 @@
             <div class="section-block" id="users">
                 <div class="section-head">
                     <h3>Recent Registrations</h3>
-                    <a href="/admin/core/user/" class="btn-admin-outline"
+                    <a href="/django-admin/core/user/" class="btn-admin-outline"
                         style="font-size:0.8rem; padding:7px 14px; text-decoration:none;">Manage All</a>
                 </div>
                 <div class="user-list">
@@ -1082,7 +1082,7 @@
                     <h3>Quick Actions</h3>
                 </div>
                 <div class="quick-actions">
-                    <a href="/admin/core/user/" class="qa-item">
+                    <a href="/django-admin/core/user/" class="qa-item">
                         <div class="qa-icon">👤</div>
                         <div class="qa-text">
                             <strong>Manage Users</strong>
@@ -1106,7 +1106,7 @@
                         </div>
                         <span class="qa-arrow">→</span>
                     </a>
-                    <a href="/admin/" class="qa-item">
+                    <a href="/django-admin/" class="qa-item">
                         <div class="qa-icon">⚙️</div>
                         <div class="qa-text">
                             <strong>Django Admin Panel</strong>

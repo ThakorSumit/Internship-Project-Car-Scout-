@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="td-page">
+    <div class="td-list-header">
+        <h2>My Purchases</h2>
+        <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">← Dashboard</a>
+    </div>
+
+    {% if transactions %}
+    <div class="td-list">
+        {% for txn in transactions %}
+        <div class="td-item">
+            <div class="td-item-left">
+                {% if txn.listing.image %}
+                <img src="{{ txn.listing.image.url }}" class="td-thumb" alt="car">
+                {% else %}
+                <div class="td-thumb-placeholder">🚗</div>
+                {% endif %}
+            </div>
+            <div class="td-item-body">
+                <h3>{{ txn.listing.vehicle.year }} {{ txn.listing.vehicle.company }} {{ txn.listing.vehicle.model }}
+                </h3>
+                <p class="td-meta">Seller: {{ txn.listing.seller.name }} &nbsp;·&nbsp; {{ txn.get_method_display }}</p>
+                <p class="td-meta"
+                    style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--text-muted);">Ref:
+                    {{ txn.reference_number }}</p>
+                <p class="td-meta">{{ txn.date|date:"d M Y, H:i" }}</p>
+            </div>
+            <div class="td-item-right">
+                <span class="txn-price"
+                    style="font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:700; color:var(--brand-accent);">${{
+                    txn.amount|floatformat:0 }}</span>
+                <span class="td-badge td-badge-confirmed">{{ txn.get_status_display }}</span>
+                <a href="{% url 'transaction_receipt' txn.id %}" class="btn-ghost"
+                    style="font-size:0.78rem; padding:0.3rem 0.8rem;">Receipt</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="td-empty">
+        <div class="td-empty-icon">🧾</div>
+        <h3>No Purchases Yet</h3>
+        <p>Completed deals will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

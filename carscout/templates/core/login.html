@@ -2,57 +2,116 @@
 {% load static %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-container">
-        <div class="auth-visual">
-            <div class="visual-overlay"></div>
-            <div class="visual-content">
-                <h2>Welcome Back to <span>Car Scout</span></h2>
-                <p>Access your personalized showroom and saved masterpieces.</p>
+<section class="login-page">
+
+    <!-- Left Panel -->
+    <div class="login-panel">
+        <div class="login-panel__glow"></div>
+        <div class="login-panel__body">
+
+            <a href="{% url 'home' %}" class="login-panel__logo">
+                <span class="login-panel__logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 17H21M5 17L6.5 10.5L9 7H15L17.5 10.5L19 17M9 7L8 4H16L15 7" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="7.5" cy="17.5" r="1.5" fill="currentColor" />
+                        <circle cx="16.5" cy="17.5" r="1.5" fill="currentColor" />
+                    </svg>
+                </span>
+                Car<em>Scout</em>
+            </a>
+
+            <div class="login-panel__text">
+                <h2>Welcome<br>Back<span>.</span></h2>
+                <p>Your personalized showroom and saved listings are waiting for you.</p>
             </div>
+
+            <!-- Decorative stat cards -->
+            <div class="login-panel__cards">
+                <div class="login-panel__card">
+                    <span class="login-panel__card-num">2,400+</span>
+                    <span class="login-panel__card-label">Verified Listings</span>
+                </div>
+                <div class="login-panel__card">
+                    <span class="login-panel__card-num">98%</span>
+                    <span class="login-panel__card-label">Inspection Accuracy</span>
+                </div>
+            </div>
+
+            <!-- Decorative ring -->
+            <div class="login-panel__ring"></div>
         </div>
+    </div>
 
-        <div class="auth-form-wrapper">
-            <form method="POST" class="auth-form">
+    <!-- Right Form -->
+    <div class="login-form-side">
+        <div class="login-form-wrap">
+
+            <div class="login-form-wrap__head">
+                <h1>Sign In</h1>
+                <p>Enter your credentials to access your account</p>
+            </div>
+
+            <!-- Errors -->
+            {% if form.errors %}
+            <div class="form-errors">
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="login-form">
                 {% csrf_token %}
-                <div class="form-header">
-                    <h1>Log In</h1>
-                    <p>Enter your credentials to manage your account</p>
-                </div>
 
-                {% if form.errors %}
-                <div class="form-errors"
-                    style="color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px; margin-bottom: 15px;">
-                    {% for field in form %}
-                    {% for error in field.errors %}
-                    <p style="margin: 0; font-size: 0.9em;"><strong>{{ field.label }}:</strong> {{ error }}</p>
-                    {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                    <p style="margin: 0; font-size: 0.9em;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="input-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                </div>
-
-                <div class="input-group">
-                    <div class="label-row">
-                        <label for="password">Password</label>
+                <!-- Email -->
+                <div class="login-form__group">
+                    <label class="login-form__label" for="email">Email Address</label>
+                    <div class="login-form__input-wrap">
+                        <svg class="login-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
                     </div>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
                 </div>
 
-                <button type="submit" class="btn-primary-gold">Enter Showroom</button>
+                <!-- Password -->
+                <div class="login-form__group">
+                    <div class="login-form__label-row">
+                        <label class="login-form__label" for="password">Password</label>
+                    </div>
+                    <div class="login-form__input-wrap">
+                        <svg class="login-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
+                            <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" />
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
 
-                <p class="auth-footer">
-                    New to Car Scout? <a href="{% url 'signup' %}">Create an Account</a>
+                <button type="submit" class="login-form__submit">
+                    Enter Showroom
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+
+                <p class="login-form__footer">
+                    New to CarScout? <a href="{% url 'signup' %}">Create an account</a>
                 </p>
+
             </form>
         </div>
     </div>
+
 </section>
 {% endblock %}

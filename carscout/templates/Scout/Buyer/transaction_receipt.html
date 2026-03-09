@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="td-page">
+    <div class="td-card" style="text-align:center;">
+
+        <div style="font-size:3.5rem; margin-bottom:1rem;">✅</div>
+        <h2 style="font-family:'Syne',sans-serif; color:var(--text-head); margin-bottom:0.5rem;">Purchase Complete!</h2>
+        <p style="color:var(--text-muted); margin-bottom:2rem;">Your transaction has been recorded successfully.</p>
+
+        <div class="txn-summary" style="text-align:left;">
+            <div class="txn-row">
+                <span class="txn-label">Vehicle</span>
+                <span class="txn-value">{{ txn.listing.vehicle.year }} {{ txn.listing.vehicle.company }} {{
+                    txn.listing.vehicle.model }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Amount Paid</span>
+                <span class="txn-value txn-price">${{ txn.amount|floatformat:0 }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Payment Method</span>
+                <span class="txn-value">{{ txn.get_method_display }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Reference #</span>
+                <span class="txn-value"
+                    style="font-family:'JetBrains Mono',monospace; font-size:0.9rem; letter-spacing:0.08em;">{{
+                    txn.reference_number }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Seller</span>
+                <span class="txn-value">{{ txn.listing.seller.name }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Date</span>
+                <span class="txn-value">{{ txn.date|date:"d M Y, H:i" }}</span>
+            </div>
+            <div class="txn-row">
+                <span class="txn-label">Status</span>
+                <span class="txn-value"><span class="td-badge td-badge-confirmed">{{ txn.get_status_display
+                        }}</span></span>
+            </div>
+        </div>
+
+        <div class="td-actions" style="justify-content:center; margin-top:2rem;">
+            <a href="{% url 'buyer_transactions' %}" class="btn-gold">My Purchases</a>
+            <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
