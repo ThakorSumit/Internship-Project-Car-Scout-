@@ -1,0 +1,76 @@
+{% load static %}
+<nav class="buyer-navbar">
+    <div class="buyer-nav-container">
+        <a href="{% url 'buyer_dashboard' %}" class="buyer-nav-logo">
+            CAR<span>SCOUT</span>
+        </a>
+
+        <!-- Desktop search -->
+        <div class="buyer-nav-search">
+            <form method="GET" action="{% url 'browse_listings' %}">
+                <input type="text" name="q" placeholder="Search make, model...">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+
+        <!-- Desktop links -->
+        <div class="buyer-nav-links">
+            <a href="{% url 'buyer_dashboard' %}" class="buyer-nav-link">Dashboard</a>
+            <a href="{% url 'browse_listings' %}" class="buyer-nav-link">Browse</a>
+            <a href="{% url 'wishlist' %}" class="buyer-nav-link">Wishlist</a>
+            <a href="{% url 'price_alerts' %}" class="buyer-nav-link">Alerts</a>
+            <a href="{% url 'buyer_offers' %}" class="buyer-nav-link">Offers</a>
+            <a href="{% url 'buyer_test_drives' %}" class="buyer-nav-link">Test Drives</a>
+            <a href="{% url 'buyer_inbox' %}" class="buyer-nav-link">Messages</a>
+        </div>
+
+        <!-- Desktop actions -->
+        <div class="buyer-nav-actions">
+            <span class="buyer-nav-user">{{ request.user.name }}</span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="buyer-nav-logout">Logout</button>
+            </form>
+        </div>
+
+        <!-- Mobile burger -->
+        <button class="buyer-nav-burger" id="buyerBurger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="buyer-nav-drawer" id="buyerDrawer">
+        <div class="buyer-nav-search" style="margin-bottom:8px;">
+            <form method="GET" action="{% url 'browse_listings' %}">
+                <input type="text" name="q" placeholder="Search make, model...">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+        <a href="{% url 'buyer_dashboard' %}" class="buyer-nav-link">🏠 Dashboard</a>
+        <a href="{% url 'browse_listings' %}" class="buyer-nav-link">🔍 Browse Cars</a>
+        <a href="{% url  'wishlist' %}" class="buyer-nav-link">❤️ Wishlist</a>
+        <a href="{% url 'price_alerts' %}" class="buyer-nav-link">🔔 Price Alerts</a>
+        <a href="{% url 'buyer_offers' %}" class="buyer-nav-link">🤝 My Offers</a>
+        <a href="{% url 'buyer_test_drives' %}" class="buyer-nav-link">🚗 Test Drives</a>
+        <a href="{% url 'buyer_inbox' %}" class="buyer-nav-link">💬 Messages</a>
+        <span style="font-size:0.82rem;color:rgba(255,255,255,0.35);padding:8px 0;">{{ request.user.name }}</span>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="buyer-nav-logout">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<script>
+    (function () {
+        const burger = document.getElementById('buyerBurger');
+        const drawer = document.getElementById('buyerDrawer');
+        if (burger && drawer) {
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('open');
+                drawer.classList.toggle('open');
+            });
+        }
+    })();
+</script>

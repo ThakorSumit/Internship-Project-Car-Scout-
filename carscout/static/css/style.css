@@ -6,6 +6,10 @@
 @import "user/buyer.css";
 @import "user/selller.css";
 @import "home.css";
+@import "admin/wishlist.css";
+@import "user/listing.css";
+@import "mobile.css";
+@import "toasts.css";
 
 * {
     margin: 0;

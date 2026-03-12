@@ -1,0 +1,71 @@
+{% load static %}
+<nav class="seller-navbar">
+    <div class="seller-nav-container">
+        <a href="{% url 'seller_dashboard' %}" class="seller-nav-logo">
+            CAR<span>SCOUT</span>
+            <small>SELLER</small>
+        </a>
+
+        <!-- Desktop links -->
+        <nav class="seller-nav-links">
+            <a href="{% url 'seller_dashboard' %}" class="seller-nav-link">
+                <span class="snl-icon">▦</span> Inventory
+            </a>
+            <a href="{% url 'seller_offers' %}" class="seller-nav-link">
+                <span class="snl-icon">🤝</span> Offers
+            </a>
+            <a href="{% url 'seller_inbox' %}" class="seller-nav-link">
+                <span class="snl-icon">✉</span> Messages
+            </a>
+            <a href="{% url 'seller_test_drives' %}" class="seller-nav-link">
+                <span class="snl-icon">◈</span> Test Drives
+            </a>
+            <a href="{% url 'seller_transactions' %}" class="seller-nav-link">
+                <span class="snl-icon">💰</span> Transactions
+            </a>
+        </nav>
+
+        <!-- Desktop right -->
+        <div class="seller-nav-right">
+            <span class="seller-nav-user">{{ request.user.name }}</span>
+            <a href="{% url 'add_listing' %}" class="seller-nav-list-btn">+ List Car</a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="seller-nav-logout">Logout</button>
+            </form>
+        </div>
+
+        <!-- Mobile burger -->
+        <button class="seller-nav-burger" id="sellerBurger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="seller-nav-drawer" id="sellerDrawer">
+        <a href="{% url 'seller_dashboard' %}" class="seller-nav-link">▦ Inventory</a>
+        <a href="{% url 'seller_offers' %}" class="seller-nav-link">🤝 Offers</a>
+        <a href="{% url 'seller_inbox' %}" class="seller-nav-link">✉ Messages</a>
+        <a href="{% url 'seller_test_drives' %}" class="seller-nav-link">◈ Test Drives</a>
+        <a href="{% url 'seller_transactions' %}" class="seller-nav-link">💰 Transactions</a>
+        <a href="{% url 'add_listing' %}" class="seller-nav-list-btn"
+            style="margin-top:12px;display:block;text-align:center;padding:12px;">+ List Car</a>
+        <form action="{% url 'logout' %}" method="post" style="margin-top:8px;">
+            {% csrf_token %}
+            <button type="submit" class="seller-nav-logout" style="width:100%;padding:12px;">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<script>
+    (function () {
+        const burger = document.getElementById('sellerBurger');
+        const drawer = document.getElementById('sellerDrawer');
+        if (burger && drawer) {
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('open');
+                drawer.classList.toggle('open');
+            });
+        }
+    })();
+</script>

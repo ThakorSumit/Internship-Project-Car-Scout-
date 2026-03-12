@@ -1,58 +1,397 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="container"
-    style="max-width: 800px; margin: 50px auto; padding: 30px; background: #1a1a1a; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: white;">
-    <h2 style="color: #d4af37; text-align: center; margin-bottom: 20px; font-family: 'Outfit', sans-serif;">
-        {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h2>
+<div class="bld-page">
+    <div class="bld-container">
 
-    {% if listing.image %}
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="{{ listing.image.url }}" alt="Vehicle Image" style="max-width: 100%; border-radius: 8px;">
-    </div>
-    {% else %}
-    <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800"
-            alt="Placeholder Vehicle Image" style="max-width: 100%; border-radius: 8px;">
-    </div>
-    {% endif %}
+        <!-- Back -->
+        <a href="{% url 'browse_listings' %}" class="bld-back">← Back to Listings</a>
 
-    <div
-        style="display: flex; justify-content: space-between; font-size: 1.2em; margin-bottom: 20px; border-top: 1px solid #444; border-bottom: 1px solid #444; padding: 15px 0;">
-        <div style="text-align: center; flex: 1;">
-            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Price
-            </p>
-            <p style="color: #d4af37; font-weight: bold; margin: 5px 0 0;">${{ listing.price }}</p>
+        <!-- ── HERO ─────────────────────────────────────────────── -->
+        <div class="bld-hero">
+            <div class="bld-hero-left">
+                <div class="bld-image-wrap">
+                    {% if listing.image %}
+                    <img src="{{ listing.image.url }}" alt="{{ listing.vehicle.company }} {{ listing.vehicle.model }}">
+                    {% else %}
+                    <div class="bld-no-image">
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                            <circle cx="12" cy="13" r="2" />
+                        </svg>
+                        <span>No photo uploaded</span>
+                    </div>
+                    {% endif %}
+
+                    {% if listing.inspection and listing.inspection.score %}
+                    <div class="bld-score-chip risk-{{ listing.inspection.risk_level|lower }}">
+                        ⚡ AI {{ listing.inspection.score }}/10
+                    </div>
+                    {% endif %}
+
+                    {% if listing.is_featured %}
+                    <div class="bld-featured-chip">★ Featured</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="bld-hero-right">
+                <div class="bld-hero-meta">
+                    <span class="bld-year-tag">{{ listing.vehicle.year }}</span>
+                    <span class="bld-fuel-tag">{{ listing.vehicle.fuel_type }}</span>
+                    <span class="bld-status status-{{ listing.status }}">{{ listing.status|title }}</span>
+                </div>
+
+                <h1 class="bld-title">
+                    {{ listing.vehicle.company }}<br>
+                    <span>{{ listing.vehicle.model }}</span>
+                </h1>
+
+                <div class="bld-price-row">
+                    <span class="bld-price">${{ listing.price|floatformat:0 }}</span>
+                    {% if listing.inspection %}
+                    <span class="bld-condition condition-{{ listing.inspection.overall_condition|lower }}">
+                        {{ listing.inspection.overall_condition }} Condition
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="bld-quick-specs">
+                    <div class="qs-item">
+                        <span class="qs-label">Mileage</span>
+                        <span class="qs-value">{{ listing.vehicle.mileage|floatformat:0 }} mi</span>
+                    </div>
+                    <div class="qs-item">
+                        <span class="qs-label">Transmission</span>
+                        <span class="qs-value">{{ listing.vehicle.transmission }}</span>
+                    </div>
+                    <div class="qs-item">
+                        <span class="qs-label">Engine</span>
+                        <span class="qs-value">{{ listing.vehicle.engine_size }}</span>
+                    </div>
+                    <div class="qs-item">
+                        <span class="qs-label">Color</span>
+                        <span class="qs-value">{{ listing.vehicle.color }}</span>
+                    </div>
+                </div>
+
+                {% if request.user.is_authenticated and request.user.role == 'Buyer' %}
+                <div class="bld-actions">
+                    <a href="{% url 'offer' listing.id %}" class="bld-cta-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                        Make an Offer
+                    </a>
+                    <a href="{% url 'test_drive' listing.id %}" class="bld-cta-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <path d="M16 2v4M8 2v4M3 10h18" />
+                        </svg>
+                        Book Test Drive
+                    </a>
+                    <button type="button" id="wl-btn-{{ listing.id }}"
+                        class="bld-cta-wish {% if in_wishlist %}wishlisted{% endif %}"
+                        data-listing-id="{{ listing.id }}" data-csrf="{{ csrf_token }}" onclick="handleWishlist(this)"
+                        title="{% if in_wishlist %}Remove from wishlist{% else %}Save to wishlist{% endif %}">
+                        {% if in_wishlist %}❤️ Saved{% else %}🤍 Save{% endif %}
+                    </button>
+                </div>
+
+                <a href="{% url 'set_price_alert' listing.id %}" class="bld-alert-link">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    Set Price Alert for this vehicle
+                </a>
+
+                {% else %}
+                <div class="bld-login-prompt">
+                    <p>Please <a href="{% url 'login' %}">log in</a> as a buyer to make an offer or book a test drive.
+                    </p>
+                </div>
+                {% endif %}
+            </div>
         </div>
-        <div style="text-align: center; flex: 1; border-left: 1px solid #444; border-right: 1px solid #444;">
-            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">VIN</p>
-            <p style="margin: 5px 0 0;">{{ listing.vehicle.vin }}</p>
-        </div>
-        <div style="text-align: center; flex: 1;">
-            <p style="color: #888; margin: 0; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Fuel
-                Type</p>
-            <p style="margin: 5px 0 0;">{{ listing.vehicle.FuelType }}</p>
-        </div>
-    </div>
 
-    <div style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
-        <p
-            style="display: inline-block; padding: 5px 15px; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 20px; color: #d4af37;">
-            Status: {{ listing.status|title }}</p>
-    </div>
+        <!-- ── BODY GRID ─────────────────────────────────────────── -->
+        <div class="bld-body">
 
-    {% if request.user.is_authenticated and request.user.role == 'Buyer' %}
-    <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
-        <a href="{% url 'buyer_chat' listing.id %}" class="btn-drive">💬 Message Seller</a>
-        <a href="{% url 'test_drive' listing.id %}" class="btn btn-primary"
-            style="background: transparent; border: 2px solid #d4af37; color: #d4af37; padding: 15px 40px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s ease;">Book
-            a Test Drive</a>
-        <a href="{% url 'make_offer' listing.id %}" class="btn btn-primary"
-            style="background: linear-gradient(135deg, #d4af37, #f3e5ab); border: none; color: #000; padding: 15px 40px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s ease;">Make
-            an Offer</a>
+            <!-- LEFT COLUMN -->
+            <div class="bld-left">
+
+                <!-- Full Specs -->
+                <div class="bld-card">
+                    <div class="bld-card-head">
+                        <h2>Vehicle Specifications</h2>
+                    </div>
+                    <div class="bld-specs-grid">
+                        <div class="spec-row">
+                            <span class="spec-key">Make</span>
+                            <span class="spec-val">{{ listing.vehicle.company }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Model</span>
+                            <span class="spec-val">{{ listing.vehicle.model }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Year</span>
+                            <span class="spec-val">{{ listing.vehicle.year }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Condition</span>
+                            <span class="spec-val">{{ listing.vehicle.condition|title }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Mileage</span>
+                            <span class="spec-val">{{ listing.vehicle.mileage|floatformat:0 }} miles</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Fuel Type</span>
+                            <span class="spec-val">{{ listing.vehicle.fuel_type }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Transmission</span>
+                            <span class="spec-val">{{ listing.vehicle.transmission }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Engine</span>
+                            <span class="spec-val">{{ listing.vehicle.engine_size }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Color</span>
+                            <span class="spec-val">{{ listing.vehicle.color }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Doors</span>
+                            <span class="spec-val">{{ listing.vehicle.num_doors }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Seats</span>
+                            <span class="spec-val">{{ listing.vehicle.seating_capacity }}</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-key">Previous Owners</span>
+                            <span class="spec-val">{% if listing.inspection %}{{ listing.inspection.previous_owners }}
+                                {% else %}—{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="bld-card">
+                    <div class="bld-card-head">
+                        <h2>Description</h2>
+                    </div>
+                    <p class="bld-description">{{ listing.vehicle.description }}</p>
+                    {% if listing.vehicle.modifications %}
+                    <div class="bld-mods">
+                        <h4>Modifications & Upgrades</h4>
+                        <p>{{ listing.vehicle.modifications }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Accident / Service History -->
+                {% if listing.inspection %}
+                <div class="bld-card">
+                    <div class="bld-card-head">
+                        <h2>Vehicle History</h2>
+                    </div>
+                    <div class="bld-history-grid">
+                        <div class="history-item">
+                            <span class="history-label">Accident History</span>
+                            <span class="history-val accident-{{ listing.inspection.accident_history }}">
+                                {% if listing.inspection.accident_history == 'none' %}✓ No Accidents
+                                {% elif listing.inspection.accident_history == 'minor' %}⚠ Minor Accident
+                                {% elif listing.inspection.accident_history == 'major' %}✗ Major Accident
+                                {% else %}Unknown
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% if listing.inspection.accident_details %}
+                        <div class="history-item full-width">
+                            <span class="history-label">Accident Details</span>
+                            <span class="history-val">{{ listing.inspection.accident_details }}</span>
+                        </div>
+                        {% endif %}
+                        {% if listing.inspection.service_history %}
+                        <div class="history-item full-width">
+                            <span class="history-label">Service History</span>
+                            <span class="history-val">{{ listing.inspection.service_history }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- RIGHT COLUMN — AI REPORT -->
+            <div class="bld-right">
+
+                {% if listing.status == 'ai_scanning' %}
+                <div class="bld-card ai-scanning-card">
+                    <div class="scanning-spinner">⟳</div>
+                    <h3>AI Inspection Running</h3>
+                    <p>Our AI is analyzing this vehicle. Usually takes under 30 seconds.</p>
+                    <button onclick="location.reload()" class="bld-refresh-btn">↻ Refresh</button>
+                </div>
+
+                {% elif listing.inspection and listing.inspection.score %}
+                <div class="bld-card ai-report-card">
+                    <div class="ai-report-header">
+                        <div class="ai-score-ring risk-{{ listing.inspection.risk_level|lower }}">
+                            <span class="air-number">{{ listing.inspection.score }}</span>
+                            <span class="air-denom">/10</span>
+                        </div>
+                        <div class="ai-score-info">
+                            <div class="ai-label">AI Inspection Score</div>
+                            <div class="ai-condition">{{ listing.inspection.overall_condition }} Condition</div>
+                            <div class="ai-risk risk-badge-{{ listing.inspection.risk_level|lower }}">
+                                {{ listing.inspection.risk_level }} Risk
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ai-recommendation rec-{{ listing.inspection.recommendation|lower }}">
+                        <span class="rec-icon">
+                            {% if listing.inspection.recommendation == 'buy_confident' %}✓
+                            {% elif listing.inspection.recommendation == 'negotiate' %}⟳
+                            {% elif listing.inspection.recommendation == 'inspect_further' %}⚠
+                            {% else %}✗
+                            {% endif %}
+                        </span>
+                        <div>
+                            <div class="rec-label">AI Recommendation</div>
+                            <div class="rec-value">{{ listing.inspection.get_recommendation_display }}</div>
+                        </div>
+                    </div>
+
+                    <div class="ai-section">
+                        <h4>AI Summary</h4>
+                        <p class="ai-summary-text">{{ listing.inspection.ai_summary }}</p>
+                    </div>
+
+                    <div class="ai-split">
+                        <div class="ai-split-col positives-col">
+                            <h4>✓ Positives</h4>
+                            <ul>
+                                {% for item in listing.inspection.positives %}
+                                <li>{{ item }}</li>
+                                {% empty %}
+                                <li class="empty-item">None noted</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="ai-split-col issues-col">
+                            <h4>⚠ Issues</h4>
+                            <ul>
+                                {% for item in listing.inspection.issues_detected %}
+                                <li>{{ item }}</li>
+                                {% empty %}
+                                <li class="empty-item">No issues detected</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="ai-section">
+                        <h4>Market Assessments</h4>
+                        <div class="ai-assessments">
+                            <div class="assess-row">
+                                <span class="assess-key">Mileage</span>
+                                <span class="assess-val">{{ listing.inspection.mileage_assessment }}</span>
+                            </div>
+                            <div class="assess-row">
+                                <span class="assess-key">Price</span>
+                                <span class="assess-val">{{ listing.inspection.price_assessment }}</span>
+                            </div>
+                            <div class="assess-row">
+                                <span class="assess-key">Accident Impact</span>
+                                <span class="assess-val">{{ listing.inspection.accident_impact }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if listing.inspection.buyer_tips %}
+                    <div class="ai-section buyer-tips-section">
+                        <h4>💡 Buyer Tips</h4>
+                        <ul class="buyer-tips-list">
+                            {% for tip in listing.inspection.buyer_tips %}
+                            <li>{{ tip }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                {% else %}
+                <div class="bld-card">
+                    <p style="color: var(--text-muted); text-align:center; padding: 24px 0;">Inspection report not yet
+                        available.</p>
+                </div>
+                {% endif %}
+
+                <!-- Seller Info -->
+                <div class="bld-card seller-card">
+                    <div class="bld-card-head">
+                        <h2>Seller</h2>
+                    </div>
+                    <div class="seller-info-row">
+                        <div class="seller-avatar">{{ listing.seller.name|first|upper }}</div>
+                        <div>
+                            <div class="seller-name">{{ listing.seller.name }}</div>
+                            <div class="seller-since">Member since {{ listing.seller.created_at|date:"M Y" }}</div>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated and request.user.role == 'Buyer' %}
+                    <a href="{% url 'chat' listing.id %}" class="bld-msg-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                        Message Seller
+                    </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
     </div>
-    {% elif not request.user.is_authenticated %}
-    <p style="text-align: center; color: #888; margin-top: 30px;">Please <a href="{% url 'login' %}"
-            style="color: #d4af37;">log in</a> as a buyer to make an offer or book a test drive.</p>
-    {% endif %}
 </div>
+
+<script>
+    function handleWishlist(btn) {
+        const listingId = btn.dataset.listingId;
+        const csrf = btn.dataset.csrf;
+        btn.disabled = true;
+
+        fetch('/scout/buyer/wishlist/toggle/' + listingId + '/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrf, 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.in_wishlist) {
+                    btn.innerHTML = '❤️ Saved';
+                    btn.classList.add('wishlisted');
+                } else {
+                    btn.innerHTML = '🤍 Save';
+                    btn.classList.remove('wishlisted');
+                }
+            })
+            .catch(err => console.error('Wishlist error:', err))
+            .finally(() => { btn.disabled = false; });
+    }
+</script>
 {% endblock %}

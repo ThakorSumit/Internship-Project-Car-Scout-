@@ -4,12 +4,22 @@ from . import views
 urlpatterns = [
     # Admin
     path('admin/', views.AdminDashboardView, name='admin_dashboard'),
-
+    path('admin/listing/<int:listing_id>/approve/', views.ApproveListingView, name='approve_listing'),
+    path('admin/listing/<int:listing_id>/reject/',  views.RejectListingView,  name='reject_listing'),
+    #http://localhost:8000/createadmin/?key=carscout
+    
     # Seller
     path('seller/', views.SellerDashboardView, name='seller_dashboard'),
     path('seller/add-listing/', views.AddListingView, name='add_listing'),
     path('seller/listing/<int:listing_id>/', views.SellerListingDetailView, name='seller_listing_detail'),
     path('seller/listing/<int:listing_id>/delete/', views.DeleteListingView, name='delete_listing'),
+    path('seller/listing/<int:listing_id>/edit-price/', views.EditListingPriceView, name='edit_listing_price'),
+    path('seller/offers/', views.SellerOffersView, name='seller_offers'),
+    path('seller/offer/<int:offer_id>/accept/', views.AcceptOfferView, name='accept_offer'),
+    path('seller/offer/<int:offer_id>/reject/', views.RejectOfferView, name='reject_offer'),
+    path('seller/offer/<int:offer_id>/counter/', views.CounterOfferView, name='counter_offer'),
+    path('seller/inbox/', views.SellerInboxView, name='seller_inbox'),
+    path('seller/chat/<int:listing_id>/<int:buyer_id>/', views.SellerChatView, name='seller_chat'),
     path('seller/test-drives/', views.SellerTestDrivesView, name='seller_test_drives'),
     path('seller/test-drives/<int:td_id>/update/', views.UpdateTestDriveView, name='update_test_drive'),
     path('seller/transactions/', views.SellerTransactionsView, name='seller_transactions'),
@@ -18,31 +28,26 @@ urlpatterns = [
     path('buyer/', views.BuyerDashboardView, name='buyer_dashboard'),
     path('buyer/browse/', views.BrowseListingsView, name='browse_listings'),
     path('buyer/listing/<int:listing_id>/', views.BuyerListingDetailView, name='buyer_listing_detail'),
-    path('buyer/listing/<int:listing_id>/toggle-wishlist/', views.ToggleWishlistView, name='toggle_wishlist'),
-    path('buyer/test-drives/', views.BuyerTestDrivesView, name='buyer_test_drives'),
-    path('buyer/test-drives/<int:td_id>/cancel/', views.CancelTestDriveView, name='cancel_test_drive'),
-    path('buyer/listing/<int:listing_id>/test-drive/', views.ScheduleTestDriveView, name='test_drive'),
+    path('buyer/offer/<int:listing_id>/', views.MakeOfferView, name='offer'),
     path('buyer/offers/', views.BuyerOffersView, name='buyer_offers'),
-    path('buyer/offers/<int:offer_id>/pay/', views.InitiateTransactionView, name='initiate_transaction'),
-    path('buyer/transactions/', views.BuyerTransactionsView, name='buyer_transactions'),
-    path('buyer/transactions/<int:txn_id>/receipt/', views.TransactionReceiptView, name='transaction_receipt'),
-
-    # Offer URLs
-    path('buyer/offer/<int:listing_id>/', views.MakeOfferView, name='make_offer'),
-    path('buyer/offers/', views.BuyerOffersView, name='buyer_offers'),
-    path('buyer/offer/<int:offer_id>/accept/', views.AcceptCounterView, name='accept_counter'),
+    path('buyer/offer/<int:offer_id>/accept-counter/', views.AcceptCounterView, name='accept_counter'),
     path('buyer/offer/<int:offer_id>/withdraw/', views.WithdrawOfferView, name='withdraw_offer'),
-
-    path('seller/offers/', views.SellerOffersView, name='seller_offers'),
-    path('seller/offer/<int:offer_id>/accept/', views.AcceptOfferView, name='accept_offer'),
-    path('seller/offer/<int:offer_id>/reject/', views.RejectOfferView, name='reject_offer'),
-    path('seller/offer/<int:offer_id>/counter/', views.CounterOfferView, name='counter_offer'),
-
-    # Messaging URLs
     path('buyer/inbox/', views.BuyerInboxView, name='buyer_inbox'),
-    path('buyer/chat/<int:listing_id>/', views.BuyerChatView, name='buyer_chat'),
-    path('seller/inbox/', views.SellerInboxView, name='seller_inbox'),
-    path('seller/chat/<int:listing_id>/<int:buyer_id>/', views.SellerChatView, name='seller_chat'),
+    path('buyer/chat/<int:listing_id>/', views.BuyerChatView, name='chat'),
+    path('buyer/test-drives/', views.BuyerTestDrivesView, name='buyer_test_drives'),
+    path('buyer/test-drives/<int:listing_id>/schedule/', views.ScheduleTestDriveView, name='test_drive'),
+    path('buyer/test-drives/<int:td_id>/cancel/', views.CancelTestDriveView, name='cancel_test_drive'),
+    path('buyer/transactions/', views.BuyerTransactionsView, name='buyer_transactions'),
+    path('buyer/transactions/<int:offer_id>/initiate/', views.InitiateTransactionView, name='initiate_transaction'),
+    path('buyer/transactions/receipt/<int:txn_id>/', views.TransactionReceiptView, name='transaction_receipt'),
 
+    # Wishlist
+    path('buyer/wishlist/', views.WishlistView, name='wishlist'),
+    path('buyer/wishlist/toggle/<int:listing_id>/', views.ToggleWishlistView, name='toggle_wishlist'),
+    path('buyer/wishlist/remove/<int:listing_id>/', views.RemoveWishlistView, name='remove_wishlist'),
 
+    # Price Alerts
+    path('buyer/price-alerts/', views.PriceAlertsView, name='price_alerts'),
+    path('buyer/price-alerts/set/<int:listing_id>/', views.SetPriceAlertView, name='set_price_alert'),
+    path('buyer/price-alerts/delete/<int:alert_id>/', views.DeletePriceAlertView, name='delete_price_alert'),
 ]

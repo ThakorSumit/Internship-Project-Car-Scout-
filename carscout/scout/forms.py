@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vehicle, Listing, InspectionReport, Offer, TestDrive,Transaction
+from .models import Vehicle, Listing, InspectionReport, Offer, TestDrive,Transaction,PriceAlert
 
 
 class VehicleForm(forms.ModelForm):
@@ -58,7 +58,7 @@ class InspectionInputForm(forms.ModelForm):
                 'rows': 3,
                 'placeholder': 'List service records, maintenance history...'
             }),
-            'previous_owners': forms.NumberInput(attrs={'min': 1}),
+            'previous_owners': forms.NumberInput(attrs={'min': 0}),
         }
 
 
@@ -122,4 +122,37 @@ class TransactionForm(forms.ModelForm):
                 'rows': 3,
                 'placeholder': 'Any payment notes or reference details...',
             }),
+        }
+
+# ─── Price Alert ────────────────────────────────────────────────────
+
+class PriceAlertForm(forms.ModelForm):
+    class Meta:
+        model = PriceAlert
+        fields = ['target_price']
+        widgets = {
+            'target_price': forms.NumberInput(attrs={
+                'placeholder': 'e.g. 45000',
+                'min': 0,
+                'step': '100',
+                'class': 'alert-price-input',
+            })
+        }
+        labels = {
+            'target_price': 'Alert me when price drops to or below ($)'
+        }
+
+class EditPriceForm(forms.ModelForm):
+   class Meta:
+       model = Listing
+       fields = ['price']
+       widgets = {
+            'price': forms.NumberInput(attrs={
+                'placeholder': 'e.g. 48000',
+                'min': 0,
+                'step': '100',
+            })
+        }
+       labels = {
+            'price': 'New Asking Price (USD)'
         }

@@ -1,0 +1,60 @@
+<nav class="admin-navbar">
+    <div class="admin-nav-container">
+
+        <a href="/scout/admin/" class="admin-nav-brand">
+            <span class="admin-nav-logo">CAR<span>SCOUT</span></span>
+            <span class="admin-nav-pill">ADMIN</span>
+        </a>
+
+        <!-- Desktop links -->
+        <div class="admin-nav-links">
+            <a href="/scout/admin/" class="admin-nav-link active">Dashboard</a>
+            <a href="/django-admin/scout/listing/" class="admin-nav-link">Listings</a>
+            <a href="/django-admin/core/user/" class="admin-nav-link">Users</a>
+            <a href="/django-admin/scout/report/" class="admin-nav-link">AI Reports</a>
+            <a href="/django-admin/" class="admin-nav-link">Django Admin</a>
+        </div>
+
+        <!-- Desktop actions -->
+        <div class="admin-nav-actions">
+            <span class="admin-nav-user">{{ request.user.email }}</span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="admin-nav-logout">→ Logout</button>
+            </form>
+        </div>
+
+        <!-- Mobile burger -->
+        <button class="admin-nav-burger" id="adminBurger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="admin-nav-drawer" id="adminDrawer">
+        <a href="/scout/admin/" class="admin-nav-link">📊 Dashboard</a>
+        <a href="/django-admin/scout/listing/" class="admin-nav-link">🚗 Listings</a>
+        <a href="/django-admin/core/user/" class="admin-nav-link">👤 Users</a>
+        <a href="/django-admin/scout/report/" class="admin-nav-link">🤖 AI Reports</a>
+        <a href="/django-admin/" class="admin-nav-link">⚙️ Django Admin</a>
+        <span style="font-size:0.82rem;color:rgba(255,255,255,0.3);padding:10px 0 4px;">{{ request.user.email }}</span>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="admin-nav-logout">→ Logout</button>
+        </form>
+    </div>
+</nav>
+
+<script>
+    (function () {
+        const burger = document.getElementById('adminBurger');
+        const drawer = document.getElementById('adminDrawer');
+        if (burger && drawer) {
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('open');
+                drawer.classList.toggle('open');
+            });
+        }
+    })();
+</script>

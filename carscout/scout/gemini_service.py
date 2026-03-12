@@ -66,7 +66,6 @@ Return ONLY a valid JSON object with these exact keys (no markdown, no backticks
 
         raw = response.choices[0].message.content.strip()
 
-        # Strip potential markdown code fences
         if raw.startswith('```'):
             raw = raw.split('```')[1]
             if raw.startswith('json'):
@@ -75,23 +74,25 @@ Return ONLY a valid JSON object with these exact keys (no markdown, no backticks
 
         data = json.loads(raw)
 
-        report.score = float(data.get('ai_score', 0))
-        report.overall_condition = data.get('overall_condition', '')
-        report.ai_summary = data.get('summary', '')
-        report.risk_level = data.get('risk_level', 'Low')
-        report.recommendation = data.get('recommendation', '')
-        report.issues_detected = data.get('issues_detected', [])
-        report.positives = data.get('positives', [])
+        report.score              = float(data.get('ai_score', 0))
+        report.overall_condition  = data.get('overall_condition', '')
+        report.ai_summary         = data.get('summary', '')
+        report.risk_level         = data.get('risk_level', 'Low').lower()
+        report.recommendation     = data.get('recommendation', '')
+        report.issues_detected    = data.get('issues_detected', [])
+        report.positives          = data.get('positives', [])
         report.mileage_assessment = data.get('mileage_assessment', '')
-        report.price_assessment = data.get('price_assessment', '')
-        report.accident_impact = data.get('accident_impact', '')
-        report.buyer_tips = data.get('buyer_tips', [])
+        report.price_assessment   = data.get('price_assessment', '')
+        report.accident_impact    = data.get('accident_impact', '')
+        report.buyer_tips         = data.get('buyer_tips', [])
         report.save()
 
-        listing.status = 'live'
+        # ── After AI scan, go to pending_review (not live) ──
+        # Admin must approve before buyers can see it
+        listing.status = 'pending_review'
         listing.save()
 
-        print(f"[AI Inspection Complete] listing_id={listing_id} score={report.score}")
+        print(f"[AI Inspection Complete] listing_id={listing_id} score={report.score} → pending_review")
 
     except Exception as e:
         print(f"[AI Inspection Error] listing_id={listing_id}: {e}")
@@ -100,7 +101,7 @@ Return ONLY a valid JSON object with these exact keys (no markdown, no backticks
         try:
             from scout.models import Listing
             listing = Listing.objects.get(id=listing_id)
-            listing.status = 'live'
+            listing.status = 'pending_review'
             listing.save()
         except Exception:
             pass

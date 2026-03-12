@@ -1,5 +1,21 @@
-<form action="" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Submit">
-</form>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="td-page">
+    <div class="td-card">
+        <div class="td-header">
+            <h2>Inspection Report</h2>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
+{% endblock %}

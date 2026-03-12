@@ -1,176 +1,97 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<div style="
-  background: var(--brand-primary);
-  min-height: 100vh;
-  padding: 60px 24px;
-  font-family: 'DM Sans', sans-serif;
-">
-    <div style="max-width: 580px; margin: 0 auto;">
+<div class="counter-page">
+    <div class="counter-wrap">
 
         <!-- Back -->
-        <a href="{% url 'seller_offers' %}" style="
-      color: rgba(255,255,255,0.4);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-bottom: 28px;
-    ">← Back to Offers</a>
+        <a href="{% url 'seller_offers' %}" class="counter-back">← Back to Offers</a>
 
         <!-- Title -->
-        <h1 style="
-      font-family: 'Syne', sans-serif;
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0 0 6px;
-    ">Counter <span style="color: var(--brand-accent);">Offer</span></h1>
-        <p style="color: rgba(255,255,255,0.4); margin: 0 0 32px; font-size: 0.9rem;">
+        <h1 class="counter-title">Counter <span>Offer</span></h1>
+        <p class="counter-sub">
             {{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{ offer.listing.vehicle.model }}
         </p>
 
         <!-- Info cards -->
-        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+        <div class="counter-info-cards">
 
-            <div
-                style="flex:1; min-width:120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
-                <span
-                    style="display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.35); margin-bottom:6px;">Listed
+            <div class="cic-card">
+                <span class="cic-label">Listed
                     At</span>
-                <span
-                    style="font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:700; color:var(--brand-accent);">
+                <span class="cic-value">
                     ${{offer.listing.price|floatformat:0 }}</span>
             </div>
 
-            <div
-                style="flex:1; min-width:120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
-                <span
-                    style="display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.35); margin-bottom:6px;">Buyer's
+            <div class="cic-card">
+                <span class="cic-label">Buyer's
                     Offer</span>
-                <span
-                    style="font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:700; color:#fbbf24;">
+                <span class="cic-value buyer-offer">
                     ${{offer.amount|floatformat:0 }}</span>
             </div>
 
-            <div
-                style="flex:1; min-width:120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
-                <span
-                    style="display:block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.35); margin-bottom:6px;">Buyer</span>
-                <span style="font-size:0.9rem; font-weight:600; color:#fff;">{{ offer.buyer.name }}</span>
+            <div class="cic-card">
+                <span class="cic-label">Buyer</span>
+                <span class="cic-value buyer-name">{{ offer.buyer.name }}</span>
             </div>
 
         </div>
 
         <!-- Buyer message -->
         {% if offer.comment %}
-        <div
-            style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;">
-            <span
-                style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; color:rgba(255,255,255,0.3); display:block; margin-bottom:6px;">Buyer's
-                Message</span>
-            <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin:0; line-height:1.6;">{{ offer.comment }}</p>
+        <div class="counter-buyer-msg">
+            <span class="cbm-label">Buyer's Message</span>
+            <p class="cbm-text">{{ offer.comment }}</p>
         </div>
         {% endif %}
 
         <!-- Form card -->
-        <div
-            style="background: rgba(255,255,255,0.04); border: 1px solid rgba(218,165,32,0.15); border-radius: 16px; padding: 32px;">
+        <div class="counter-form-card">
 
-            <h3
-                style="font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.5px; margin:0 0 24px;">
+            <h3 class="counter-form-title">
                 Your Counter</h3>
 
             <form method="POST" action="">
                 {% csrf_token %}
 
                 <!-- Counter Amount -->
-                <div style="margin-bottom: 20px;">
-                    <label
-                        style="display:block; font-size:0.8rem; font-weight:700; color:rgba(255,255,255,0.55); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:8px;">
+                <div class="cf-field">
+                    <label class="cf-label">
                         Counter Amount ($) *
                     </label>
                     <input type="number" name="counter_amount" value="{{ form.counter_amount.value|default:'' }}"
-                        placeholder="Enter your counter price" required style="
-              width: 100%;
-              background: rgba(255,255,255,0.06);
-              border: 1px solid rgba(255,255,255,0.12);
-              border-radius: 9px;
-              padding: 12px 16px;
-              font-family: 'JetBrains Mono', monospace;
-              font-size: 1rem;
-              color: #fff;
-              outline: none;
-              box-sizing: border-box;
-              transition: border-color 0.2s;
-            " onfocus="this.style.borderColor='var(--brand-accent)'"
-                        onblur="this.style.borderColor='rgba(255,255,255,0.12)'">
+                        placeholder="Enter your counter price" required class="cf-input">
                     {% if form.counter_amount.errors %}
-                    <span style="color:#f87171; font-size:0.78rem; display:block; margin-top:5px;">{{
+                    <span class="cf-error">{{
                         form.counter_amount.errors.0 }}</span>
                     {% endif %}
                 </div>
 
                 <!-- Counter Comment -->
-                <div style="margin-bottom: 32px;">
-                    <label
-                        style="display:block; font-size:0.8rem; font-weight:700; color:rgba(255,255,255,0.55); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:8px;">
+                <div class="cf-field">
+                    <label class="cf-label">
                         Message to Buyer <span
                             style="font-weight:400; text-transform:none; opacity:0.5;">(optional)</span>
                     </label>
-                    <textarea name="counter_comment" rows="3" placeholder="Explain your counter offer..." style="
-              width: 100%;
-              background: rgba(255,255,255,0.06);
-              border: 1px solid rgba(255,255,255,0.12);
-              border-radius: 9px;
-              padding: 12px 16px;
-              font-family: 'DM Sans', sans-serif;
-              font-size: 0.92rem;
-              color: #fff;
-              outline: none;
-              box-sizing: border-box;
-              resize: vertical;
-              min-height: 90px;
-              transition: border-color 0.2s;
-            " onfocus="this.style.borderColor='var(--brand-accent)'"
-                        onblur="this.style.borderColor='rgba(255,255,255,0.12)'">{{ form.counter_comment.value|default:'' }}</textarea>
+                    <textarea name="counter_comment" rows="3" placeholder="Explain your counter offer..."
+                        class="cf-textarea">{{ form.counter_comment.value|default:'' }}</textarea>
                     {% if form.counter_comment.errors %}
-                    <span style="color:#f87171; font-size:0.78rem; display:block; margin-top:5px;">{{
+                    <span class="cf-error">{{
                         form.counter_comment.errors.0 }}</span>
                     {% endif %}
                 </div>
 
                 <!-- Buttons -->
-                <div style="display: flex; gap: 12px;">
-                    <a href="{% url 'seller_offers' %}" style="
-            flex: 1;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 9px;
-            padding: 13px;
-            color: rgba(255,255,255,0.45);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-          ">Cancel</a>
+                <div class="counter-actions">
+                    <a href="{% url 'seller_offers' %}" class="btn-counter-cancel">Cancel</a>
 
-                    <button type="submit" style="
-            flex: 2;
-            background: var(--brand-accent);
-            color: var(--brand-primary);
-            border: none;
-            border-radius: 9px;
-            padding: 13px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 700;
-            font-size: 0.92rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-          " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    <button type="submit" class="btn-counter-submit">
                         Send Counter Offer →
                     </button>
                 </div>

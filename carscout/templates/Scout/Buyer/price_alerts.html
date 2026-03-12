@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/wishlist.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wishlist-page">
+
+    <!-- Header -->
+    <div class="wl-hero">
+        <div class="wl-hero-inner">
+            <div class="wl-hero-text">
+                <span class="wl-eyebrow">NOTIFICATIONS</span>
+                <h1>Price <em>Alerts</em></h1>
+                <p>{{ active_count }} active · {{ triggered_count }} triggered</p>
+            </div>
+            <a href="{% url 'browse_listings' %}" class="wl-browse-btn">+ Add Alert</a>
+        </div>
+    </div>
+
+    <div class="wl-container">
+
+        {% if alerts %}
+        <div class="alerts-list">
+
+            {% if triggered_count %}
+            <div class="alerts-section-head triggered-head">
+                <span class="alerts-section-dot triggered-dot"></span>
+                <h2>Triggered Alerts <span>{{ triggered_count }}</span></h2>
+                <p>These listings hit your target price — act fast!</p>
+            </div>
+
+            {% for alert in alerts %}
+            {% if alert.is_triggered %}
+            <div class="alert-row triggered">
+                <div class="alert-car-info">
+                    {% if alert.listing.image %}
+                    <img src="{{ alert.listing.image.url }}" alt="" class="alert-thumb">
+                    {% else %}
+                    <div class="alert-thumb alert-thumb-empty">🚗</div>
+                    {% endif %}
+                    <div>
+                        <div class="alert-car-name">
+                            {{ alert.listing.vehicle.year }} {{ alert.listing.vehicle.company }} {{
+                            alert.listing.vehicle.model }}
+                        </div>
+                        <div class="alert-car-price">
+                            Current: <strong>${{ alert.listing.price|floatformat:0 }}</strong>
+                            <span class="alert-target-tag">Your target: ${{ alert.target_price|floatformat:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-status triggered-status">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Target Reached!
+                </div>
+                <div class="alert-actions">
+                    <a href="{% url 'buyer_listing_detail' alert.listing.id %}" class="wl-btn-primary small">View
+                        Now</a>
+                    <form method="POST" action="{% url 'delete_price_alert' alert.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="wl-btn-ghost small danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            {% if active_count %}
+            <div class="alerts-section-head active-head">
+                <span class="alerts-section-dot active-dot"></span>
+                <h2>Active Alerts <span>{{ active_count }}</span></h2>
+                <p>Watching for price drops on these vehicles</p>
+            </div>
+
+            {% for alert in alerts %}
+            {% if not alert.is_triggered %}
+            <div class="alert-row active">
+                <div class="alert-car-info">
+                    {% if alert.listing.image %}
+                    <img src="{{ alert.listing.image.url }}" alt="" class="alert-thumb">
+                    {% else %}
+                    <div class="alert-thumb alert-thumb-empty">🚗</div>
+                    {% endif %}
+                    <div>
+                        <div class="alert-car-name">
+                            {{ alert.listing.vehicle.year }} {{ alert.listing.vehicle.company }} {{
+                            alert.listing.vehicle.model }}
+                        </div>
+                        <div class="alert-car-price">
+                            Listed at <strong>${{ alert.listing.price|floatformat:0 }}</strong>
+                            <span class="alert-gap">
+                                {% if alert.listing.price > alert.target_price %}
+                                ${{ alert.listing.price|floatformat:0 }} → need ${{ alert.target_price|floatformat:0 }}
+                                &nbsp;(gap: ${{ alert.listing.price|add:"-0"|floatformat:0 }})
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-target-display">
+                    <span class="at-label">Your Target</span>
+                    <span class="at-value">${{ alert.target_price|floatformat:0 }}</span>
+                </div>
+                <div class="alert-actions">
+                    <a href="{% url 'set_price_alert' alert.listing.id %}" class="wl-btn-ghost small">Edit</a>
+                    <form method="POST" action="{% url 'delete_price_alert' alert.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="wl-btn-ghost small danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+        </div>
+
+        {% else %}
+        <div class="wl-empty">
+            <div class="wl-empty-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+            </div>
+            <h2>No price alerts set</h2>
+            <p>Browse listings and set a target price to get notified when a car drops.</p>
+            <a href="{% url 'browse_listings' %}" class="wl-empty-cta">Browse & Set Alerts</a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}s

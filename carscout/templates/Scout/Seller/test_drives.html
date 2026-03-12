@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+{% endblock %}
+{% block content %}
+
 
 <div class="seller-page">
     <div class="seller-page-header">
@@ -32,12 +36,12 @@
 
             {% if td.status == 'pending' %}
             <div class="td-seller-actions">
-                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                <form method="post" action="{% url 'update_test_drive' td.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="confirmed">
                     <button type="submit" class="btn-confirm">✓ Confirm</button>
                 </form>
-                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                <form method="post" action="{% url 'update_test_drive' td.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="cancelled">
                     <button type="submit" class="btn-reject">✗ Decline</button>
@@ -45,12 +49,12 @@
             </div>
             {% elif td.status == 'confirmed' %}
             <div class="td-seller-actions">
-                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                <form method="post" action="{% url 'update_test_drive' td.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="completed">
                     <button type="submit" class="btn-confirm">✓ Mark Completed</button>
                 </form>
-                <form method="post" action="{% url 'update_test_drive' td.id %}" style="display:inline;">
+                <form method="post" action="{% url 'update_test_drive' td.id %}">
                     {% csrf_token %}
                     <input type="hidden" name="status" value="cancelled">
                     <button type="submit" class="btn-reject">✗ Cancel</button>
@@ -62,11 +66,10 @@
     </div>
 
     {% else %}
-    <div class="td-empty" style="text-align:center; padding:4rem 0;">
-        <div style="font-size:3rem; margin-bottom:1rem;">🗓️</div>
-        <h3 style="color:rgba(255,255,255,0.7);">No test drive requests yet</h3>
-        <p style="color:rgba(255,255,255,0.4);">When buyers request test drives on your listings, they'll appear here.
-        </p>
+    <div class="td-empty">
+        <div class="ei-icon">🗓️</div>
+        <h3>No test drive requests yet</h3>
+        <p>When buyers request test drives on your listings, they'll appear here.</p>
     </div>
     {% endif %}
 </div>

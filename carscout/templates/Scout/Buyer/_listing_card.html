@@ -18,11 +18,11 @@
         {% endif %}
 
         <!-- Wishlist heart -->
-        <a href="{% url 'toggle_wishlist' listing.id %}?next={{ request.path }}"
-            class="wishlist-btn {% if in_wishlist %}wishlisted{% endif %}"
-            title="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+        <button type="button" class="wishlist-btn {% if in_wishlist %}wishlisted{% endif %}"
+            title="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}"
+            data-listing-id="{{ listing.id }}" data-csrf="{{ csrf_token }}" onclick="handleWishlist(this)">
             {% if in_wishlist %}❤️{% else %}🤍{% endif %}
-        </a>
+        </button>
     </div>
 
     <div class="card-body">
@@ -41,3 +41,35 @@
         <a href="{% url 'buyer_listing_detail' listing.id %}" class="card-cta">View Details →</a>
     </div>
 </article>
+
+<script>
+    function handleWishlist(btn) {
+        const listingId = btn.dataset.listingId;
+        const csrf = btn.dataset.csrf;
+
+        btn.disabled = true;
+
+        fetch('/scout/buyer/wishlist/toggle/' + listingId + '/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrf,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.in_wishlist) {
+                    btn.innerHTML = '❤️';
+                    btn.classList.add('wishlisted');
+                    btn.title = 'Remove from wishlist';
+                } else {
+                    btn.innerHTML = '🤍';
+                    btn.classList.remove('wishlisted');
+                    btn.title = 'Add to wishlist';
+                }
+            })
+            .catch(err => console.error('Wishlist error:', err))
+            .finally(() => { btn.disabled = false; });
+    }
+</script>

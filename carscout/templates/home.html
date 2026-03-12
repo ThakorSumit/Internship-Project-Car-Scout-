@@ -126,7 +126,7 @@
                 <span class="section-badge">Exclusive Technology</span>
                 <h2 class="section-title">AI That Reads<br>Every Car's Story</h2>
                 <p class="section-body">
-                    Our Gemini-powered engine analyzes accident history, service records,
+                    Our AI-powered engine analyzes accident history, service records,
                     mileage patterns, and market data — producing a trust score you can
                     actually rely on before you spend a rupee.
                 </p>
@@ -187,7 +187,7 @@
                 <span class="section-badge">Live Inventory</span>
                 <h2 class="section-title">Featured Listings</h2>
             </div>
-            <a href="/browse" class="link-arrow">
+            <a href="{% url 'browse_listings' %}" class="link-arrow">
                 Browse All
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -222,7 +222,7 @@
                     </h3>
                     <p class="car-card__price">${{ listing.price|floatformat:0 }}</p>
                     <div class="car-card__vin">VIN · {{ listing.vehicle.vin }}</div>
-                    <a href="{% url 'seller_listing_detail' listing.id %}" class="car-card__btn">
+                    <a href="{% url 'buyer_listing_detail' listing.id %}" class="car-card__btn">
                         View Details
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
                             <path d="M5 12H19M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"
@@ -311,7 +311,7 @@
                 <p>Join thousands of buyers and sellers who trust CarScout's AI-verified marketplace.</p>
                 <div class="cta-card__actions">
                     <a href="{% url 'signup' %}" class="btn-gold">Create Free Account</a>
-                    <a href="#browse" class="btn-ghost">Browse Cars</a>
+                    <a href="{% url 'browse_listings' %}" class="btn-ghost">Browse Cars</a>
                 </div>
             </div>
         </div>

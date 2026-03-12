@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="dashboard-wrapper">
 
@@ -64,12 +68,12 @@
 
         <div class="soc-actions">
           {% if offer.status == "pending" %}
-          <form method="POST" action="{% url 'accept_offer' offer.id %}" style="display:inline;">
+          <form method="POST" action="{% url 'accept_offer' offer.id %}">
             {% csrf_token %}
             <button type="submit" class="soc-btn soc-accept">Accept</button>
           </form>
           <a href="{% url 'counter_offer' offer.id %}" class="soc-btn soc-counter-btn">Counter</a>
-          <form method="POST" action="{% url 'reject_offer' offer.id %}" style="display:inline;">
+          <form method="POST" action="{% url 'reject_offer' offer.id %}">
             {% csrf_token %}
             <button type="submit" class="soc-btn soc-reject">Reject</button>
           </form>
@@ -80,7 +84,7 @@
           {% elif offer.status == "rejected" %}
           <span class="soc-rejected">✕ Rejected</span>
           {% else %}
-          <span style="color:var(--text-muted); font-size:0.82rem;">{{ offer.status|title }}</span>
+          <span class="soc-waiting">{{ offer.status|title }}</span>
           {% endif %}
         </div>
 
@@ -95,8 +99,8 @@
     </div>
 
     {% else %}
-    <div style="text-align:center; padding:80px 20px; color:rgba(255,255,255,0.3);">
-      <p style="font-size:3rem;">🤝</p>
+    <div class="seller-inbox-empty">
+      <div class="ei-icon">🤝</div>
       <p>No offers received yet.</p>
     </div>
     {% endif %}
@@ -104,225 +108,4 @@
   </main>
 </div>
 
-<style>
-  .seller-offers-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding: 0 40px 40px;
-  }
-
-  .seller-offer-card {
-    background: var(--brand-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 14px;
-    padding: 20px 24px;
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr auto auto;
-    gap: 20px;
-    align-items: center;
-    border-left: 4px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .seller-offer-card.status-pending {
-    border-left-color: #f59e0b;
-  }
-
-  .seller-offer-card.status-accepted {
-    border-left-color: #22c55e;
-  }
-
-  .seller-offer-card.status-rejected {
-    border-left-color: #ef4444;
-  }
-
-  .seller-offer-card.status-countered {
-    border-left-color: #3b82f6;
-  }
-
-  .soc-thumb {
-    width: 64px;
-    height: 46px;
-    border-radius: 7px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-  }
-
-  .soc-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .soc-vehicle {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-
-  .soc-vehicle h4 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 3px;
-  }
-
-  .soc-vehicle p {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
-    margin: 0;
-  }
-
-  .soc-vehicle p strong {
-    color: var(--brand-accent);
-  }
-
-  .soc-label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    color: rgba(255, 255, 255, 0.35);
-    margin-bottom: 3px;
-  }
-
-  .soc-val {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #fff;
-  }
-
-  .soc-email {
-    display: block;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .soc-price {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--brand-accent);
-  }
-
-  .soc-counter {
-    display: block;
-    font-size: 0.75rem;
-    color: #93c5fd;
-    margin-top: 3px;
-  }
-
-  .soc-tag {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
-
-  .tag-pending {
-    background: rgba(245, 158, 11, 0.15);
-    color: #fbbf24;
-  }
-
-  .tag-accepted {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-  }
-
-  .tag-rejected {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-  }
-
-  .tag-countered {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-  }
-
-  .tag-withdrawn {
-    background: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
-  }
-
-  .soc-date {
-    display: block;
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.3);
-    margin-top: 4px;
-  }
-
-  .soc-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .soc-btn {
-    display: inline-block;
-    border: none;
-    border-radius: 7px;
-    padding: 7px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 0.78rem;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    text-decoration: none;
-    text-align: center;
-  }
-
-  .soc-accept {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-  }
-
-  .soc-counter-btn {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-  }
-
-  .soc-reject {
-    background: rgba(239, 68, 68, 0.12);
-    color: #f87171;
-  }
-
-  .soc-btn:hover {
-    opacity: 0.75;
-  }
-
-  .soc-waiting {
-    font-size: 0.8rem;
-    color: #93c5fd;
-  }
-
-  .soc-done {
-    font-size: 0.8rem;
-    color: #4ade80;
-    font-weight: 700;
-  }
-
-  .soc-rejected {
-    font-size: 0.8rem;
-    color: #f87171;
-  }
-
-  .soc-comment {
-    grid-column: 1/-1;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-  }
-</style>
 {% endblock %}

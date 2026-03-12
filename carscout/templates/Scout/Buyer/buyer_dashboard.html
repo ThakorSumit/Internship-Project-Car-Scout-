@@ -537,7 +537,7 @@
             <a href="{% url 'browse_listings' %}" class="snav-item">
                 <span class="snav-icon">🔍</span> Browse Cars
             </a>
-            <a href="#" class="snav-item">
+            <a href="{% url 'wishlist' %}" class="snav-item">
                 <span class="snav-icon">❤️</span> Wishlist
                 {% if wishlist_count %}<span class="snav-badge">{{ wishlist_count }}</span>{% endif %}
             </a>
@@ -569,70 +569,84 @@
         <!-- Stats Row -->
         <div class="stat-row">
             <div class="stat-card">
-                <span class="stat-icon">❤️</span>
-                <div>
-                    <p class="stat-num">{{ wishlist_count }}</p>
-                    <p class="stat-lbl">Saved Cars</p>
-                </div>
+                <a href="{% url 'wishlist' %}">
+                    <span class="stat-icon">❤️</span>
+                    <div>
+                        <p class="stat-num">{{ wishlist_count }}</p>
+                        <p class="stat-lbl">Saved Cars</p>
+                    </div>
+                </a>
             </div>
             <div class="stat-card">
-                <span class="stat-icon">🤝</span>
-                <div>
-                    <p class="stat-num">0</p>
-                    <p class="stat-lbl">Active Offers</p>
-                </div>
+                <a href="{% url 'buyer_offers' %}">
+                    <span class="stat-icon">🤝</span>
+                    <div>
+                        <p class="stat-num">{{ offer_count }}</p>
+                        <p class="stat-lbl">Active Offers</p>
+                    </div>
+                </a>
             </div>
             <div class="stat-card">
-                <span class="stat-icon">📅</span>
-                <div>
-                    <p class="stat-num">0</p>
-                    <p class="stat-lbl">Test Drives</p>
-                </div>
+                <a href="{% url 'buyer_test_drives' %}">
+                    <span class="stat-icon">📅</span>
+                    <div>
+                        <p class="stat-num">{{ test_drive_count }}</p>
+                        <p class="stat-lbl">Test Drives</p>
+                    </div>
+                </a>
             </div>
             <div class="stat-card">
-                <span class="stat-icon">🔔</span>
-                <div>
-                    <p class="stat-num">0</p>
-                    <p class="stat-lbl">Price Alerts</p>
-                </div>
+                <a href="{% url 'price_alerts' %}">
+                    <span class="stat-icon">🔔</span>
+
+                    <div>
+                        <p class="stat-num">{{ price_alert_count }}</p>
+                        <p class="stat-lbl">Price Alerts
+                            {% if triggered_alert_count %}
+                            <span style="color:#4ade80; font-size:11px; font-weight:700;">· {{ triggered_alert_count }}
+                                triggered</span>
+                            {% endif %}
+                        </p>
+                </a>
             </div>
         </div>
+</div>
 
-        <!-- Wishlist Section -->
-        {% if wishlist_listings %}
-        <section class="dash-section">
-            <div class="section-hd">
-                <h2>Your Wishlist</h2>
-                <a href="#" class="section-link">View All →</a>
-            </div>
-            <div class="car-grid">
-                {% for listing in wishlist_listings %}
-                {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=True %}
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
+<!-- Wishlist Section -->
+{% if wishlist_listings %}
+<section class="dash-section">
+    <div class="section-hd">
+        <h2>Your Wishlist</h2>
+        <a href="#" class="section-link">View All →</a>
+    </div>
+    <div class="car-grid">
+        {% for listing in wishlist_listings %}
+        {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=True %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
-        <!-- Recently Listed -->
-        <section class="dash-section">
-            <div class="section-hd">
-                <h2>Recently Listed</h2>
-                <a href="{% url 'browse_listings' %}" class="section-link">Browse All →</a>
-            </div>
-            {% if recent_listings %}
-            <div class="car-grid">
-                {% for listing in recent_listings %}
-                {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=False %}
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="empty-state">
-                🚗 &nbsp; No live listings yet. Check back soon.
-            </div>
-            {% endif %}
-        </section>
+<!-- Recently Listed -->
+<section class="dash-section">
+    <div class="section-hd">
+        <h2>Recently Listed</h2>
+        <a href="{% url 'browse_listings' %}" class="section-link">Browse All →</a>
+    </div>
+    {% if recent_listings %}
+    <div class="car-grid">
+        {% for listing in recent_listings %}
+        {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=False %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        🚗 &nbsp; No live listings yet. Check back soon.
+    </div>
+    {% endif %}
+</section>
 
-    </main>
+</main>
 </div>
 
 {% endblock %}

@@ -22,18 +22,15 @@
                 <h3>{{ txn.listing.vehicle.year }} {{ txn.listing.vehicle.company }} {{ txn.listing.vehicle.model }}
                 </h3>
                 <p class="td-meta">Seller: {{ txn.listing.seller.name }} &nbsp;·&nbsp; {{ txn.get_method_display }}</p>
-                <p class="td-meta"
-                    style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--text-muted);">Ref:
+                <p class="td-meta" class="txn-ref-text">Ref:
                     {{ txn.reference_number }}</p>
                 <p class="td-meta">{{ txn.date|date:"d M Y, H:i" }}</p>
             </div>
             <div class="td-item-right">
-                <span class="txn-price"
-                    style="font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:700; color:var(--brand-accent);">${{
+                <span class="txn-price" class="txn-amount-inline">${{
                     txn.amount|floatformat:0 }}</span>
                 <span class="td-badge td-badge-confirmed">{{ txn.get_status_display }}</span>
-                <a href="{% url 'transaction_receipt' txn.id %}" class="btn-ghost"
-                    style="font-size:0.78rem; padding:0.3rem 0.8rem;">Receipt</a>
+                <a href="{% url 'transaction_receipt' txn.id %}" class="btn-ghost">Receipt</a>
             </div>
         </div>
         {% endfor %}

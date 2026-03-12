@@ -1,0 +1,1041 @@
+/* ============================================================
+   static/css/mobile.css
+   CarScout — Mobile Responsive System
+   Covers: public nav, buyer nav, seller nav, sidebars
+   ============================================================ */
+
+/* ── PUBLIC NAV (cs-nav) ─────────────────────────────────── */
+.cs-nav {
+    background: rgba(7, 12, 23, 0.95);
+    backdrop-filter: blur(16px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cs-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 68px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cs-nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+
+.cs-nav__logo-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(218, 165, 32, 0.15);
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #daa520;
+}
+
+.cs-nav__logo-text em {
+    color: #daa520;
+    font-style: normal;
+}
+
+.cs-nav__links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+}
+
+.cs-nav__link {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.cs-nav__link:hover {
+    color: #daa520;
+}
+
+.cs-nav__auth {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cs-nav__login {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.cs-nav__login:hover {
+    color: #daa520;
+}
+
+.cs-nav__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #daa520;
+    color: #070c17;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.cs-nav__cta:hover {
+    background: #f0b429;
+    transform: translateY(-1px);
+}
+
+/* Burger — hidden on desktop */
+.cs-nav__burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.cs-nav__burger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+/* Burger open state */
+.cs-nav__burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.cs-nav__burger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.cs-nav__burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile drawer */
+.cs-nav__drawer {
+    display: none;
+    flex-direction: column;
+    background: #070c17;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 20px 5% 28px;
+}
+
+.cs-nav__drawer.open {
+    display: flex;
+}
+
+.cs-nav__drawer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cs-nav__drawer-links li a {
+    display: block;
+    padding: 12px 0;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: color 0.2s;
+}
+
+.cs-nav__drawer-links li a:hover {
+    color: #daa520;
+}
+
+.cs-nav__drawer-auth {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.cs-nav__drawer-login {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.cs-nav__drawer-login:hover {
+    border-color: #daa520;
+    color: #daa520;
+}
+
+.cs-nav__drawer-cta {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: #daa520;
+    border-radius: 8px;
+    color: #070c17;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.cs-nav__drawer-cta:hover {
+    background: #f0b429;
+}
+
+
+/* ── BUYER NAV ───────────────────────────────────────────── */
+.buyer-navbar {
+    background: #070c17;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.buyer-nav-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 5%;
+    height: 64px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.buyer-nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.buyer-nav-logo span {
+    color: #daa520;
+}
+
+.buyer-nav-search {
+    flex: 1;
+    max-width: 400px;
+}
+
+.buyer-nav-search form {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.buyer-nav-search input {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 9px 14px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+}
+
+.buyer-nav-search input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.buyer-nav-search button {
+    background: none;
+    border: none;
+    padding: 9px 14px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.buyer-nav-search button:hover {
+    color: #daa520;
+}
+
+.buyer-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.buyer-nav-link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.buyer-nav-link:hover,
+.buyer-nav-link.active {
+    background: rgba(218, 165, 32, 0.1);
+    color: #daa520;
+}
+
+.buyer-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.buyer-nav-user {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+}
+
+.buyer-nav-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.buyer-nav-logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Buyer mobile burger */
+.buyer-nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-left: auto;
+}
+
+.buyer-nav-burger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.buyer-nav-burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.buyer-nav-burger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.buyer-nav-burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Buyer mobile drawer */
+.buyer-nav-drawer {
+    display: none;
+    flex-direction: column;
+    background: #070c17;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 5% 24px;
+    gap: 8px;
+}
+
+.buyer-nav-drawer.open {
+    display: flex;
+}
+
+.buyer-nav-drawer .buyer-nav-link {
+    display: block;
+    padding: 13px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+}
+
+.buyer-nav-drawer .buyer-nav-search {
+    max-width: 100%;
+    margin-bottom: 8px;
+}
+
+.buyer-nav-drawer .buyer-nav-logout {
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    margin-top: 4px;
+}
+
+
+/* ── SELLER NAV ──────────────────────────────────────────── */
+.seller-navbar {
+    background: #070c17;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.seller-nav-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 5%;
+    height: 64px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.seller-nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    flex-shrink: 0;
+}
+
+.seller-nav-logo span {
+    color: #daa520;
+}
+
+.seller-nav-logo small {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+}
+
+.seller-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.seller-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.seller-nav-link:hover,
+.seller-nav-link.active {
+    background: rgba(218, 165, 32, 0.1);
+    color: #daa520;
+}
+
+.seller-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.seller-nav-user {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.seller-nav-list-btn {
+    background: #daa520;
+    color: #070c17;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.seller-nav-list-btn:hover {
+    background: #f0b429;
+}
+
+.seller-nav-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.seller-nav-logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Seller mobile burger */
+.seller-nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-left: auto;
+}
+
+.seller-nav-burger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.seller-nav-burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.seller-nav-burger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.seller-nav-burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Seller mobile drawer */
+.seller-nav-drawer {
+    display: none;
+    flex-direction: column;
+    background: #070c17;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 5% 24px;
+}
+
+.seller-nav-drawer.open {
+    display: flex;
+}
+
+.seller-nav-drawer .seller-nav-link {
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    font-size: 0.95rem;
+}
+
+.seller-nav-drawer .seller-nav-list-btn {
+    margin-top: 12px;
+    text-align: center;
+    padding: 12px;
+    display: block;
+}
+
+.seller-nav-drawer .seller-nav-logout {
+    margin-top: 8px;
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+}
+
+
+/* ── BUYER SIDEBAR (dashboard pages) ────────────────────── */
+/* On mobile, sidebar becomes a top tab bar */
+@media (max-width: 768px) {
+    .buyer-shell {
+        flex-direction: column;
+    }
+
+    .buyer-sidebar {
+        width: 100%;
+        min-height: unset;
+        position: static;
+        padding: 0;
+        flex-direction: row;
+        overflow-x: auto;
+        border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+        /* Hide scrollbar */
+        scrollbar-width: none;
+    }
+
+    .buyer-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar-brand {
+        display: none;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+    }
+
+    .snav-item {
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px 16px;
+        font-size: 0.72rem;
+        white-space: nowrap;
+        border-right: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .snav-item.active {
+        border-right: none;
+        border-bottom: 3px solid #daa520;
+        background: rgba(218, 165, 32, 0.08);
+    }
+
+    .snav-icon {
+        font-size: 1.1rem;
+    }
+
+    .sidebar-footer {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        border-top: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
+    }
+
+    .buyer-main {
+        padding: 24px 16px;
+        max-width: 100%;
+    }
+
+    .buyer-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .stat-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .car-grid,
+    .car-grid-browse {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ── ADMIN NAV ───────────────────────────────────────────── */
+.admin-navbar {
+    background: #070c17;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.admin-nav-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 5%;
+    height: 64px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.admin-nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.admin-nav-logo span {
+    color: #daa520;
+}
+
+.admin-nav-pill {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.admin-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.admin-nav-link {
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.admin-nav-link:hover,
+.admin-nav-link.active {
+    background: rgba(218, 165, 32, 0.1);
+    color: #daa520;
+}
+
+.admin-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.admin-nav-user {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.admin-nav-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-nav-logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* Admin mobile burger */
+.admin-nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-left: auto;
+}
+
+.admin-nav-burger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.admin-nav-burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.admin-nav-burger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.admin-nav-burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Admin mobile drawer */
+.admin-nav-drawer {
+    display: none;
+    flex-direction: column;
+    background: #070c17;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px 5% 24px;
+}
+
+.admin-nav-drawer.open {
+    display: flex;
+}
+
+.admin-nav-drawer .admin-nav-link {
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    font-size: 0.95rem;
+}
+
+.admin-nav-drawer .admin-nav-logout {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+}
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 1024px) {
+
+    /* Buyer nav — hide user name, compress */
+    .buyer-nav-user {
+        display: none;
+    }
+
+    .buyer-nav-search {
+        max-width: 260px;
+    }
+
+    /* Seller nav — hide user name */
+    .seller-nav-user {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    /* ── Public nav ── */
+    .cs-nav__links {
+        display: none;
+    }
+
+    .cs-nav__auth {
+        display: none;
+    }
+
+    .cs-nav__burger {
+        display: flex;
+    }
+
+    /* ── Buyer nav ── */
+    .buyer-nav-links {
+        display: none;
+    }
+
+    .buyer-nav-search {
+        display: none;
+    }
+
+    .buyer-nav-actions {
+        display: none;
+    }
+
+    .buyer-nav-burger {
+        display: flex;
+    }
+
+    /* ── Seller nav ── */
+    .seller-nav-links {
+        display: none;
+    }
+
+    .seller-nav-right {
+        display: none;
+    }
+
+    .seller-nav-burger {
+        display: flex;
+    }
+
+    /* ── Admin nav ── */
+    .admin-nav-links {
+        display: none;
+    }
+
+    .admin-nav-actions {
+        display: none;
+    }
+
+    .admin-nav-burger {
+        display: flex;
+    }
+
+    /* ── Browse page filter bar ── */
+    .filter-bar {
+        padding: 16px;
+    }
+
+    .filter-chips {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .filter-chips select {
+        width: 100%;
+    }
+
+    .filter-chips .price-input {
+        width: 100%;
+    }
+
+    .btn-filter-apply,
+    .btn-filter-clear {
+        grid-column: span 2;
+        text-align: center;
+    }
+
+    /* ── Listing detail hero ── */
+    .bld-hero {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .bld-body {
+        grid-template-columns: 1fr;
+    }
+
+    .bld-right {
+        order: -1;
+    }
+
+    .bld-quick-specs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bld-specs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-split {
+        grid-template-columns: 1fr;
+    }
+
+    .bld-actions {
+        flex-direction: column;
+    }
+
+    .bld-cta-primary,
+    .bld-cta-secondary {
+        width: 100%;
+    }
+
+    /* ── General page padding ── */
+    .bld-page {
+        padding: 20px 4% 60px;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .cs-nav__inner {
+        padding: 0 4%;
+        height: 60px;
+    }
+
+    .cs-nav__logo-text {
+        font-size: 1.1rem;
+    }
+
+    .buyer-nav-container,
+    .seller-nav-container {
+        padding: 0 4%;
+        height: 58px;
+    }
+
+    .stat-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-card {
+        padding: 14px 16px;
+    }
+
+    .stat-num {
+        font-size: 1.3rem;
+    }
+
+    .bld-price {
+        font-size: 26px;
+    }
+
+    .bld-title {
+        font-size: 26px;
+    }
+}

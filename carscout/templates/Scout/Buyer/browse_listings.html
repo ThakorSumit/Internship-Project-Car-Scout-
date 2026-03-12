@@ -18,13 +18,13 @@
             <a href="{% url 'browse_listings' %}" class="snav-item active">
                 <span class="snav-icon">🔍</span> Browse Cars
             </a>
-            <a href="#" class="snav-item">
+            <a href="{% url 'wishlist' %}" class="snav-item">
                 <span class="snav-icon">❤️</span> Wishlist
             </a>
-            <a href="#" class="snav-item">
+            <a href="{% url 'buyer_inbox' %}" class="snav-item">
                 <span class="snav-icon">💬</span> Messages
             </a>
-            <a href="#" class="snav-item">
+            <a href="{% url 'buyer_offers' %}" class="snav-item">
                 <span class="snav-icon">🤝</span> My Offers
             </a>
         </nav>
@@ -51,6 +51,16 @@
             </div>
 
             <div class="filter-chips">
+
+                <select name="sort">
+                    <option value="">Sort: Featured</option>
+                    <option value="newest" {% if filter_sort == "newest" %}selected{% endif %}>Newest First</option>
+                    <option value="price_asc" {% if filter_sort == "price_asc" %}selected{% endif %}>Price: Low →
+                        High</option>
+                    <option value="price_desc" {% if filter_sort == "price_desc" %}selected{% endif %}>Price: High →
+                        Low</option>
+                    <option value="score" {% if filter_sort == "score" %}selected{% endif %}>AI Score</option>
+                </select>
 
                 <select name="fuel">
                     <option value="">All Fuel Types</option>
@@ -105,6 +115,21 @@
             <h3>No listings found</h3>
             <p>Try adjusting your filters or search terms.</p>
             <a href="{% url 'browse_listings' %}" class="btn-browse">Clear Filters</a>
+        </div>
+        {% endif %}
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&q={{ filter_q }}&fuel={{ filter_fuel }}&transmission={{ filter_transmission }}&condition={{ filter_condition }}&min_price={{ filter_min_price }}&max_price={{ filter_max_price }}&sort={{ filter_sort }}"
+                class="page-btn">← Prev</a>
+            {% endif %}
+
+            <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ filter_q }}&fuel={{ filter_fuel }}&transmission={{ filter_transmission }}&condition={{ filter_condition }}&min_price={{ filter_min_price }}&max_price={{ filter_max_price }}&sort={{ filter_sort }}"
+                class="page-btn">Next →</a>
+            {% endif %}
         </div>
         {% endif %}
 

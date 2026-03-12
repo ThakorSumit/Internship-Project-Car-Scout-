@@ -2,27 +2,73 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% block extra_css %}
-    {% endblock extra_css %}
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     {% block extra_css %}
+     {% endblock extra_css %}
 </head>
 
 <body>
-    {% if not request.user.is_authenticated %}
-         {% include 'usernave.html' %}
-    {% elif request.user.role == 'Buyer' %}
-         {% include 'Scout/Buyer/usernave.html' %}
-    {% elif request.user.role == 'Seller' %}
-         {% include 'Scout/Seller/usernave.html' %}
-    {% elif request.user.role == 'Admin' %}
-         {% include 'Scout/Admin/usernave.html' %}
-    {% else %}
-         {% include 'usernave.html' %}
-    {% endif %}
-    {% block content %}
-    {% endblock content %}
-    {% include 'footer.html' %}
+
+     {% if not request.user.is_authenticated %}
+     {% include 'usernave.html' %}
+     {% elif request.user.role == 'Buyer' %}
+     {% include 'Scout/Buyer/buyer_usernave.html' %}
+     {% elif request.user.role == 'Seller' %}
+     {% include 'Scout/Seller/seller_usernave.html' %}
+     {% elif request.user.role == 'Admin' %}
+     {% include 'Scout/Admin/admin_usernave.html' %}
+     {% else %}
+     {% include 'usernave.html' %}
+     {% endif %}
+
+     {% block content %}
+     {% endblock content %}
+
+     {% include 'footer.html' %}
+
+     <!-- ── TOAST CONTAINER ── -->
+     {% if messages %}
+     <div class="toast-container" id="toastContainer">
+          {% for message in messages %}
+          <div class="toast toast--{{ message.tags }}" role="alert">
+               <span class="toast__icon">
+                    {% if message.tags == 'success' %}✓
+                    {% elif message.tags == 'error' %}✕
+                    {% elif message.tags == 'warning' %}⚠
+                    {% else %}ℹ
+                    {% endif %}
+               </span>
+               <span class="toast__text">{{ message }}</span>
+               <button class="toast__close" onclick="this.parentElement.remove()">×</button>
+          </div>
+          {% endfor %}
+     </div>
+     {% endif %}
+
+     <!-- ── TOAST JS — auto dismiss after 4s ── -->
+     <script>
+          (function () {
+               // Public nav burger
+               const burger = document.getElementById('csBurger');
+               const drawer = document.getElementById('csDrawer');
+               if (burger && drawer) {
+                    burger.addEventListener('click', function () {
+                         burger.classList.toggle('open');
+                         drawer.classList.toggle('open');
+                    });
+               }
+
+               // Auto dismiss toasts
+               const toasts = document.querySelectorAll('.toast');
+               toasts.forEach(function (toast, i) {
+                    setTimeout(function () {
+                         toast.style.animation = 'toastOut 0.3s forwards';
+                         setTimeout(function () { toast.remove(); }, 300);
+                    }, 4000 + i * 200);
+               });
+          })();
+     </script>
 
 </body>
 

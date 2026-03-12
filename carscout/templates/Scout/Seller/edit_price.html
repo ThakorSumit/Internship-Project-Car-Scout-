@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+{% endblock %}
+{% block content %}
+
+<div class="edit-price-page">
+    <div class="ep-container">
+
+        <a href="{% url 'seller_listing_detail' listing.id %}" class="ep-back">← Back to Listing</a>
+
+        <!-- Vehicle Preview -->
+        <div class="ep-preview">
+            {% if listing.image %}
+            <img src="{{ listing.image.url }}" alt="" class="ep-thumb">
+            {% else %}
+            <div class="ep-thumb ep-thumb-empty">🚗</div>
+            {% endif %}
+            <div class="ep-preview-info">
+                <div class="ep-preview-year">{{ listing.vehicle.year }} · {{ listing.vehicle.fuel_type }}</div>
+                <div class="ep-preview-name">{{ listing.vehicle.company }} {{ listing.vehicle.model }}</div>
+                <div class="ep-current-price">
+                    Current price: <strong>${{ listing.price|floatformat:0 }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="ep-card">
+            <div class="ep-card-header">
+                <div class="ep-icon">💰</div>
+                <div>
+                    <h2>Update Asking Price</h2>
+                    <p>Buyers with price alerts will be notified if your new price meets their target.</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="ep-field">
+                    <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
+                    <div class="ep-input-wrap">
+                        <span class="ep-currency">$</span>
+                        {{ form.price }}
+                    </div>
+                    {% if form.price.errors %}
+                    <span class="ep-error">{{ form.price.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="ep-actions">
+                    <button type="submit" class="ep-btn-save">Update Price</button>
+                    <a href="{% url 'seller_listing_detail' listing.id %}" class="ep-btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

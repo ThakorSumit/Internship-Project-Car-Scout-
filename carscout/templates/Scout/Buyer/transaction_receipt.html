@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
 <div class="td-page">
-    <div class="td-card" style="text-align:center;">
+    <div class="td-card">
 
-        <div style="font-size:3.5rem; margin-bottom:1rem;">✅</div>
-        <h2 style="font-family:'Syne',sans-serif; color:var(--text-head); margin-bottom:0.5rem;">Purchase Complete!</h2>
-        <p style="color:var(--text-muted); margin-bottom:2rem;">Your transaction has been recorded successfully.</p>
+        <div>✅</div>
+        <h2>Purchase Complete!</h2>
+        <p>Your transaction has been recorded successfully.</p>
 
-        <div class="txn-summary" style="text-align:left;">
+        <div class="txn-summary">
             <div class="txn-row">
                 <span class="txn-label">Vehicle</span>
                 <span class="txn-value">{{ txn.listing.vehicle.year }} {{ txn.listing.vehicle.company }} {{
@@ -24,8 +24,7 @@
             </div>
             <div class="txn-row">
                 <span class="txn-label">Reference #</span>
-                <span class="txn-value"
-                    style="font-family:'JetBrains Mono',monospace; font-size:0.9rem; letter-spacing:0.08em;">{{
+                <span class="txn-value">{{
                     txn.reference_number }}</span>
             </div>
             <div class="txn-row">
@@ -43,7 +42,7 @@
             </div>
         </div>
 
-        <div class="td-actions" style="justify-content:center; margin-top:2rem;">
+        <div class="td-actions">
             <a href="{% url 'buyer_transactions' %}" class="btn-gold">My Purchases</a>
             <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">Dashboard</a>
         </div>

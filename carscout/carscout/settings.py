@@ -13,6 +13,16 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from  django.contrib.messages import constants as msg_constants
+
+
+MESSAGE_TAGS = {
+    msg_constants.DEBUG: 'debug',
+    msg_constants.INFO: 'info',
+    msg_constants.SUCCESS: 'success',
+    msg_constants.WARNING: 'warning',
+    msg_constants.ERROR: 'error',
+}
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

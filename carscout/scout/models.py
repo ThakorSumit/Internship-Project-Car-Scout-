@@ -59,6 +59,7 @@ class Vehicle(models.Model):
 class Listing(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),          # just submitted, waiting for AI inspection
+        ('pending_review','Pending Review'), #after ai_scaning line 
         ('ai_scanning', 'AI Scanning'),  # gemini is analyzing it
         ('live', 'Live'),                # approved and visible to buyers
         ('sold', 'Sold'),                # transaction completed
@@ -126,9 +127,9 @@ class InspectionReport(models.Model):
     accident_history    = models.CharField(max_length=20, choices=ACCIDENT_CHOICES, default='none')
     accident_details    = models.TextField(default='')        # seller describes what happened
     service_history     = models.TextField(default='')        # maintenance records description
-    previous_owners     = models.IntegerField(default=1)
+    previous_owners     = models.IntegerField(default=0)
 
-    # AI Output
+    # AI Outputs
     score               = models.DecimalField(
                             max_digits=3, decimal_places=1,
                             validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],

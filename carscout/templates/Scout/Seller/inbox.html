@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="dashboard-wrapper">
 
@@ -22,64 +26,59 @@
             </div>
         </header>
 
-        <div style="padding:0 40px 40px;">
+        <div class="seller-inbox-list">
             {% if inbox %}
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                {% for item in inbox %}
-                <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" style="display:flex; align-items:center; gap:16px;
-                  background:var(--brand-secondary); border:1px solid rgba(255,255,255,0.07);
-                  border-radius:14px; padding:16px 20px; text-decoration:none;
-                  transition:background 0.2s;
-                  {% if item.unread %}border-left:4px solid var(--brand-accent);{% endif %}">
+
+            {% for item in inbox %}
+            {% if item.unread %}
+            <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" class="seller-inbox-row unread">
+                {% else %}
+                <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" class="seller-inbox-row">
+                    {% endif %}
 
                     <!-- Car thumb -->
-                    <div
-                        style="width:60px; height:44px; border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.05); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
-                        {% if item.listing.image %}<img src="{{ item.listing.image.url }}" alt=""
-                            style="width:100%; height:100%; object-fit:cover;">
+                    <div class="sir-thumb">
+                        {% if item.listing.image %}<img src="{{ item.listing.image.url }}" alt="">
                         {% else %}🚗{% endif %}
                     </div>
 
                     <!-- Info -->
-                    <div style="flex:1; min-width:0;">
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:3px;">
-                            <h4
-                                style="font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; color:#fff; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{ item.listing.vehicle.model }}
+                    <div class="sir-info">
+                        <div class="sir-title-row">
+                            <h4>
+                                {{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{
+                                item.listing.vehicle.model }}
                             </h4>
                             {% if item.unread %}
-                            <span
-                                style="background:var(--brand-accent); color:var(--brand-primary); font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:999px; flex-shrink:0;">{{
+                            <span class="sir-badge">{{
                                 item.unread }} new</span>
                             {% endif %}
                         </div>
-                        <p style="font-size:0.78rem; color:rgba(255,255,255,0.4); margin:0 0 3px;">Buyer: {{ item.buyer.name }} · {{ item.buyer.email }}</p>
+                        <p class="sir-buyer">Buyer: {{ item.buyer.name }} · {{ item.buyer.email }}</p>
                         {% if item.last_msg %}
-                        <p
-                            style="font-size:0.82rem; color:rgba(255,255,255,0.5); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            {% if item.last_msg.sender == request.user %}You: {% endif %}{{ item.last_msg.body|truncatechars:55 }}
+                        <p class="sir-preview">
+                            {% if item.last_msg.sender == request.user %}You: {% endif %}{{
+                            item.last_msg.body|truncatechars:55 }}
                         </p>
                         {% endif %}
                     </div>
 
                     <!-- Time -->
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;">
+                    <div class="sir-meta">
                         {% if item.last_msg %}
-                        <span style="font-size:0.75rem; color:rgba(255,255,255,0.3);">{{ item.last_msg.created_at|date:"M d" }}</span>
+                        <span class="sir-time">{{ item.last_msg.created_at|date:"M d" }}</span>
                         {% endif %}
-                        <span style="color:var(--brand-accent); font-weight:700;">→</span>
+                        <span class="sir-arrow">→</span>
                     </div>
 
                 </a>
                 {% endfor %}
-            </div>
-
-            {% else %}
-            <div style="text-align:center; padding:80px 20px; color:rgba(255,255,255,0.3);">
-                <p style="font-size:3rem;">💬</p>
-                <p>No messages yet. Buyers will contact you once they're interested.</p>
-            </div>
-            {% endif %}
+                {% else %}
+                <div class="seller-inbox-empty">
+                    <div class="ei-icon">💬</div>
+                    <p>No messages yet. Buyers will contact you once they're interested.</p>
+                </div>
+                {% endif %}
         </div>
 
     </main>
