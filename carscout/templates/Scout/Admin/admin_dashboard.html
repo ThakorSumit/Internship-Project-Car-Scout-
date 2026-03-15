@@ -113,7 +113,7 @@
         <div class="revenue-banner">
             <div class="rev-left">
                 <span class="rev-label">TOTAL PLATFORM REVENUE</span>
-                <span class="rev-value">${{ total_revenue|floatformat:0 }}</span>
+                <span class="rev-value">₹{{ total_revenue|floatformat:0 }}</span>
             </div>
             <div class="rev-right">
                 <span class="rev-stat">{{ total_transactions }} transactions closed</span>
@@ -173,7 +173,7 @@
                             <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);">
                                 {{ listing.seller.email|truncatechars:22 }}</div>
                         </td>
-                        <td><span class="price-cell">${{ listing.price|floatformat:0 }}</span></td>
+                        <td><span class="price-cell">₹{{ listing.price|floatformat:0 }}</span></td>
                         <td>
                             {% if listing.inspection and listing.inspection.score %}
                             <span class="ai-chip">⚡ {{ listing.inspection.score }}/10</span>
@@ -237,6 +237,7 @@
                     {% for listing in recent_listings %}
                     <tr>
                         <td>
+                            <a href="{% url 'admin_inspection_report' listing.id %}">
                             <div class="vehicle-cell">
                                 {% if listing.image %}
                                 <img class="vehicle-thumb" src="{{ listing.image.url }}" alt="{{ listing.vehicle }}">
@@ -251,13 +252,14 @@
                                     <div class="vehicle-vin">{{ listing.vehicle.fuel_type }} · {{ listing.vehicle.transmission }}</div>
                                 </div>
                             </div>
+                        </a>
                         </td>
                         <td class="td-seller">
                             <div>{{ listing.seller.name }}</div>
                             <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);">
                                 {{ listing.seller.email|truncatechars:22 }}</div>
                         </td>
-                        <td><span class="price-cell">${{ listing.price|floatformat:0 }}</span></td>
+                        <td><span class="price-cell">₹{{ listing.price|floatformat:0 }}</span></td>
                         <td>
                             {% if listing.inspection and listing.inspection.score %}
                             <span class="ai-chip">⚡ {{ listing.inspection.score }}/10</span>
@@ -350,7 +352,7 @@
                         <div class="user-av buyer" style="font-size:0.7rem;">{{ offer.buyer.name|first|upper }}</div>
                         <div class="user-name-text">
                             <strong>{{ offer.listing.vehicle.company }} {{ offer.listing.vehicle.model }}</strong>
-                            <span>by {{ offer.buyer.name }} · ${{ offer.amount|floatformat:0 }}</span>
+                            <span>by {{ offer.buyer.name }} · ₹{{ offer.amount|floatformat:0 }}</span>
                         </div>
                         <span
                             class="user-role-tag {% if offer.status == 'pending' %}tag-buyer{% elif offer.status == 'accepted' %}tag-seller{% else %}tag-admin{% endif %}"
@@ -392,7 +394,7 @@
                                 {{ txn.listing.vehicle.company }} {{ txn.listing.vehicle.model }}</div>
                         </td>
                         <td class="td-seller">{{ txn.buyer.name }}</td>
-                        <td><span class="price-cell">${{ txn.amount|floatformat:0 }}</span></td>
+                        <td><span class="price-cell">₹{{ txn.amount|floatformat:0 }}</span></td>
                         <td style="font-size:0.82rem;color:rgba(255,255,255,0.45);">{{ txn.method|default:"—" }}</td>
                         <td style="font-size:0.8rem;color:rgba(255,255,255,0.3);">{{ txn.date|date:"M d, Y" }}</td>
                     </tr>
@@ -437,7 +439,7 @@
                 </a>
                 <a href="/django-admin/scout/transaction/" class="qa-item">
                     <div class="qa-icon">💰</div>
-                    <div class="qa-text"><strong>All Transactions</strong><span>${{ total_revenue|floatformat:0 }} total
+                    <div class="qa-text"><strong>All Transactions</strong><span>₹{{ total_revenue|floatformat:0 }} total
                             revenue</span></div>
                     <span class="qa-arrow">→</span>
                 </a>

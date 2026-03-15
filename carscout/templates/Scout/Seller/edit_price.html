@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
+
 {% block content %}
 
 <div class="edit-price-page">
@@ -22,7 +23,7 @@
                 <div class="ep-preview-year">{{ listing.vehicle.year }} · {{ listing.vehicle.fuel_type }}</div>
                 <div class="ep-preview-name">{{ listing.vehicle.company }} {{ listing.vehicle.model }}</div>
                 <div class="ep-current-price">
-                    Current price: <strong>${{ listing.price|floatformat:0 }}</strong>
+                    Current price: <strong>₹{{ listing.price|floatformat:0 }}</strong>
                 </div>
             </div>
         </div>
@@ -43,7 +44,7 @@
                 <div class="ep-field">
                     <label for="{{ form.price.id_for_label }}">{{ form.price.label }}</label>
                     <div class="ep-input-wrap">
-                        <span class="ep-currency">$</span>
+                        <span class="ep-currency">₹</span>
                         {{ form.price }}
                     </div>
                     {% if form.price.errors %}

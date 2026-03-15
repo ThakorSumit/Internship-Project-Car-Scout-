@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div style="max-width:860px; margin:100px auto 80px; padding:0 24px;">
+
+    <!-- Header -->
+    <div style="margin-bottom:48px;">
+        <span style="font-size:11px; color:var(--gold); text-transform:uppercase;
+                     letter-spacing:2px; font-weight:600;">Legal</span>
+        <h1 style="font-family:var(--font-display); font-size:42px; color:var(--text);
+                   margin:12px 0 16px; line-height:1.2;">
+            Terms &amp; <em style="color:var(--gold); font-style:normal;">Conditions</em>
+        </h1>
+        <p style="color:var(--text-muted); font-size:14px;">
+            Last updated: June 2025 &nbsp;·&nbsp; By using CarScout you agree to these terms.
+        </p>
+    </div>
+
+    <!-- Content -->
+    <div style="display:flex; flex-direction:column; gap:32px;">
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                1. Acceptance of Terms
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                By registering or using CarScout, you agree to be bound by these Terms and Conditions.
+                If you do not agree, you must not use this platform. These terms apply to all users
+                including buyers, sellers, and visitors.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                2. Platform Role
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                CarScout is a marketplace platform that connects car buyers and sellers.
+                We are not a party to any transaction between users. We do not own, inspect,
+                or guarantee the condition of any vehicle listed. All transactions are solely
+                between the buyer and seller.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                3. Seller Responsibilities
+            </h2>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li>All listing information must be accurate, complete, and not misleading</li>
+                <li>Sellers must own or have authority to sell the vehicle listed</li>
+                <li>Sellers must disclose known defects, accident history, and ownership records honestly</li>
+                <li>Fraudulent listings will result in immediate account termination</li>
+                <li>Sellers agree that CarScout admin may approve, reject, or remove any listing</li>
+                <li>Sellers are responsible for honouring accepted offers and confirmed test drives</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                4. Buyer Responsibilities
+            </h2>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li>Buyers are encouraged to physically inspect vehicles before completing any transaction</li>
+                <li>AI inspection reports are advisory — not a substitute for professional mechanical inspection</li>
+                <li>Buyers must honour accepted offers and initiated transactions</li>
+                <li>Buyers must not submit fraudulent offers or abuse the offer system</li>
+                <li>Test drive no-shows may result in account restrictions</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                5. AI Inspection Reports
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                CarScout uses AI to generate vehicle inspection reports based on seller-provided data.
+                These reports are for informational purposes only and do not constitute a certified
+                mechanical inspection. CarScout makes no guarantees about the accuracy of AI-generated
+                scores, assessments, or recommendations. Users rely on these reports at their own risk.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                6. Payments
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0 0 12px;">
+                Payments on CarScout are processed via Razorpay. By initiating a payment, you agree
+                to Razorpay's terms of service. CarScout does not store payment credentials.
+            </p>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                Refunds, disputes, and chargebacks must be raised directly with CarScout support
+                within 7 days of the transaction. CarScout reserves the right to facilitate or
+                decline refund requests at its discretion.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                7. Prohibited Conduct
+            </h2>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li>Listing stolen, illegally acquired, or encumbered vehicles</li>
+                <li>Creating fake accounts or impersonating other users</li>
+                <li>Attempting to take transactions off-platform to avoid fees</li>
+                <li>Posting false, misleading, or duplicate listings</li>
+                <li>Harassment, abuse, or threats towards other users</li>
+                <li>Attempting to manipulate AI inspection scores</li>
+                <li>Any activity that violates Indian law</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                8. Account Termination
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                CarScout reserves the right to suspend or permanently terminate any account that
+                violates these terms, engages in fraudulent activity, or is reported for misconduct.
+                Terminated users may not re-register without explicit approval.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                9. Limitation of Liability
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                CarScout is not liable for any loss, damage, or dispute arising from transactions
+                between users, inaccurate listings, or AI report outputs. Our liability is limited
+                to the amount paid in platform fees, if any. Use of this platform is at your own risk.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                10. Governing Law
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                These terms are governed by the laws of India. Any disputes shall be subject to
+                the exclusive jurisdiction of the courts of Gujarat, India.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                11. Contact
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                For any questions about these terms, contact us at
+                <a href="mailto:legal@carscout.in"
+                   style="color:var(--gold); text-decoration:none;">legal@carscout.in</a>.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Footer nav -->
+    <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border);
+                display:flex; gap:24px; flex-wrap:wrap;">
+        <a href="{% url 'privacy_policy' %}"
+           style="color:var(--gold); font-size:14px; text-decoration:none;">
+            Privacy Policy →
+        </a>
+        <a href="{% url 'home' %}"
+           style="color:var(--text-muted); font-size:14px; text-decoration:none;">
+            ← Back to Home
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

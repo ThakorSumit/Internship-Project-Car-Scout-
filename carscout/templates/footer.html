@@ -52,10 +52,10 @@
             <div class="cs-footer__col">
                 <h4 class="cs-footer__col-title">Buy & Sell</h4>
                 <ul class="cs-footer__links">
-                    <li><a href="#">Certified Used Cars</a></li>
-                    <li><a href="#">New Car Launches</a></li>
-                    <li><a href="#">Sell Your Car</a></li>
-                    <li><a href="#">Car Comparisons</a></li>
+                    <li><a href="{% url 'browse_listings' %}?condition=used">Certified Used Cars</a></li>
+                    <li><a href="{% url 'browse_listings' %}?condition=new">New Car Launches</a></li>
+                    <li><a href="{% url 'add_listing' %}">Sell Your Car</a></li>
+                    <li><a href="{% url 'compare' %}">Car Comparisons</a></li>
                 </ul>
             </div>
 
@@ -101,9 +101,9 @@
                 &copy; {% now "Y" %} CarScout Inc. All rights reserved.
             </p>
             <div class="cs-footer__legal">
-                <a href="#">Privacy Policy</a>
+                <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
                 <span class="cs-footer__legal-dot"></span>
-                <a href="#">Terms of Service</a>
+                <a href="{% url 'terms_and_conditions' %}">Terms of Service</a>
             </div>
         </div>
     </div>

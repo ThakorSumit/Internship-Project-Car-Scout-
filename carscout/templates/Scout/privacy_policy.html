@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div style="max-width:860px; margin:100px auto 80px; padding:0 24px;">
+
+    <!-- Header -->
+    <div style="margin-bottom:48px;">
+        <span style="font-size:11px; color:var(--gold); text-transform:uppercase;
+                     letter-spacing:2px; font-weight:600;">Legal</span>
+        <h1 style="font-family:var(--font-display); font-size:42px; color:var(--text);
+                   margin:12px 0 16px; line-height:1.2;">
+            Privacy <em style="color:var(--gold); font-style:normal;">Policy</em>
+        </h1>
+        <p style="color:var(--text-muted); font-size:14px;">
+            Last updated: June 2025 &nbsp;·&nbsp; Effective immediately
+        </p>
+    </div>
+
+    <!-- Content -->
+    <div style="display:flex; flex-direction:column; gap:32px;">
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                1. Information We Collect
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0 0 12px;">
+                When you register on CarScout, we collect personal information including your name, email address,
+                phone number, and location. Sellers additionally provide vehicle details, images, and pricing
+                information for their listings.
+            </p>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                We also automatically collect usage data such as pages visited, search queries, filters applied,
+                and device/browser information to improve our platform experience.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                2. How We Use Your Information
+            </h2>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li>To create and manage your CarScout account</li>
+                <li>To facilitate transactions between buyers and sellers</li>
+                <li>To send price alert notifications you have subscribed to</li>
+                <li>To process payments securely via Razorpay</li>
+                <li>To generate AI-powered vehicle inspection reports</li>
+                <li>To send transactional emails (offer updates, test drive confirmations)</li>
+                <li>To improve platform features and user experience</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                3. Payments & Financial Data
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                CarScout uses <strong style="color:var(--text);">Razorpay</strong> as our payment gateway.
+                We do not store your card details, UPI credentials, or net banking information on our servers.
+                All payment data is handled directly by Razorpay in accordance with PCI-DSS standards.
+                We only retain transaction references and amounts for record-keeping purposes.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                4. AI Inspection Reports
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                Vehicle data submitted by sellers is processed by Google's Gemini AI to generate inspection
+                reports. This data is transmitted to Google's API under their privacy policy. AI-generated
+                reports are advisory only and do not constitute a professional mechanical inspection.
+                CarScout is not liable for decisions made based on AI report outputs.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                5. Data Sharing
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0 0 12px;">
+                We do not sell your personal data to third parties. We share data only with:
+            </p>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li><strong style="color:var(--text);">Razorpay</strong> — for payment processing</li>
+                <li><strong style="color:var(--text);">Groq API</strong> — for AI inspection reports</li>
+                <li><strong style="color:var(--text);">Other users</strong> — buyer/seller contact details shared only when a transaction is initiated</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                6. Data Retention
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                We retain your account data for as long as your account is active. If you delete your account,
+                personal data is removed within 30 days. Transaction records may be retained for up to 7 years
+                for legal and accounting compliance. You may request deletion of your data by contacting us.
+            </p>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                7. Your Rights
+            </h2>
+            <ul style="color:var(--text-muted); line-height:2; margin:0; padding-left:20px;">
+                <li>Access the personal data we hold about you</li>
+                <li>Request correction of inaccurate data</li>
+                <li>Request deletion of your account and data</li>
+                <li>Opt out of non-transactional emails at any time</li>
+                <li>Withdraw consent for data processing (may limit platform access)</li>
+            </ul>
+        </div>
+
+        <div style="background:var(--bg-card); border:1px solid var(--border);
+                    border-radius:16px; padding:32px 36px;">
+            <h2 style="font-family:var(--font-display); font-size:20px; color:var(--gold); margin:0 0 16px;">
+                8. Contact Us
+            </h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin:0;">
+                For any privacy-related queries or data requests, contact us at
+                <a href="mailto:privacy@carscout.in"
+                   style="color:var(--gold); text-decoration:none;">privacy@carscout.in</a>.
+                We aim to respond within 5 business days.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Footer nav -->
+    <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border);
+                display:flex; gap:24px; flex-wrap:wrap;">
+        <a href="{% url 'terms_and_conditions' %}"
+           style="color:var(--gold); font-size:14px; text-decoration:none;">
+            Terms &amp; Conditions →
+        </a>
+        <a href="{% url 'home' %}"
+           style="color:var(--text-muted); font-size:14px; text-decoration:none;">
+            ← Back to Home
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

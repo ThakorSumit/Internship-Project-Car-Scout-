@@ -1,9 +1,14 @@
 {% load static %}
-<html>
+<html lang="en">
 
 <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>{% block title %}CarScout{% endblock %}</title>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+
      {% block extra_css %}
      {% endblock extra_css %}
 </head>
@@ -11,15 +16,15 @@
 <body>
 
      {% if not request.user.is_authenticated %}
-     {% include 'usernave.html' %}
+          {% include 'usernave.html' %}
      {% elif request.user.role == 'Buyer' %}
-     {% include 'Scout/Buyer/buyer_usernave.html' %}
+          {% include 'Scout/Buyer/buyer_usernave.html' %}
      {% elif request.user.role == 'Seller' %}
-     {% include 'Scout/Seller/seller_usernave.html' %}
+          {% include 'Scout/Seller/seller_usernave.html' %}
      {% elif request.user.role == 'Admin' %}
-     {% include 'Scout/Admin/admin_usernave.html' %}
+          {% include 'Scout/Admin/admin_usernave.html' %}
      {% else %}
-     {% include 'usernave.html' %}
+          {% include 'usernave.html' %}
      {% endif %}
 
      {% block content %}
@@ -46,10 +51,8 @@
      </div>
      {% endif %}
 
-     <!-- ── TOAST JS — auto dismiss after 4s ── -->
      <script>
           (function () {
-               // Public nav burger
                const burger = document.getElementById('csBurger');
                const drawer = document.getElementById('csDrawer');
                if (burger && drawer) {
@@ -59,7 +62,6 @@
                     });
                }
 
-               // Auto dismiss toasts
                const toasts = document.querySelectorAll('.toast');
                toasts.forEach(function (toast, i) {
                     setTimeout(function () {

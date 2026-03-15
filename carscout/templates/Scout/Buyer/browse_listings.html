@@ -12,25 +12,18 @@
     <aside class="buyer-sidebar">
         <div class="sidebar-brand">CAR<span>SCOUT</span></div>
         <nav class="sidebar-nav">
-            <a href="{% url 'buyer_dashboard' %}" class="snav-item">
-                <span class="snav-icon">🏠</span> Dashboard
-            </a>
-            <a href="{% url 'browse_listings' %}" class="snav-item active">
-                <span class="snav-icon">🔍</span> Browse Cars
-            </a>
-            <a href="{% url 'wishlist' %}" class="snav-item">
-                <span class="snav-icon">❤️</span> Wishlist
-            </a>
-            <a href="{% url 'buyer_inbox' %}" class="snav-item">
-                <span class="snav-icon">💬</span> Messages
-            </a>
-            <a href="{% url 'buyer_offers' %}" class="snav-item">
-                <span class="snav-icon">🤝</span> My Offers
-            </a>
+            <a href="{% url 'buyer_dashboard' %}" class="snav-item"><span class="snav-icon">🏠</span> Dashboard</a>
+            <a href="{% url 'browse_listings' %}" class="snav-item active"><span class="snav-icon">🔍</span> Browse Cars</a>
+            <a href="{% url 'wishlist' %}" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
+            <a href="{% url 'buyer_inbox' %}" class="snav-item"><span class="snav-icon">💬</span> Messages</a>
+            <a href="{% url 'buyer_offers' %}" class="snav-item"><span class="snav-icon">🤝</span> My Offers</a>
+            <a href="{% url 'buyer_test_drives' %}" class="snav-item"><span class="snav-icon">📅</span> Test  Drives</a>
+            <a href="{% url 'price_alerts' %}" class="snav-item"><span class="snav-icon">🔔</span> Price Alerts</a>
+            <a href="{% url 'compare' %}" class="snav-item"><span class="snav-icon">⚖️</span> Compare Cars</a>
         </nav>
         <div class="sidebar-footer">
             <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
-        </div>
+        </div>  
     </aside>
 
     <!-- Main -->
@@ -57,24 +50,24 @@
                     <option value="newest" {% if filter_sort == "newest" %}selected{% endif %}>Newest First</option>
                     <option value="price_asc" {% if filter_sort == "price_asc" %}selected{% endif %}>Price: Low →
                         High</option>
-                    <option value="price_desc" {% if filter_sort == "price_desc" %}selected{% endif %}>Price: High →
+                    <option value="price_desc" {% if filter_sort == "Price_desc" %}selected{% endif %}>Price: High →
                         Low</option>
-                    <option value="score" {% if filter_sort == "score" %}selected{% endif %}>AI Score</option>
+                    <option value="score" {% if filter_sort == "Score" %}selected{% endif %}>AI Score</option>
                 </select>
 
                 <select name="fuel">
                     <option value="">All Fuel Types</option>
-                    <option value="Petrol" {% if filter_fuel == "Petrol" %}selected{% endif %}>Petrol</option>
-                    <option value="Diesel" {% if filter_fuel == "Diesel" %}selected{% endif %}>Diesel</option>
-                    <option value="Electric" {% if filter_fuel == "Electric" %}selected{% endif %}>Electric</option>
-                    <option value="Hybrid" {% if filter_fuel == "Hybrid" %}selected{% endif %}>Hybrid</option>
+                    <option value="petrol" {% if filter_fuel == "Petrol" %}selected{% endif %}>Petrol</option>
+                    <option value="diesel" {% if filter_fuel == "Diesel" %}selected{% endif %}>Diesel</option>
+                    <option value="electric" {% if filter_fuel == "Electric" %}selected{% endif %}>Electric</option>
+                    <option value="hybrid" {% if filter_fuel == "Hybrid" %}selected{% endif %}>Hybrid</option>
                 </select>
 
                 <select name="transmission">
                     <option value="">All Transmissions</option>
-                    <option value="Automatic" {% if filter_transmission == "Automatic" %}selected{% endif %}>Automatic
+                    <option value="automatic" {% if filter_transmission == "Automatic" %}selected{% endif %}>Automatic
                     </option>
-                    <option value="Manual" {% if filter_transmission == "Manual" %}selected{% endif %}>Manual</option>
+                    <option value="manual" {% if filter_transmission == "Manual" %}selected{% endif %}>Manual</option>
                 </select>
 
                 <select name="condition">
@@ -85,9 +78,9 @@
                         Pre-Owned</option>
                 </select>
 
-                <input type="number" name="min_price" placeholder="Min $" value="{{ filter_min_price }}"
+                <input type="number" name="min_price" placeholder="Min ₹" value="{{ filter_min_price }}"
                     class="price-input">
-                <input type="number" name="max_price" placeholder="Max $" value="{{ filter_max_price }}"
+                <input type="number" name="max_price" placeholder="Max ₹" value="{{ filter_max_price }}"
                     class="price-input">
 
                 <button type="submit" class="btn-filter-apply">Apply</button>
@@ -132,6 +125,7 @@
             {% endif %}
         </div>
         {% endif %}
+        
 
     </main>
 </div>

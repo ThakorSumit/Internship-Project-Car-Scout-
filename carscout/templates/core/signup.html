@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Create Account — CarScout{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth/auth.css' %}">
+{% endblock extra_css %}
+
 {% block content %}
 <section class="signup-page">
 
@@ -80,13 +86,12 @@
                 <p>Start your premium automotive journey today</p>
             </div>
 
-            <!-- Errors -->
             {% if form.errors %}
             <div class="form-errors">
                 {% for field in form %}
-                {% for error in field.errors %}
-                <p><strong>{{ field.label }}:</strong> {{ error }}</p>
-                {% endfor %}
+                    {% for error in field.errors %}
+                    <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                    {% endfor %}
                 {% endfor %}
                 {% for error in form.non_field_errors %}
                 <p>{{ error }}</p>
@@ -105,8 +110,7 @@
                         <label for="role-buyer" class="role-toggle__btn">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                                 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
-                                <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" />
+                                <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
                             Buy a Car
                         </label>
@@ -145,17 +149,16 @@
                     </div>
                 </div>
 
-                <!-- Phone + Address row -->
+                <!-- Phone + Address -->
                 <div class="signup-form__row">
                     <div class="signup-form__group">
                         <label class="signup-form__label" for="phone">Phone</label>
                         <div class="signup-form__input-wrap">
                             <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
-                                <path
-                                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
                                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
-                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" required>
+                            <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required>
                         </div>
                     </div>
                     <div class="signup-form__group">
@@ -184,32 +187,26 @@
                     </div>
                 </div>
 
-                <!-- Passwords row -->
+                <!-- Passwords -->
                 <div class="signup-form__row">
                     <div class="signup-form__group">
                         <label class="signup-form__label" for="password1">Password</label>
                         <div class="signup-form__input-wrap">
                             <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
-                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"
-                                    stroke-width="1.8" />
-                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" />
+                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
-                            <input type="password" id="password1" name="password1" placeholder="Min. 8 characters"
-                                required>
+                            <input type="password" id="password1" name="password1" placeholder="Min. 8 characters" required>
                         </div>
                     </div>
                     <div class="signup-form__group">
                         <label class="signup-form__label" for="password2">Confirm</label>
                         <div class="signup-form__input-wrap">
                             <svg class="signup-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none">
-                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor"
-                                    stroke-width="1.8" />
-                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8"
-                                    stroke-linecap="round" />
+                                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
-                            <input type="password" id="password2" name="password2" placeholder="Repeat password"
-                                required>
+                            <input type="password" id="password2" name="password2" placeholder="Repeat password" required>
                         </div>
                     </div>
                 </div>

@@ -259,38 +259,42 @@ class TestDrive(models.Model):
 # TRANSACTION
 # Final payment when offer is accepted
 # ─────────────────────────────────────────
+
 class Transaction(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
+        ('pending',   'Pending'),
         ('completed', 'Completed'),
-        ('failed', 'Failed'),
-        ('refunded', 'Refunded'),
+        ('failed',    'Failed'),
+        ('refunded',  'Refunded'),
     ]
     METHOD_CHOICES = [
-        ('bank_transfer', 'Bank Transfer'),
-        ('cash', 'Cash'),
-        ('finance', 'Finance/Loan'),
-        ('online', 'Online Payment'),
+        ('cash',      'Cash'),
+        ('razorpay',  'Net Banking / UPI (Razorpay)'),
     ]
 
-    listing         = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name='transactions')
-    buyer           = models.ForeignKey(User, on_delete=models.PROTECT, related_name='transactions')
-    offer           = models.OneToOneField(Offer, on_delete=models.PROTECT, related_name='transaction', null=True, blank=True)
-    amount          = models.DecimalField(max_digits=12, decimal_places=2)
-    method          = models.CharField(max_length=20, choices=METHOD_CHOICES, default='bank_transfer')
-    status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    reference_number= models.CharField(max_length=100, default='', blank=True)  # payment ref
-    notes           = models.TextField(default='', blank=True)
-    date            = models.DateTimeField(auto_now_add=True)
+    listing          = models.ForeignKey(Listing,  on_delete=models.PROTECT, related_name='transactions')
+    buyer            = models.ForeignKey(User,     on_delete=models.PROTECT, related_name='transactions')
+    offer            = models.OneToOneField(Offer, on_delete=models.PROTECT, related_name='transaction', null=True, blank=True)
+    amount           = models.DecimalField(max_digits=12, decimal_places=2)
+    method           = models.CharField(max_length=20, choices=METHOD_CHOICES, default='cash')
+    status           = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    reference_number = models.CharField(max_length=100, default='', blank=True)
+
+    razorpay_order_id   = models.CharField(max_length=100, default='', blank=True)
+    razorpay_payment_id = models.CharField(max_length=100, default='', blank=True)
+    razorpay_signature  = models.CharField(max_length=200, default='', blank=True)
+
+    notes            = models.TextField(default='', blank=True)
+    date             = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'transaction'
-        verbose_name = 'Transaction'
+        db_table        = 'transaction'
+        verbose_name    = 'Transaction'
         verbose_name_plural = 'Transactions'
-        ordering = ['-date']
+        ordering        = ['-date']
 
     def __str__(self):
-        return f"Transaction ${self.amount} — {self.listing.vehicle} — {self.status}"
+        return f"Transaction ₹{self.amount} — {self.listing.vehicle} — {self.status}"
 
 
 # ─────────────────────────────────────────

@@ -1,0 +1,497 @@
+/* ═══════════════════════════════════════════════════════════════
+   CARSCOUT — AUTH.CSS
+   Login & Signup pages
+   Depends on: base.css (variables must be loaded first)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── SHARED AUTH LAYOUT ─────────────────────────────────────── */
+.login-page,
+.signup-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - var(--nav-h));
+}
+
+/* ── LEFT PANEL (shared) ────────────────────────────────────── */
+.login-panel,
+.signup-panel {
+    position: relative;
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+}
+
+.login-panel__glow,
+.signup-panel__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* Gold orb backgrounds */
+.login-panel::before,
+.signup-panel::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(218, 165, 32, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.login-panel::after,
+.signup-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(218, 165, 32, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.login-panel__body,
+.signup-panel__body {
+    position: relative;
+    z-index: 1;
+    padding: 60px 52px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Panel Logo */
+.login-panel__logo,
+.signup-panel__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 52px;
+    text-decoration: none;
+}
+
+.login-panel__logo em,
+.signup-panel__logo em {
+    color: var(--gold);
+    font-style: italic;
+}
+
+.login-panel__logo-icon,
+.signup-panel__logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold-border);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+}
+
+/* Panel Headline */
+.login-panel__text h2,
+.signup-panel__text h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.login-panel__text h2 span,
+.signup-panel__text h2 span {
+    color: var(--gold);
+}
+
+.login-panel__text p,
+.signup-panel__text p {
+    color: var(--text-muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+    max-width: 340px;
+}
+
+/* ── SIGNUP PANEL PERKS ─────────────────────────────────────── */
+.signup-panel__perks {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.signup-panel__perks li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.signup-panel__perk-icon {
+    width: 26px;
+    height: 26px;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    flex-shrink: 0;
+}
+
+/* ── LOGIN PANEL STAT CARDS ─────────────────────────────────── */
+.login-panel__cards {
+    display: flex;
+    gap: 14px;
+    margin-top: 44px;
+}
+
+.login-panel__card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    transition: var(--transition);
+}
+
+.login-panel__card:hover {
+    border-color: var(--gold-border);
+    background: var(--gold-soft);
+}
+
+.login-panel__card-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.login-panel__card-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* Decorative ring */
+.login-panel__ring {
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-border);
+    pointer-events: none;
+}
+
+.login-panel__ring::after {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(218, 165, 32, 0.1);
+}
+
+/* ── RIGHT FORM SIDE (shared) ───────────────────────────────── */
+.login-form-side,
+.signup-form-side {
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 28px;
+    overflow-y: auto;
+}
+
+.login-form-wrap,
+.signup-form-wrap {
+    width: 100%;
+    max-width: 440px;
+}
+
+.login-form-wrap__head,
+.signup-form-wrap__head {
+    margin-bottom: 36px;
+}
+
+.login-form-wrap__head h1,
+.signup-form-wrap__head h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.login-form-wrap__head p,
+.signup-form-wrap__head p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ── FORM ERRORS ────────────────────────────────────────────── */
+.form-errors {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 24px;
+}
+
+.form-errors p {
+    font-size: 0.85rem;
+    color: #f87171;
+    line-height: 1.5;
+}
+
+.form-errors p+p {
+    margin-top: 4px;
+}
+
+/* ── FORM GROUPS ────────────────────────────────────────────── */
+.login-form__group,
+.signup-form__group {
+    margin-bottom: 18px;
+}
+
+.signup-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.login-form__label,
+.signup-form__label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+/* Input wrap */
+.login-form__input-wrap,
+.signup-form__input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    transition: var(--transition);
+}
+
+.login-form__input-wrap:focus-within,
+.signup-form__input-wrap:focus-within {
+    border-color: var(--gold-border);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.login-form__icon,
+.signup-form__icon {
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+
+.login-form__input-wrap input,
+.signup-form__input-wrap input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 13px 0;
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 400;
+}
+
+.login-form__input-wrap input::placeholder,
+.signup-form__input-wrap input::placeholder {
+    color: var(--text-dim);
+}
+
+/* ── ROLE TOGGLE ────────────────────────────────────────────── */
+.role-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.role-toggle input[type="radio"] {
+    display: none;
+}
+
+.role-toggle__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.role-toggle__btn:hover {
+    border-color: var(--gold-border);
+    color: var(--text);
+}
+
+.role-toggle input[type="radio"]:checked+.role-toggle__btn {
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* ── GENDER TOGGLE ──────────────────────────────────────────── */
+.gender-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.gender-toggle input[type="radio"] {
+    display: none;
+}
+
+.gender-toggle__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.gender-toggle__btn:hover {
+    border-color: var(--gold-border);
+    color: var(--text);
+}
+
+.gender-toggle input[type="radio"]:checked+.gender-toggle__btn {
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* ── SUBMIT BUTTONS ─────────────────────────────────────────── */
+.login-form__submit,
+.signup-form__submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 24px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: var(--radius);
+    transition: var(--transition);
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.login-form__submit:hover,
+.signup-form__submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(218, 165, 32, 0.4);
+}
+
+/* ── FOOTER LINKS ───────────────────────────────────────────── */
+.login-form__label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.login-form__footer,
+.signup-form__footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.login-form__footer a,
+.signup-form__footer a {
+    color: var(--gold);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.login-form__footer a:hover,
+.signup-form__footer a:hover {
+    text-decoration: underline;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+
+    .login-page,
+    .signup-page {
+        grid-template-columns: 1fr;
+    }
+
+    .login-panel,
+    .signup-panel {
+        display: none;
+    }
+
+    .login-form-side,
+    .signup-form-side {
+        min-height: calc(100vh - var(--nav-h));
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .signup-form__row {
+        grid-template-columns: 1fr;
+    }
+
+    .login-form-wrap,
+    .signup-form-wrap {
+        max-width: 100%;
+    }
+}

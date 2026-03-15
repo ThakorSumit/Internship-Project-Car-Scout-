@@ -1,17 +1,17 @@
 /* --- Global Reset --- */
 @import "base.css";
 @import "admin/admin_dashboard.css";
-@import "auth/signin.css";
-@import "auth/login.css";
 @import "user/buyer.css";
-@import "user/selller.css";
 @import "home.css";
+@import "user/seller.css";
 @import "admin/wishlist.css";
-@import "user/listing.css";
 @import "mobile.css";
 @import "toasts.css";
+@import "payment/payment.css";
+@import "payment/receipe.css";
 
 * {
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;

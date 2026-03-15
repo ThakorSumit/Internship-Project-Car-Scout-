@@ -1,0 +1,203 @@
+:root {
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --dark: #0d0d0d;
+    --card-bg: #161616;
+    --border: rgba(212, 175, 55, 0.2);
+}
+
+.payment-page {
+    min-height: 100vh;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.payment-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.payment-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.payment-header h1 {
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin: 0 0 8px;
+}
+
+.payment-header p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Order summary */
+.order-summary {
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.order-label {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+}
+
+.order-value {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.order-row.total {
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+    padding-top: 14px;
+}
+
+.order-row.total .order-value {
+    color: var(--gold);
+    font-size: 1.3rem;
+}
+
+/* Payment method cards */
+.method-title {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.method-card {
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.method-card:hover {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.06);
+}
+
+.method-card.selected {
+    border-color: var(--gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.method-card .icon {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.method-card .label {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.method-card .sublabel {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+}
+
+/* Action button */
+.pay-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000;
+}
+
+.pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+}
+
+.pay-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Secure badge */
+.secure-note {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.75rem;
+    margin-top: 20px;
+}
+
+.secure-note span {
+    color: #4ade80;
+}
+
+/* Spinner inside button */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-card {
+        padding: 32px 20px;
+    }
+
+    .method-grid {
+        grid-template-columns: 1fr;
+    }
+}

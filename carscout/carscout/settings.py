@@ -30,6 +30,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
 
+#payment gateway
+RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'core',
     'crispy_bootstrap5',
     'crispy_forms',
@@ -160,8 +165,5 @@ EMAIL_HOST_PASSWORD = 'sfdc kckw djks kchd'
 
 
 #admin key
-
 ADMIN_CREATION_KEY = 'carscout'
-
-
 

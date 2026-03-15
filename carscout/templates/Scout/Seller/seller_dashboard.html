@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
+
 {% block content %}
-
-
 <div class="seller-shell">
 
     <!-- ── SIDEBAR ── -->
@@ -21,12 +21,18 @@
             <a href="{% url 'seller_dashboard' %}" class="s-nav-item active">
                 <span class="s-nav-icon">▦</span> Inventory Console
             </a>
-            <a href="#" class="s-nav-item">
-                <span class="s-nav-icon">◈</span> Analytics
+            <a href="{% url 'seller_offers' %}" class="s-nav-item">
+                <span class="s-nav-icon">🤝</span> Offers
             </a>
-            <a href="#" class="s-nav-item">
+            <a href="{% url 'seller_inbox' %}" class="s-nav-item">
                 <span class="s-nav-icon">✉</span> Messages
                 <span class="s-nav-badge">0</span>
+            </a>
+            <a href="{% url 'seller_test_drives' %}" class="s-nav-item">
+                <span class="s-nav-icon">◈</span> Test Drives
+            </a>
+            <a href="{% url 'seller_transactions' %}" class="s-nav-item">
+                <span class="s-nav-icon">💰</span> Transactions
             </a>
             <a href="{% url 'add_listing' %}" class="s-nav-item">
                 <span class="s-nav-icon">＋</span> List New Car
@@ -35,9 +41,9 @@
 
         <div class="sidebar-bottom">
             <div class="seller-profile-row">
-                <div class="seller-avatar">S</div>
+                <div class="seller-avatar">{{ request.user.name|first|upper }}</div>
                 <div class="seller-info">
-                    <strong>My Account</strong>
+                    <strong>{{ request.user.name|truncatechars:18 }}</strong>
                     <span>SELLER</span>
                 </div>
             </div>
@@ -47,7 +53,6 @@
     <!-- ── MAIN ── -->
     <main class="seller-main">
 
-        <!-- Header -->
         <header class="page-header">
             <div class="page-header-left">
                 <h1>Seller <span>Command</span></h1>
@@ -75,7 +80,7 @@
             </div>
         </div>
 
-        <!-- Inventory Table -->
+        <!-- Inventory -->
         <section>
             <div class="section-header">
                 <h2>Active Inventory</h2>
@@ -106,8 +111,7 @@
                                     <div class="no-img-placeholder">🚗</div>
                                     {% endif %}
                                     <div>
-                                        <div class="car-name">{{ listing.vehicle.year }} {{ listing.vehicle.company }}
-                                            {{ listing.vehicle.model }}</div>
+                                        <div class="car-name">{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</div>
                                         <div class="car-vin">VIN ···{{ listing.vehicle.vin|slice:"-4:" }}</div>
                                     </div>
                                 </div>
@@ -122,11 +126,9 @@
                                 {% elif listing.status == 'sold' %}
                                 <span class="status-tag sold">Sold</span>
                                 {% elif listing.status == 'pending_review' %}
-                                <span class="status-tag"
-                                    style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2);">
-                                    Under Review</span>
+                                <span class="status-tag pending">Under Review</span>
                                 {% else %}
-                                <span class="status-tag">{{ listing.status|capfirst }}</span>
+                                <span class="status-tag pending">{{ listing.status|capfirst }}</span>
                                 {% endif %}
                             </td>
                             <td>
@@ -138,18 +140,15 @@
                                 <span class="ai-status none">—</span>
                                 {% endif %}
                             </td>
-                            <td><span class="price-val">${{ listing.price|floatformat:0 }}</span></td>
+                            <td><span class="price-val">₹{{ listing.price|floatformat:0 }}</span></td>
                             <td><span class="views-val">{{ listing.views_count }}</span></td>
                             <td>
                                 <div class="action-group">
-                                    <a href="{% url 'seller_listing_detail' listing.id %}"
-                                        class="btn-act btn-act-view">View</a>
-                                    <a href="{% url 'edit_listing_price' listing.id %}" class="btn-act btn-act-view">✏
-                                        Edit Price</a>
-                                    <form method="POST" action="{% url 'delete_listing' listing.id %}"
-                                        onsubmit="return confirm('Delete this listing?')">
+                                    <a href="{% url 'seller_listing_detail' listing.id %}" class="btn-act btn-act-view">View</a>
+                                    <a href="{% url 'edit_listing_price' listing.id %}" class="btn-act btn-act-view">✏ Price</a>
+                                    <form method="POST" action="{% url 'delete_listing' listing.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn-act btn-act-delete">Delete</button>
+                                        <button type="submit" class="btn-act btn-act-delete" onclick="return confirm('Delete this listing?')">Delete</button>
                                     </form>
                                 </div>
                             </td>
@@ -164,13 +163,11 @@
                 <div class="empty-icon">🚗</div>
                 <h3>No listings yet</h3>
                 <p>Start by adding your first vehicle to the marketplace.</p>
-                <a href="{% url 'add_listing' %}" class="btn-list-car">+
-                    List Your First Car</a>
+                <a href="{% url 'add_listing' %}" class="btn-list-car">+ List Your First Car</a>
             </div>
             {% endif %}
         </section>
 
     </main>
 </div>
-
 {% endblock content %}

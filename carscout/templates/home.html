@@ -33,31 +33,31 @@
         </p>
 
         <!-- Search Bar -->
-        <form class="hero__search" method="get" action="#">
-            {% csrf_token %}
-            <div class="hero__search-field">
-                <label class="hero__search-label">Make & Model</label>
-                <input class="hero__search-input" type="text" placeholder="e.g. Porsche 911, BMW M3…">
-            </div>
-            <div class="hero__search-divider"></div>
-            <div class="hero__search-field">
-                <label class="hero__search-label">Budget</label>
-                <select class="hero__search-input hero__search-select">
-                    <option value="">Any Price</option>
-                    <option value="0-50">Under $50,000</option>
-                    <option value="50-100">$50k – $100k</option>
-                    <option value="100+">$100k+</option>
-                </select>
-            </div>
-            <button type="submit" class="hero__search-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
-                    <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                Search
-            </button>
-        </form>
-
+       <form class="hero__search" method="get" action="{% url 'browse_listings' %}">
+    <div class="hero__search-field">
+        <label class="hero__search-label">Make & Model</label>
+        <input class="hero__search-input" type="text" name="q"
+               placeholder="e.g. Porsche 911, BMW M3…">
+    </div>
+    <div class="hero__search-divider"></div>
+    <div class="hero__search-field">
+        <label class="hero__search-label">Budget</label>
+        <select class="hero__search-input hero__search-select" name="budget">
+            <option value="">Any Price</option>
+            <option value="0-500000">Under ₹5,00,000</option>
+            <option value="500000-1000000">₹5L – ₹10L</option>
+            <option value="1000000-2000000">₹10L – ₹20L</option>
+            <option value="2000000+">₹20L+</option>
+        </select>
+    </div>
+    <button type="submit" class="hero__search-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Search
+    </button>
+</form>
         <!-- Stats -->
         <div class="hero__stats">
             <div class="hero__stat">
@@ -220,7 +220,7 @@
                     <h3 class="car-card__title">
                         {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}
                     </h3>
-                    <p class="car-card__price">${{ listing.price|floatformat:0 }}</p>
+                    <p class="car-card__price">₹{{ listing.price|floatformat:0 }}</p>
                     <div class="car-card__vin">VIN · {{ listing.vehicle.vin }}</div>
                     <a href="{% url 'buyer_listing_detail' listing.id %}" class="car-card__btn">
                         View Details

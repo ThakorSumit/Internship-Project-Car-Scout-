@@ -2,25 +2,52 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
+<div class="seller-shell">
 
-    <aside class="dash-sidebar">
-        <div class="sidebar-logo">CAR<span>SCOUT</span></div>
-        <nav class="dash-nav">
-            <a href="{% url 'seller_dashboard' %}" class="nav-item">Inventory Console</a>
-            <a href="{% url 'seller_offers' %}" class="nav-item">Offers</a>
-            <a href="{% url 'seller_inbox' %}" class="nav-item active">Messages</a>
-            <a href="{% url 'add_listing' %}" class="nav-item">+ List New Car</a>
+    <aside class="seller-sidebar">
+        <div class="sidebar-head">
+            <div class="s-wordmark">CAR<span>SCOUT</span></div>
+            <div class="s-role-tag">SELLER PORTAL</div>
+        </div>
+        <div class="s-section-label">Console</div>
+        <nav class="s-nav">
+            <a href="{% url 'seller_dashboard' %}" class="s-nav-item">
+                <span class="s-nav-icon">▦</span> Inventory Console
+            </a>
+            <a href="{% url 'seller_offers' %}" class="s-nav-item">
+                <span class="s-nav-icon">🤝</span> Offers
+            </a>
+            <a href="{% url 'seller_inbox' %}" class="s-nav-item active">
+                <span class="s-nav-icon">✉</span> Messages
+            </a>
+            <a href="{% url 'seller_test_drives' %}" class="s-nav-item">
+                <span class="s-nav-icon">◈</span> Test Drives
+            </a>
+            <a href="{% url 'seller_transactions' %}" class="s-nav-item">
+                <span class="s-nav-icon">💰</span> Transactions
+            </a>
+            <a href="{% url 'add_listing' %}" class="s-nav-item">
+                <span class="s-nav-icon">＋</span> List New Car
+            </a>
         </nav>
+        <div class="sidebar-bottom">
+            <div class="seller-profile-row">
+                <div class="seller-avatar">{{ request.user.name|first|upper }}</div>
+                <div class="seller-info">
+                    <strong>{{ request.user.name|truncatechars:18 }}</strong>
+                    <span>SELLER</span>
+                </div>
+            </div>
+        </div>
     </aside>
 
-    <main class="dash-content">
-        <header class="content-header">
-            <div class="welcome">
+    <main class="seller-main">
+        <header class="page-header">
+            <div class="page-header-left">
                 <h1>Message <span>Inbox</span></h1>
                 <p>All buyer conversations across your listings.</p>
             </div>
@@ -28,59 +55,36 @@
 
         <div class="seller-inbox-list">
             {% if inbox %}
-
-            {% for item in inbox %}
-            {% if item.unread %}
-            <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" class="seller-inbox-row unread">
-                {% else %}
-                <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" class="seller-inbox-row">
-                    {% endif %}
-
-                    <!-- Car thumb -->
+                {% for item in inbox %}
+                <a href="{% url 'seller_chat' item.listing.id item.buyer.id %}" class="seller-inbox-row {% if item.unread %}unread{% endif %}">
                     <div class="sir-thumb">
                         {% if item.listing.image %}<img src="{{ item.listing.image.url }}" alt="">
                         {% else %}🚗{% endif %}
                     </div>
-
-                    <!-- Info -->
                     <div class="sir-info">
                         <div class="sir-title-row">
-                            <h4>
-                                {{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{
-                                item.listing.vehicle.model }}
-                            </h4>
-                            {% if item.unread %}
-                            <span class="sir-badge">{{
-                                item.unread }} new</span>
-                            {% endif %}
+                            <h4>{{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{ item.listing.vehicle.model }}</h4>
+                            {% if item.unread %}<span class="sir-badge">{{ item.unread }} new</span>{% endif %}
                         </div>
                         <p class="sir-buyer">Buyer: {{ item.buyer.name }} · {{ item.buyer.email }}</p>
                         {% if item.last_msg %}
-                        <p class="sir-preview">
-                            {% if item.last_msg.sender == request.user %}You: {% endif %}{{
-                            item.last_msg.body|truncatechars:55 }}
-                        </p>
+                        <p class="sir-preview">{% if item.last_msg.sender == request.user %}You: {% endif %}{{ item.last_msg.body|truncatechars:55 }}</p>
                         {% endif %}
                     </div>
-
-                    <!-- Time -->
                     <div class="sir-meta">
-                        {% if item.last_msg %}
-                        <span class="sir-time">{{ item.last_msg.created_at|date:"M d" }}</span>
-                        {% endif %}
+                        {% if item.last_msg %}<span class="sir-time">{{ item.last_msg.created_at|date:"M d" }}</span>{% endif %}
                         <span class="sir-arrow">→</span>
                     </div>
-
                 </a>
                 {% endfor %}
-                {% else %}
-                <div class="seller-inbox-empty">
-                    <div class="ei-icon">💬</div>
-                    <p>No messages yet. Buyers will contact you once they're interested.</p>
-                </div>
-                {% endif %}
+            {% else %}
+            <div class="td-empty">
+                <div class="ei-icon">💬</div>
+                <h3>No messages yet</h3>
+                <p>Buyers will contact you once they're interested in your listings.</p>
+            </div>
+            {% endif %}
         </div>
-
     </main>
 </div>
 {% endblock %}

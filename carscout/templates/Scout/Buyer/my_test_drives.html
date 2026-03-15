@@ -1,54 +1,176 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
 
-<div class="td-page">
-    <div class="td-list-header">
-        <h2>My Test Drives</h2>
-        <a href="{% url 'buyer_dashboard' %}" class="btn-ghost">← Dashboard</a>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wishlist-page">
+
+    <div class="wl-hero">
+        <div class="wl-hero-inner">
+            <div class="wl-hero-text">
+                <span class="wl-eyebrow">BOOKINGS</span>
+                <h1>Test <em>Drives</em></h1>
+                <p>{{ test_drives.count }} booking{{ test_drives.count|pluralize }} scheduled</p>
+            </div>
+            <a href="{% url 'browse_listings' %}" class="wl-browse-btn">+ Schedule New</a>
+        </div>
     </div>
 
-    {% if test_drives %}
-    <div class="td-list">
-        {% for td in test_drives %}
-        <div class="td-item td-status-{{ td.status }}">
-            <div class="td-item-left">
-                {% if td.listing.image %}
-                <img src="{{ td.listing.image.url }}" alt="car" class="td-thumb">
-                {% else %}
-                <div class="td-thumb-placeholder">🚗</div>
-                {% endif %}
+    <div class="wl-container">
+        {% if test_drives %}
+        <div class="alerts-list">
+
+            <!-- ── Upcoming ── -->
+            {% for td in test_drives %}{% if td.status == 'pending' or td.status == 'confirmed' %}{% if forloop.first %}
+            <div class="alerts-section-head active-head">
+                <span class="alerts-section-dot active-dot"></span>
+                <h2>Upcoming</h2>
+                <p>Pending confirmation or confirmed by seller</p>
             </div>
-            <div class="td-item-body">
-                <h3>{{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}</h3>
-                <p class="td-meta">Seller: {{ td.listing.seller.name }}</p>
-                <div class="td-details">
-                    <span>📅 {{ td.scheduled_date|date:"D, d M Y" }} at {{ td.scheduled_date|time:"H:i" }}</span>
-                    <span>📍 {{ td.location }}</span>
-                    {% if td.notes %}<span>📝 {{ td.notes }}</span>{% endif %}
+            {% endif %}{% endif %}{% endfor %}
+
+            {% for td in test_drives %}
+            {% if td.status == 'pending' or td.status == 'confirmed' %}
+            <div class="alert-row active">
+                <div class="alert-car-info">
+                    {% if td.listing.image %}
+                    <img src="{{ td.listing.image.url }}" alt="" class="alert-thumb">
+                    {% else %}
+                    <div class="alert-thumb alert-thumb-empty">🚗</div>
+                    {% endif %}
+                    <div>
+                        <div class="alert-car-name">
+                            {{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}
+                        </div>
+                        <div class="alert-car-price">
+                            Seller: <strong>{{ td.listing.seller.name }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-target-display">
+                    <span class="at-label">📅 {{ td.scheduled_date }}</span>
+                    <span class="at-value" style="font-size:13px;">🕐 {{ td.scheduled_time }} &nbsp;·&nbsp; 📍 {{ td.location }}</span>
+                </div>
+
+                <div class="alert-status"
+                     style="{% if td.status == 'confirmed' %}color:#22c55e; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3);{% else %}color:var(--gold); background:var(--gold-soft); border:1px solid var(--gold-border);{% endif %}
+                            padding:4px 14px; border-radius:50px; font-size:12px; font-weight:600;">
+                    {{ td.status|capfirst }}
+                </div>
+
+                <div class="alert-actions">
+                    <a href="{% url 'buyer_listing_detail' td.listing.id %}" class="wl-btn-ghost small">View Car</a>
+                    <form method="post" action="{% url 'cancel_test_drive' td.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="wl-btn-ghost small danger">Cancel</button>
+                    </form>
                 </div>
             </div>
-            <div class="td-item-right">
-                <span class="td-badge td-badge-{{ td.status }}">{{ td.get_status_display }}</span>
-                {% if td.status in 'pending,confirmed' %}
-                <form method="post" action="{% url 'cancel_test_drive' td.id %}"
-                    onsubmit="return confirm('Cancel this test drive?')">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-cancel-small">Cancel</button>
-                </form>
-                {% endif %}
+            {% endif %}
+            {% endfor %}
+
+            <!-- ── Completed ── -->
+            {% for td in test_drives %}{% if td.status == 'completed' %}{% if forloop.first %}
+            <div class="alerts-section-head triggered-head" style="margin-top:32px;">
+                <span class="alerts-section-dot triggered-dot"></span>
+                <h2>Completed</h2>
+                <p>Test drives you've already attended</p>
             </div>
+            {% endif %}{% endif %}{% endfor %}
+
+            {% for td in test_drives %}
+            {% if td.status == 'completed' %}
+            <div class="alert-row triggered">
+                <div class="alert-car-info">
+                    {% if td.listing.image %}
+                    <img src="{{ td.listing.image.url }}" alt="" class="alert-thumb">
+                    {% else %}
+                    <div class="alert-thumb alert-thumb-empty">🚗</div>
+                    {% endif %}
+                    <div>
+                        <div class="alert-car-name">
+                            {{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}
+                        </div>
+                        <div class="alert-car-price">Seller: <strong>{{ td.listing.seller.name }}</strong></div>
+                    </div>
+                </div>
+
+                <div class="alert-target-display">
+                    <span class="at-label">📅 {{ td.scheduled_date }}</span>
+                    <span class="at-value" style="font-size:13px;">📍 {{ td.location }}</span>
+                </div>
+
+                <div class="alert-status triggered-status">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Completed
+                </div>
+
+                <div class="alert-actions">
+                    <a href="{% url 'buyer_listing_detail' td.listing.id %}" class="wl-btn-primary small">View Car</a>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            <!-- ── Cancelled ── -->
+            {% for td in test_drives %}{% if td.status == 'cancelled' %}{% if forloop.first %}
+            <div class="alerts-section-head" style="margin-top:32px; opacity:0.6;">
+                <span class="alerts-section-dot" style="background:#ef4444;"></span>
+                <h2>Cancelled</h2>
+                <p>Test drives that were cancelled</p>
+            </div>
+            {% endif %}{% endif %}{% endfor %}
+
+            {% for td in test_drives %}
+            {% if td.status == 'cancelled' %}
+            <div class="alert-row" style="opacity:0.55;">
+                <div class="alert-car-info">
+                    {% if td.listing.image %}
+                    <img src="{{ td.listing.image.url }}" alt="" class="alert-thumb">
+                    {% else %}
+                    <div class="alert-thumb alert-thumb-empty">🚗</div>
+                    {% endif %}
+                    <div>
+                        <div class="alert-car-name">
+                            {{ td.listing.vehicle.year }} {{ td.listing.vehicle.company }} {{ td.listing.vehicle.model }}
+                        </div>
+                        <div class="alert-car-price">📅 {{ td.scheduled_date }} &nbsp;·&nbsp; 📍 {{ td.location }}</div>
+                    </div>
+                </div>
+
+                <div class="alert-status"
+                     style="color:#ef4444; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);
+                            padding:4px 14px; border-radius:50px; font-size:12px; font-weight:600;">
+                    Cancelled
+                </div>
+
+                <div class="alert-actions">
+                    <a href="{% url 'test_drive' td.listing.id %}" class="wl-btn-ghost small">Rebook</a>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
         </div>
-        {% endfor %}
+
+        {% else %}
+        <div class="wl-empty">
+            <div class="wl-empty-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+            </div>
+            <h2>No test drives booked</h2>
+            <p>Find a car you love and schedule a test drive with the seller.</p>
+            <a href="{% url 'browse_listings' %}" class="wl-empty-cta">Browse Cars</a>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="td-empty">
-        <div class="td-empty-icon">🗓️</div>
-        <h3>No Test Drives Yet</h3>
-        <p>Browse listings and book a test drive to see them here.</p>
-        <a href="{% url 'buyer_dashboard' %}" class="btn-gold">Browse Listings</a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

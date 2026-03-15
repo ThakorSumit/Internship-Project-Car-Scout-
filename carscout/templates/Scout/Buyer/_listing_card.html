@@ -16,7 +16,7 @@
         {% if listing.is_featured %}
         <div class="featured-ribbon">Featured</div>
         {% endif %}
-
+        
         <!-- Wishlist heart -->
         <button type="button" class="wishlist-btn {% if in_wishlist %}wishlisted{% endif %}"
             title="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}"
@@ -27,7 +27,7 @@
 
     <div class="card-body">
         <h3 class="card-title">{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
-        <p class="card-price">${{ listing.price|floatformat:0 }}</p>
+        <p class="card-price">₹{{ listing.price|floatformat:0 }}</p>
         <div class="card-meta">
             <span>{{ listing.vehicle.mileage|floatformat:0 }} mi</span>
             <span>{{ listing.vehicle.transmission }}</span>
@@ -39,6 +39,11 @@
         </div>
         {% endif %}
         <a href="{% url 'buyer_listing_detail' listing.id %}" class="card-cta">View Details →</a>
+        <a href="{% url 'compare' %}?car1={{ listing.id }}" class="card-cta" 
+        style="background:transparent; border:1px solid var(--gold-border); 
+        color:var(--gold); margin-top:8px;">
+        ⇄ Compare
+        </a>
     </div>
 </article>
 

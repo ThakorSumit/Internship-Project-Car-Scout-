@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="compare-shell">
+
+    <h1 style="font-family:var(--font-display); font-size:28px; color:var(--gold); margin:0 0 8px;">
+        Compare Cars
+    </h1>
+    <p style="color:var(--text-muted); font-size:14px; margin:0 0 28px;">
+        Select two listings to compare specs, price and AI scores side by side.
+    </p>
+
+    <!-- Picker -->
+    <form method="GET" action="{% url 'compare' %}">
+        <div class="compare-picker">
+            <select name="car1" required>
+                <option value="">— Select Car 1 —</option>
+                {% for l in all_listings %}
+                <option value="{{ l.id }}" {% if car1.id == l.id %}selected{% endif %}>
+                    {{ l.vehicle.year }} {{ l.vehicle.company }} {{ l.vehicle.model }} — ₹{{ l.price|floatformat:0 }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select name="car2" required>
+                <option value="">— Select Car 2 —</option>
+                {% for l in all_listings %}
+                <option value="{{ l.id }}" {% if car2.id == l.id %}selected{% endif %}>
+                    {{ l.vehicle.year }} {{ l.vehicle.company }} {{ l.vehicle.model }} — ₹{{ l.price|floatformat:0 }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="compare-btn">Compare →</button>
+        </div>
+    </form>
+
+    {% if car1 and car2 %}
+    <!-- comparison table here — unchanged -->
+
+    {% elif car1 and not car2 %}
+    <div style="background:var(--bg-card); border:1px solid var(--gold-border); 
+            border-radius:16px; padding:40px; text-align:center; margin-top:8px;">
+        <p style="color:var(--gold); font-size:18px; font-family:var(--font-display); margin:0 0 8px;">
+            {{ car1.vehicle.year }} {{ car1.vehicle.company }} {{ car1.vehicle.model }} selected
+        </p>
+        <p style="color:var(--text-muted); font-size:14px; margin:0;">
+            Now pick a second car from the dropdown above to compare.
+        </p>
+    </div>
+
+    {% else %}
+    <div style="background:var(--bg-card); border:1px solid var(--border); 
+            border-radius:16px; padding:48px; text-align:center; margin-top:8px;">
+        <div style="font-size:40px; margin-bottom:16px;">⇄</div>
+        <p style="color:var(--text-muted); font-size:14px; margin:0;">
+            Select two cars from the dropdowns above to see a side-by-side comparison.
+        </p>
+    </div>
+    {% endif %}
+    <!-- Comparison Table -->
+    {% if car1 and car2 %}
+    <div style="background:var(--bg-card); border:1px solid var(--gold-border); border-radius:16px; overflow:hidden;">
+        <table class="compare-table">
+
+            <!-- Header -->
+            <thead>
+                <tr>
+                    <th class="row-label">Specification</th>
+                    <th>{{ car1.vehicle.year }} {{ car1.vehicle.company }} {{ car1.vehicle.model }}</th>
+                    <th>{{ car2.vehicle.year }} {{ car2.vehicle.company }} {{ car2.vehicle.model }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <!-- ── AI SCORES ── -->
+                <tr class="section-divider"><td colspan="3">AI Inspection</td></tr>
+
+                <tr>
+                    <td class="row-label">AI Score</td>
+                    <td>
+                        <span class="score-big {% if car1.inspection.score and car2.inspection.score %}{% if car1.inspection.score >= car2.inspection.score %}better{% else %}worse{% endif %}{% endif %}">
+                            {{ car1.inspection.score|default:"—" }}
+                        </span><span style="color:var(--text-muted); font-size:13px;">/10</span>
+                    </td>
+                    <td>
+                        <span class="score-big {% if car1.inspection.score and car2.inspection.score %}{% if car2.inspection.score >= car1.inspection.score %}better{% else %}worse{% endif %}{% endif %}">
+                            {{ car2.inspection.score|default:"—" }}
+                        </span><span style="color:var(--text-muted); font-size:13px;">/10</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Overall Condition</td>
+                    <td>{{ car1.inspection.overall_condition|default:"—" }}</td>
+                    <td>{{ car2.inspection.overall_condition|default:"—" }}</td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Risk Level</td>
+                    <td>
+                        {% if car1.inspection %}
+                        <span class="badge badge-{{ car1.inspection.risk_level }}">
+                            {{ car1.inspection.get_risk_level_display }}
+                        </span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if car2.inspection %}
+                        <span class="badge badge-{{ car2.inspection.risk_level }}">
+                            {{ car2.inspection.get_risk_level_display }}
+                        </span>
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Recommendation</td>
+                    <td>
+                        {% if car1.inspection %}
+                        <span class="badge badge-gold">{{ car1.inspection.get_recommendation_display }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if car2.inspection %}
+                        <span class="badge badge-gold">{{ car2.inspection.get_recommendation_display }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+
+                <!-- ── PRICING ── -->
+                <tr class="section-divider"><td colspan="3">Pricing</td></tr>
+
+                <tr>
+                    <td class="row-label">Asking Price</td>
+                    <td class="{% if car1.price <= car2.price %}better{% else %}worse{% endif %}">
+                        ₹{{ car1.price|floatformat:0 }}
+                    </td>
+                    <td class="{% if car2.price <= car1.price %}better{% else %}worse{% endif %}">
+                        ₹{{ car2.price|floatformat:0 }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Price Assessment</td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car1.inspection.price_assessment|default:"—" }}
+                    </td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car2.inspection.price_assessment|default:"—" }}
+                    </td>
+                </tr>
+
+                <!-- ── SPECS ── -->
+                <tr class="section-divider"><td colspan="3">Specifications</td></tr>
+
+                <tr>
+                    <td class="row-label">Year</td>
+                    <td class="{% if car1.vehicle.year >= car2.vehicle.year %}better{% else %}worse{% endif %}">
+                        {{ car1.vehicle.year }}
+                    </td>
+                    <td class="{% if car2.vehicle.year >= car1.vehicle.year %}better{% else %}worse{% endif %}">
+                        {{ car2.vehicle.year }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Mileage</td>
+                    <td class="{% if car1.vehicle.mileage <= car2.vehicle.mileage %}better{% else %}worse{% endif %}">
+                        {{ car1.vehicle.mileage|floatformat:0 }} km
+                    </td>
+                    <td class="{% if car2.vehicle.mileage <= car1.vehicle.mileage %}better{% else %}worse{% endif %}">
+                        {{ car2.vehicle.mileage|floatformat:0 }} km
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Mileage Assessment</td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car1.inspection.mileage_assessment|default:"—" }}
+                    </td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car2.inspection.mileage_assessment|default:"—" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Condition</td>
+                    <td>{{ car1.vehicle.condition }}</td>
+                    <td>{{ car2.vehicle.condition }}</td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Fuel Type</td>
+                    <td>{{ car1.vehicle.fuel_type }}</td>
+                    <td>{{ car2.vehicle.fuel_type }}</td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Transmission</td>
+                    <td>{{ car1.vehicle.transmission }}</td>
+                    <td>{{ car2.vehicle.transmission }}</td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Engine</td>
+                    <td>{{ car1.vehicle.engine_size }}</td>
+                    <td>{{ car2.vehicle.engine_size }}</td>
+                </tr>
+
+                <!-- ── HISTORY ── -->
+                <tr class="section-divider"><td colspan="3">History</td></tr>
+
+                <tr>
+                    <td class="row-label">Previous Owners</td>
+                    <td class="{% if car1.inspection.previous_owners <= car2.inspection.previous_owners %}better{% else %}worse{% endif %}">
+                        {{ car1.inspection.previous_owners|default:"—" }}
+                    </td>
+                    <td class="{% if car2.inspection.previous_owners <= car1.inspection.previous_owners %}better{% else %}worse{% endif %}">
+                        {{ car2.inspection.previous_owners|default:"—" }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Accident History</td>
+                    <td>{{ car1.inspection.get_accident_history_display|default:"—" }}</td>
+                    <td>{{ car2.inspection.get_accident_history_display|default:"—" }}</td>
+                </tr>
+
+                <tr>
+                    <td class="row-label">Accident Impact</td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car1.inspection.accident_impact|default:"None reported" }}
+                    </td>
+                    <td style="font-size:13px; color:var(--text-muted);">
+                        {{ car2.inspection.accident_impact|default:"None reported" }}
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- CTA row -->
+    <div style="display:flex; gap:12px; margin-top:20px; justify-content:flex-end;">
+        <a href="{% url 'buyer_listing_detail' car1.id %}"
+           style="padding:10px 24px; border-radius:8px; border:1px solid var(--gold-border);
+                  color:var(--gold); font-size:13px; font-weight:600; text-decoration:none;">
+            View {{ car1.vehicle.company }} {{ car1.vehicle.model }} →
+        </a>
+        <a href="{% url 'buyer_listing_detail' car2.id %}"
+           style="padding:10px 24px; border-radius:8px; border:1px solid var(--gold-border);
+                  color:var(--gold); font-size:13px; font-weight:600; text-decoration:none;">
+            View {{ car2.vehicle.company }} {{ car2.vehicle.model }} →
+        </a>
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

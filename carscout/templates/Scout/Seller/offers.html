@@ -1,111 +1,135 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-wrapper">
+<div class="seller-shell">
 
-  <aside class="dash-sidebar">
-    <div class="sidebar-logo">CAR<span>SCOUT</span></div>
-    <nav class="dash-nav">
-      <a href="{% url 'seller_dashboard' %}" class="nav-item">Inventory Console</a>
-      <a href="{% url 'seller_offers' %}" class="nav-item active">
-        Offers
-        {% if pending_count %}<span class="badge">{{ pending_count }}</span>{% endif %}
-      </a>
-      <a href="#" class="nav-item">Messages</a>
-      <a href="{% url 'add_listing' %}" class="nav-item">+ List New Car</a>
-    </nav>
-  </aside>
+    <aside class="seller-sidebar">
+        <div class="sidebar-head">
+            <div class="s-wordmark">CAR<span>SCOUT</span></div>
+            <div class="s-role-tag">SELLER PORTAL</div>
+        </div>
+        <div class="s-section-label">Console</div>
+        <nav class="s-nav">
+            <a href="{% url 'seller_dashboard' %}" class="s-nav-item">
+                <span class="s-nav-icon">▦</span> Inventory Console
+            </a>
+            <a href="{% url 'seller_offers' %}" class="s-nav-item active">
+                <span class="s-nav-icon">🤝</span> Offers
+                {% if pending_count %}<span class="s-nav-badge">{{ pending_count }}</span>{% endif %}
+            </a>
+            <a href="{% url 'seller_inbox' %}" class="s-nav-item">
+                <span class="s-nav-icon">✉</span> Messages
+            </a>
+            <a href="{% url 'seller_test_drives' %}" class="s-nav-item">
+                <span class="s-nav-icon">◈</span> Test Drives
+            </a>
+            <a href="{% url 'seller_transactions' %}" class="s-nav-item">
+                <span class="s-nav-icon">💰</span> Transactions
+            </a>
+            <a href="{% url 'add_listing' %}" class="s-nav-item">
+                <span class="s-nav-icon">＋</span> List New Car
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="seller-profile-row">
+                <div class="seller-avatar">{{ request.user.name|first|upper }}</div>
+                <div class="seller-info">
+                    <strong>{{ request.user.name|truncatechars:18 }}</strong>
+                    <span>SELLER</span>
+                </div>
+            </div>
+        </div>
+    </aside>
 
-  <main class="dash-content">
-    <header class="content-header">
-      <div class="welcome">
-        <h1>Incoming <span>Offers</span></h1>
-        <p>{{ pending_count }} pending offer{{ pending_count|pluralize }} waiting for your response.</p>
-      </div>
-    </header>
+    <main class="seller-main">
+        <header class="page-header">
+            <div class="page-header-left">
+                <h1>Incoming <span>Offers</span></h1>
+                <p>{{ pending_count }} pending offer{{ pending_count|pluralize }} waiting for your response.</p>
+            </div>
+        </header>
 
-    {% if offers %}
-    <div class="seller-offers-list">
-      {% for offer in offers %}
-      <div class="seller-offer-card status-{{ offer.status }}">
+        {% if offers %}
+        <div class="seller-offers-list">
+            {% for offer in offers %}
+            <div class="seller-offer-card status-{{ offer.status }}">
 
-        <div class="soc-vehicle">
-          <div class="soc-thumb">
-            {% if offer.listing.image %}
-            <img src="{{ offer.listing.image.url }}" alt="">
-            {% else %}<span>🚗</span>{% endif %}
-          </div>
-          <div>
-            <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{ offer.listing.vehicle.model }}
-            </h4>
-            <p>Listed: <strong>${{ offer.listing.price|floatformat:0 }}</strong></p>
-          </div>
+                <div class="soc-vehicle">
+                    <div class="soc-thumb">
+                        {% if offer.listing.image %}
+                        <img src="{{ offer.listing.image.url }}" alt="">
+                        {% else %}<span>🚗</span>{% endif %}
+                    </div>
+                    <div>
+                        <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{ offer.listing.vehicle.model }}</h4>
+                        <p>Listed: <strong>₹{{ offer.listing.price|floatformat:0 }}</strong></p>
+                    </div>
+                </div>
+
+                <div class="soc-buyer">
+                    <span class="soc-label">Buyer</span>
+                    <span class="soc-val">{{ offer.buyer.name }}</span>
+                    <span class="soc-email">{{ offer.buyer.email }}</span>
+                </div>
+
+                <div class="soc-amount">
+                    <span class="soc-label">Offer Amount</span>
+                    <span class="soc-price">₹{{ offer.amount|floatformat:0 }}</span>
+                    {% if offer.counter_amount %}
+                    <span class="soc-counter">Counter: ₹{{ offer.counter_amount|floatformat:0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="soc-status">
+                    <span class="soc-tag tag-{{ offer.status }}">{{ offer.status|title }}</span>
+                    <span class="soc-date">{{ offer.created_at|date:"M d, Y" }}</span>
+                </div>
+
+                <div class="soc-actions">
+                    {% if offer.status == "pending" %}
+                    <form method="POST" action="{% url 'accept_offer' offer.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="soc-btn soc-accept">✓ Accept</button>
+                    </form>
+                    <a href="{% url 'counter_offer' offer.id %}" class="soc-btn soc-counter-btn">↔ Counter</a>
+                    <form method="POST" action="{% url 'reject_offer' offer.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="soc-btn soc-reject">✕ Reject</button>
+                    </form>
+                    {% elif offer.status == "countered" %}
+                    <span class="soc-waiting">⏳ Awaiting buyer</span>
+                    {% elif offer.status == "accepted" %}
+                    <span class="soc-done">✓ Accepted</span>
+                    {% elif offer.status == "rejected" %}
+                    <span class="soc-rejected">✕ Rejected</span>
+                    {% else %}
+                    <span class="soc-waiting">{{ offer.status|title }}</span>
+                    {% endif %}
+                </div>
+
+                {% if offer.comment %}
+                <div class="soc-comment">
+                    <strong>Buyer message:</strong> {{ offer.comment }}
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
         </div>
 
-        <div class="soc-buyer">
-          <span class="soc-label">Buyer</span>
-          <span class="soc-val">{{ offer.buyer.name }}</span>
-          <span class="soc-email">{{ offer.buyer.email }}</span>
-        </div>
-
-        <div class="soc-amount">
-          <span class="soc-label">Offer Amount</span>
-          <span class="soc-price">${{ offer.amount|floatformat:0 }}</span>
-          {% if offer.counter_amount %}
-          <span class="soc-counter">Counter: ${{ offer.counter_amount|floatformat:0 }}</span>
-          {% endif %}
-        </div>
-
-        <div class="soc-status">
-          <span class="soc-tag tag-{{ offer.status }}">{{ offer.status|title }}</span>
-          <span class="soc-date">{{ offer.created_at|date:"M d, Y" }}</span>
-        </div>
-
-        <div class="soc-actions">
-          {% if offer.status == "pending" %}
-          <form method="POST" action="{% url 'accept_offer' offer.id %}">
-            {% csrf_token %}
-            <button type="submit" class="soc-btn soc-accept">Accept</button>
-          </form>
-          <a href="{% url 'counter_offer' offer.id %}" class="soc-btn soc-counter-btn">Counter</a>
-          <form method="POST" action="{% url 'reject_offer' offer.id %}">
-            {% csrf_token %}
-            <button type="submit" class="soc-btn soc-reject">Reject</button>
-          </form>
-          {% elif offer.status == "countered" %}
-          <span class="soc-waiting">⏳ Awaiting buyer</span>
-          {% elif offer.status == "accepted" %}
-          <span class="soc-done">✓ Accepted</span>
-          {% elif offer.status == "rejected" %}
-          <span class="soc-rejected">✕ Rejected</span>
-          {% else %}
-          <span class="soc-waiting">{{ offer.status|title }}</span>
-          {% endif %}
-        </div>
-
-        {% if offer.comment %}
-        <div class="soc-comment">
-          <strong>Buyer message:</strong> {{ offer.comment }}
+        {% else %}
+        <div class="td-empty">
+            <div class="ei-icon">🤝</div>
+            <h3>No offers yet</h3>
+            <p>When buyers make offers on your listings, they'll appear here.</p>
         </div>
         {% endif %}
-
-      </div>
-      {% endfor %}
-    </div>
-
-    {% else %}
-    <div class="seller-inbox-empty">
-      <div class="ei-icon">🤝</div>
-      <p>No offers received yet.</p>
-    </div>
-    {% endif %}
-
-  </main>
+    </main>
 </div>
-
 {% endblock %}

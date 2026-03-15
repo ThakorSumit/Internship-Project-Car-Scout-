@@ -6,531 +6,11 @@
 {% endblock %}
 
 {% block content %}
-
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
-
-    /* ══════════════════════════════════════════════
-       BUYER COMMAND — DARK LUXURY THEME
-       Matches Seller Dashboard aesthetic
-    ══════════════════════════════════════════════ */
-
-    .buyer-shell {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        min-height: calc(100vh - 70px);
-        background: #05080f;
-        font-family: 'DM Sans', sans-serif;
-    }
-
-    /* ── SIDEBAR ──────────────────────────────── */
-    .buyer-sidebar {
-        background: #070c1a;
-        border-right: 1px solid rgba(218, 165, 32, 0.1);
-        display: flex;
-        flex-direction: column;
-        position: sticky;
-        top: 70px;
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-    }
-
-    .sidebar-head {
-        padding: 36px 28px 28px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .sidebar-brand {
-        font-family: 'Syne', sans-serif;
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: #fff;
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-        display: block;
-        text-decoration: none;
-    }
-
-    .sidebar-brand span {
-        color: #daa520;
-    }
-
-    .b-role-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(59, 130, 246, 0.08);
-        border: 1px solid rgba(59, 130, 246, 0.2);
-        color: #60a5fa;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .b-role-tag::before {
-        content: '';
-        width: 6px;
-        height: 6px;
-        background: #22c55e;
-        border-radius: 50%;
-        animation: live-blink 2s infinite;
-    }
-
-    @keyframes live-blink {
-
-        0%,
-        100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.2;
-        }
-    }
-
-    .s-section-label {
-        font-size: 0.6rem;
-        font-weight: 700;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.2);
-        padding: 24px 28px 8px;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .snav-list {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        padding: 0 12px;
-    }
-
-    .snav-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        border-radius: 10px;
-        color: rgba(255, 255, 255, 0.45);
-        text-decoration: none;
-        font-size: 0.88rem;
-        font-weight: 500;
-        transition: all 0.25s ease;
-        position: relative;
-    }
-
-    .snav-item:hover {
-        background: rgba(255, 255, 255, 0.04);
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .snav-item.active {
-        background: rgba(59, 130, 246, 0.1);
-        color: #60a5fa;
-        font-weight: 600;
-    }
-
-    .snav-item.active::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 20%;
-        height: 60%;
-        width: 3px;
-        background: #60a5fa;
-        border-radius: 0 3px 3px 0;
-    }
-
-    .snav-icon {
-        font-size: 1rem;
-        width: 20px;
-        text-align: center;
-        flex-shrink: 0;
-    }
-
-    .snav-badge {
-        margin-left: auto;
-        background: #daa520;
-        color: #05080f;
-        font-size: 0.65rem;
-        font-weight: 800;
-        padding: 2px 7px;
-        border-radius: 20px;
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .sidebar-footer {
-        margin-top: auto;
-        padding: 20px 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .snav-logout {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 11px 16px;
-        border-radius: 10px;
-        color: rgba(239, 68, 68, 0.5);
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-
-    .snav-logout:hover {
-        background: rgba(239, 68, 68, 0.08);
-        color: #ef4444;
-    }
-
-    .snav-logout::before {
-        content: '→';
-        font-size: 1rem;
-    }
-
-    /* Scrollbar */
-    .buyer-sidebar::-webkit-scrollbar {
-        width: 3px;
-    }
-
-    .buyer-sidebar::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .buyer-sidebar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 10px;
-    }
-
-    /* ── MAIN ─────────────────────────────────── */
-    .buyer-main {
-        padding: 44px 48px;
-        overflow-y: auto;
-        background: #07090f;
-    }
-
-    /* ── PAGE HEADER ──────────────────────────── */
-    .buyer-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 40px;
-    }
-
-    .buyer-welcome {
-        font-family: 'Syne', sans-serif;
-        font-size: 2rem;
-        font-weight: 800;
-        color: #fff;
-        margin-bottom: 6px;
-        line-height: 1.1;
-    }
-
-    .buyer-welcome span {
-        color: #daa520;
-    }
-
-    .buyer-sub {
-        color: rgba(255, 255, 255, 0.35);
-        font-size: 0.9rem;
-    }
-
-    .btn-browse {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.05);
-        color: rgba(255, 255, 255, 0.7);
-        padding: 12px 22px;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.88rem;
-        text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: all 0.25s ease;
-        white-space: nowrap;
-    }
-
-    .btn-browse:hover {
-        background: #daa520;
-        color: #05080f;
-        border-color: #daa520;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(218, 165, 32, 0.25);
-    }
-
-    /* ── STAT CARDS ───────────────────────────── */
-    .stat-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 44px;
-    }
-
-    .stat-card {
-        background: #0d1120;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
-        padding: 24px 20px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #3b82f6, transparent);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-
-    .stat-card:hover {
-        border-color: rgba(59, 130, 246, 0.2);
-        transform: translateY(-3px);
-    }
-
-    .stat-card:hover::after {
-        opacity: 1;
-    }
-
-    .stat-icon {
-        font-size: 1.6rem;
-        opacity: 0.7;
-        flex-shrink: 0;
-    }
-
-    .stat-num {
-        font-family: 'Syne', sans-serif;
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #fff;
-        line-height: 1;
-        margin-bottom: 4px;
-    }
-
-    .stat-lbl {
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: rgba(255, 255, 255, 0.25);
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* ── SECTIONS ─────────────────────────────── */
-    .dash-section {
-        margin-bottom: 48px;
-    }
-
-    .section-hd {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .section-hd h2 {
-        font-family: 'Syne', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #fff;
-    }
-
-    .section-link {
-        color: rgba(218, 165, 32, 0.7);
-        text-decoration: none;
-        font-size: 0.82rem;
-        font-weight: 600;
-        transition: color 0.2s;
-        font-family: 'JetBrains Mono', monospace;
-        letter-spacing: 0.5px;
-    }
-
-    .section-link:hover {
-        color: #daa520;
-    }
-
-    /* ── CAR GRID ─────────────────────────────── */
-    .car-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-    }
-
-    .car-card {
-        background: #0d1120;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .car-card:hover {
-        border-color: rgba(218, 165, 32, 0.2);
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .car-image {
-        position: relative;
-        height: 180px;
-        overflow: hidden;
-    }
-
-    .car-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
-    }
-
-    .car-card:hover .car-image img {
-        transform: scale(1.04);
-    }
-
-    .ai-badge {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        background: rgba(7, 9, 15, 0.85);
-        backdrop-filter: blur(6px);
-        color: #daa520;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        border: 1px solid rgba(218, 165, 32, 0.3);
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .wishlist-btn {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: rgba(7, 9, 15, 0.7);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: all 0.2s;
-        text-decoration: none;
-    }
-
-    .wishlist-btn:hover,
-    .wishlist-btn.active {
-        background: rgba(239, 68, 68, 0.15);
-        border-color: rgba(239, 68, 68, 0.3);
-    }
-
-    .car-info {
-        padding: 18px 20px 20px;
-    }
-
-    .car-info h3 {
-        font-family: 'Syne', sans-serif;
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 8px;
-        line-height: 1.3;
-    }
-
-    .car-price {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #daa520;
-        margin-bottom: 12px;
-    }
-
-    .car-price span {
-        font-size: 0.82rem;
-        text-decoration: line-through;
-        color: rgba(255, 255, 255, 0.2);
-        font-weight: 400;
-        margin-left: 8px;
-    }
-
-    .car-meta {
-        display: flex;
-        gap: 10px;
-        color: rgba(255, 255, 255, 0.3);
-        font-size: 0.78rem;
-        margin-bottom: 16px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        font-family: 'JetBrains Mono', monospace;
-    }
-
-    .car-meta span {
-        white-space: nowrap;
-    }
-
-    .btn-view {
-        width: 100%;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-align: center;
-        text-decoration: none;
-        display: block;
-    }
-
-    .btn-view:hover {
-        background: #daa520;
-        border-color: #daa520;
-        color: #05080f;
-    }
-
-    /* ── EMPTY STATE ──────────────────────────── */
-    .empty-state {
-        background: #0d1120;
-        border: 1px dashed rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 60px 40px;
-        text-align: center;
-        color: rgba(255, 255, 255, 0.25);
-        font-size: 0.9rem;
-        font-family: 'JetBrains Mono', monospace;
-    }
-</style>
-
 <div class="buyer-shell">
 
-    <!-- ── SIDEBAR ── -->
     <aside class="buyer-sidebar">
-        <div class="sidebar-head">
-            <a href="/" class="sidebar-brand">CAR<span>SCOUT</span></a>
-            <div class="b-role-tag">BUYER PORTAL</div>
-        </div>
-
-        <div class="s-section-label">Navigation</div>
-        <nav class="snav-list">
+        <a href="{% url 'buyer_dashboard' %}" class="sidebar-brand">CAR<span>SCOUT</span></a>
+        <nav class="sidebar-nav">
             <a href="{% url 'buyer_dashboard' %}" class="snav-item active">
                 <span class="snav-icon">🏠</span> Dashboard
             </a>
@@ -547,17 +27,23 @@
             <a href="{% url 'buyer_offers' %}" class="snav-item">
                 <span class="snav-icon">🤝</span> My Offers
             </a>
+            <a href="{% url 'buyer_test_drives' %}" class="snav-item">
+                <span class="snav-icon">📅</span> Test Drives
+            </a>
+            <a href="{% url 'price_alerts' %}" class="snav-item">
+                <span class="snav-icon">🔔</span> Price Alerts
+            </a>
+            <a href="{% url 'compare' %}" class="snav-item">
+                <span class="snav-icon">⚖️</span> Compare Cars
+            </a>
         </nav>
-
         <div class="sidebar-footer">
             <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
         </div>
     </aside>
 
-    <!-- ── MAIN ── -->
     <main class="buyer-main">
 
-        <!-- Header -->
         <header class="buyer-header">
             <div>
                 <h1 class="buyer-welcome">Welcome back, <span>{{ request.user.name }}</span></h1>
@@ -566,7 +52,6 @@
             <a href="{% url 'browse_listings' %}" class="btn-browse">Browse Inventory →</a>
         </header>
 
-        <!-- Stats Row -->
         <div class="stat-row">
             <div class="stat-card">
                 <a href="{% url 'wishlist' %}">
@@ -598,55 +83,51 @@
             <div class="stat-card">
                 <a href="{% url 'price_alerts' %}">
                     <span class="stat-icon">🔔</span>
-
                     <div>
                         <p class="stat-num">{{ price_alert_count }}</p>
                         <p class="stat-lbl">Price Alerts
                             {% if triggered_alert_count %}
-                            <span style="color:#4ade80; font-size:11px; font-weight:700;">· {{ triggered_alert_count }}
-                                triggered</span>
+                            <span style="color:#4ade80;font-size:11px;font-weight:700;"> · {{ triggered_alert_count }} triggered</span>
                             {% endif %}
                         </p>
+                    </div>
                 </a>
             </div>
         </div>
+
+        {% if wishlist_listings %}
+        <section class="dash-section">
+            <div class="section-hd">
+                <h2>Your Wishlist</h2>
+                <a href="{% url 'wishlist' %}" class="section-link">View All →</a>
+            </div>
+            <div class="car-grid">
+                {% for listing in wishlist_listings %}
+                {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=True %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="dash-section">
+            <div class="section-hd">
+                <h2>Recently Listed</h2>
+                <a href="{% url 'browse_listings' %}" class="section-link">Browse All →</a>
+            </div>
+            {% if recent_listings %}
+            <div class="car-grid">
+                {% for listing in recent_listings %}
+                {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=False %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🚗</div>
+                <p>No live listings yet. Check back soon.</p>
+            </div>
+            {% endif %}
+        </section>
+
+    </main>
 </div>
-
-<!-- Wishlist Section -->
-{% if wishlist_listings %}
-<section class="dash-section">
-    <div class="section-hd">
-        <h2>Your Wishlist</h2>
-        <a href="#" class="section-link">View All →</a>
-    </div>
-    <div class="car-grid">
-        {% for listing in wishlist_listings %}
-        {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=True %}
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
-
-<!-- Recently Listed -->
-<section class="dash-section">
-    <div class="section-hd">
-        <h2>Recently Listed</h2>
-        <a href="{% url 'browse_listings' %}" class="section-link">Browse All →</a>
-    </div>
-    {% if recent_listings %}
-    <div class="car-grid">
-        {% for listing in recent_listings %}
-        {% include 'Scout/Buyer/_listing_card.html' with listing=listing in_wishlist=False %}
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state">
-        🚗 &nbsp; No live listings yet. Check back soon.
-    </div>
-    {% endif %}
-</section>
-
-</main>
-</div>
-
 {% endblock %}

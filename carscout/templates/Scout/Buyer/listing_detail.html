@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock extra_css %}
+
 {% block content %}
 <div class="bld-page">
     <div class="bld-container">
@@ -51,7 +55,7 @@
                 </h1>
 
                 <div class="bld-price-row">
-                    <span class="bld-price">${{ listing.price|floatformat:0 }}</span>
+                    <span class="bld-price">₹{{ listing.price|floatformat:0 }}</span>
                     {% if listing.inspection %}
                     <span class="bld-condition condition-{{ listing.inspection.overall_condition|lower }}">
                         {{ listing.inspection.overall_condition }} Condition
@@ -83,7 +87,7 @@
                     <a href="{% url 'offer' listing.id %}" class="bld-cta-primary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            <path d="M6 3h12M6 8h12M14 3a5 5 0 0 1 0 10H6l8 10" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Make an Offer
                     </a>

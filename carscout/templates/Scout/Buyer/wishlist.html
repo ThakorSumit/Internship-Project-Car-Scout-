@@ -2,13 +2,12 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/wishlist.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="wishlist-page">
 
-    <!-- Page Header -->
     <div class="wl-hero">
         <div class="wl-hero-inner">
             <div class="wl-hero-text">
@@ -18,8 +17,7 @@
             </div>
             <a href="{% url 'browse_listings' %}" class="wl-browse-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                 </svg>
                 Browse More
             </a>
@@ -27,122 +25,89 @@
     </div>
 
     <div class="wl-container">
-
         {% if wishlist_items %}
         <div class="wl-grid">
             {% for item in wishlist_items %}
             {% with listing=item.listing vehicle=listing.vehicle %}
-            <article class="wl-card" data-listing-id="{{ listing.id }}">
-
-                <!-- Image -->
+            <article class="wl-card">
                 <div class="wl-card-image">
                     {% if listing.image %}
-                    <img src="{{ listing.image.url }}"
-                        alt="{{ vehicle.year }} {{ vehicle.company }} {{ vehicle.model }}">
+                    <img src="{{ listing.image.url }}" alt="{{ vehicle.year }} {{ vehicle.company }} {{ vehicle.model }}">
                     {% else %}
                     <div class="wl-no-image">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5">
-                            <rect x="2" y="7" width="20" height="14" rx="2" />
-                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                            <circle cx="12" cy="13" r="2" />
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                            <circle cx="12" cy="13" r="2"/>
                         </svg>
                     </div>
                     {% endif %}
 
-                    <!-- AI Score Badge -->
                     {% if listing.inspection and listing.inspection.score %}
                     <div class="wl-ai-badge score-{{ listing.inspection.risk_level|lower }}">
                         AI {{ listing.inspection.score }}/10
                     </div>
                     {% endif %}
 
-                    <!-- Status Badge -->
-                    <div class="wl-status-tag status-{{ listing.status }}">
-                        {{ listing.status|title }}
-                    </div>
+                    <div class="wl-status-tag status-{{ listing.status }}">{{ listing.status|title }}</div>
 
-                    <!-- Remove btn -->
                     <form method="POST" action="{% url 'remove_wishlist' listing.id %}" class="wl-remove-form">
                         {% csrf_token %}
                         <button type="submit" class="wl-remove-btn" title="Remove from wishlist">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <path d="M18 6 6 18M6 6l12 12" />
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M18 6 6 18M6 6l12 12"/>
                             </svg>
                         </button>
                     </form>
                 </div>
 
-                <!-- Info -->
                 <div class="wl-card-body">
                     <div class="wl-card-meta">
                         <span class="wl-year">{{ vehicle.year }}</span>
                         <span class="wl-fuel">{{ vehicle.fuel_type }}</span>
                     </div>
-
                     <h3 class="wl-card-title">{{ vehicle.company }} {{ vehicle.model }}</h3>
-
                     <div class="wl-card-specs">
                         <span>{{ vehicle.mileage|floatformat:0 }} mi</span>
                         <span>{{ vehicle.transmission }}</span>
                         <span>{{ vehicle.color }}</span>
                     </div>
-
-                    <div class="wl-card-price">
-                        ${{ listing.price|floatformat:0 }}
-                        {% with pa=alert_map|default_if_none:"" %}
-                        {% endwith %}
-                    </div>
-
-                    <!-- Price Alert Status -->
-                    {% if listing.id in alert_map %}
-                    {% with alert=alert_map|dictsort:"listing_id" %}{% endwith %}
-                    {% endif %}
+                    <div class="wl-card-price">₹{{ listing.price|floatformat:0 }}</div>
 
                     {% for lid, alert in alert_map.items %}
                     {% if lid == listing.id %}
                     <div class="wl-alert-chip {% if alert.is_triggered %}triggered{% endif %}">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                         </svg>
-                        {% if alert.is_triggered %}
-                        🎯 Alert triggered — ${{ alert.target_price|floatformat:0 }}
-                        {% else %}
-                        Alert set at ${{ alert.target_price|floatformat:0 }}
-                        {% endif %}
+                        {% if alert.is_triggered %}🎯 Alert triggered — ₹{{ alert.target_price|floatformat:0 }}
+                        {% else %}Alert set at ₹{{ alert.target_price|floatformat:0 }}{% endif %}
                     </div>
                     {% endif %}
                     {% endfor %}
 
-                    <!-- Actions -->
                     <div class="wl-card-actions">
                         <a href="{% url 'buyer_listing_detail' listing.id %}" class="wl-btn-primary">View Details</a>
                         <a href="{% url 'set_price_alert' listing.id %}" class="wl-btn-ghost">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                             </svg>
                             Set Alert
                         </a>
                     </div>
                 </div>
-
             </article>
             {% endwith %}
             {% endfor %}
         </div>
 
         {% else %}
-        <!-- Empty State -->
         <div class="wl-empty">
             <div class="wl-empty-icon">
                 <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                    <path
-                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
             </div>
             <h2>Your garage is empty</h2>
@@ -150,7 +115,6 @@
             <a href="{% url 'browse_listings' %}" class="wl-empty-cta">Browse Inventory</a>
         </div>
         {% endif %}
-
     </div>
 </div>
 {% endblock %}

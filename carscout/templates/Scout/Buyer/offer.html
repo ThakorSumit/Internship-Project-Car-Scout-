@@ -4,10 +4,10 @@
 <div class="offer-legacy-wrap">
     <h2 class="offer-legacy-title">Make an Offer</h2>
     {% if listing %}
-    <p>for {{ listing.vehicle.year }} {{
-        listing.vehicle.company }} {{ listing.vehicle.model }}</p>
+    <p>for {{ listing.vehicle.year }} 
+        {{ listing.vehicle.company }} {{ listing.vehicle.model }}</p>
     <p>Asking
-        Price: ${{ listing.price }}</p>
+        Price: ₹{{ listing.price }}</p>
     {% endif %}
     <form action="" method="post">
         {% csrf_token %}

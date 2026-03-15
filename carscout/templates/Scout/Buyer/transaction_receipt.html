@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock extra_css %}
 {% block content %}
 <div class="td-page">
     <div class="td-card">
@@ -16,7 +20,7 @@
             </div>
             <div class="txn-row">
                 <span class="txn-label">Amount Paid</span>
-                <span class="txn-value txn-price">${{ txn.amount|floatformat:0 }}</span>
+                <span class="txn-value txn-price">₹{{ txn.amount|floatformat:0 }}</span>
             </div>
             <div class="txn-row">
                 <span class="txn-label">Payment Method</span>

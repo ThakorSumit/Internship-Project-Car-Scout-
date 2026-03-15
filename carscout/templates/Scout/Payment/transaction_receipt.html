@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Payment Receipt — Car Scout{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment/receipt.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="receipt-page">
+  <div class="receipt-card">
+
+    <!-- Success Header -->
+    <div class="success-banner">
+      <div class="success-icon">✅</div>
+      <h1>Payment Successful!</h1>
+      <p>Your vehicle purchase has been recorded.</p>
+    </div>
+
+    <!-- Vehicle Info -->
+    <div class="receipt-section">
+      <p class="receipt-section-title">🚗 Vehicle Details</p>
+      <div class="receipt-row">
+        <span class="receipt-label">Vehicle</span>
+        <span class="receipt-value">{{ txn.listing.vehicle }}</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Seller</span>
+        <span class="receipt-value">{{ txn.listing.seller.get_full_name|default:txn.listing.seller.email }}</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Buyer</span>
+        <span class="receipt-value">{{ txn.buyer.get_full_name|default:txn.buyer.email}}</span>
+      </div>
+    </div>
+
+    <!-- Payment Info -->
+    <div class="receipt-section">
+      <p class="receipt-section-title">💰 Payment Details</p>
+      <div class="receipt-row">
+        <span class="receipt-label">Amount Paid</span>
+        <span class="receipt-value gold">₹{{ txn.amount|floatformat:0|intcomma }}</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Method</span>
+        <span class="receipt-value">
+          {% if txn.method == 'cash' %}
+            <span class="method-badge cash">💵 Cash</span>
+          {% else %}
+            <span class="method-badge razorpay">🏦 Razorpay (Net Banking / UPI)</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Status</span>
+        <span class="receipt-value green">✔ Completed</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-label">Date</span>
+        <span class="receipt-value">{{ txn.date|date:"d M Y, h:i A" }}</span>
+      </div>
+    </div>
+
+    <!-- Reference Numbers -->
+    <div class="receipt-section">
+      <p class="receipt-section-title">🔖 Reference</p>
+      <div class="receipt-row">
+        <span class="receipt-label">Transaction ID</span>
+        <span class="receipt-value">#{{ txn.id }}</span>
+      </div>
+      {% if txn.reference_number %}
+      <div class="receipt-row">
+        <span class="receipt-label">Reference No.</span>
+        <span class="receipt-value">{{ txn.reference_number }}</span>
+      </div>
+      {% endif %}
+      {% if txn.razorpay_order_id %}
+      <div class="receipt-row">
+        <span class="receipt-label">Razorpay Order</span>
+        <span class="receipt-value">{{ txn.razorpay_order_id }}</span>
+      </div>
+      {% endif %}
+      {% if txn.razorpay_payment_id %}
+      <div class="receipt-row">
+        <span class="receipt-label">Payment ID</span>
+        <span class="receipt-value">{{ txn.razorpay_payment_id }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="btn-receipt btn-outline-receipt" onclick="window.print()">🖨️ Print Receipt</button>
+      <a href="{% url 'buyer_dashboard' %}" class="btn-receipt btn-primary-receipt">🏠 Back to Dashboard</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

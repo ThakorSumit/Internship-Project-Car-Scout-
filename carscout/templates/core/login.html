@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Sign In — CarScout{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth/auth.css' %}">
+{% endblock extra_css %}
 {% block content %}
 <section class="login-page">
 
@@ -26,7 +30,6 @@
                 <p>Your personalized showroom and saved listings are waiting for you.</p>
             </div>
 
-            <!-- Decorative stat cards -->
             <div class="login-panel__cards">
                 <div class="login-panel__card">
                     <span class="login-panel__card-num">2,400+</span>
@@ -38,7 +41,6 @@
                 </div>
             </div>
 
-            <!-- Decorative ring -->
             <div class="login-panel__ring"></div>
         </div>
     </div>
@@ -52,13 +54,12 @@
                 <p>Enter your credentials to access your account</p>
             </div>
 
-            <!-- Errors -->
             {% if form.errors %}
             <div class="form-errors">
                 {% for field in form %}
-                {% for error in field.errors %}
-                <p><strong>{{ field.label }}:</strong> {{ error }}</p>
-                {% endfor %}
+                    {% for error in field.errors %}
+                    <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                    {% endfor %}
                 {% endfor %}
                 {% for error in form.non_field_errors %}
                 <p>{{ error }}</p>
@@ -69,7 +70,6 @@
             <form method="POST" class="login-form">
                 {% csrf_token %}
 
-                <!-- Email -->
                 <div class="login-form__group">
                     <label class="login-form__label" for="email">Email Address</label>
                     <div class="login-form__input-wrap">
@@ -82,7 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Password -->
                 <div class="login-form__group">
                     <div class="login-form__label-row">
                         <label class="login-form__label" for="password">Password</label>

@@ -7,21 +7,23 @@ from scout.gemini_service import run_ai_inspection
 from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponseForbidden, Http404, JsonResponse
-import uuid
+import uuid, razorpay, hmac, hashlib, json
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Count, Sum
+from django.views.decorators.csrf import csrf_exempt
 from core.models import User as CoreUser
+from django.core.mail import send_mail
+from django.conf import settings as django_settings
+from django.views import View
+from django.utils.decorators import method_decorator
 
 # ─── Admin ───────────────────────────────────────────────────────────────────
 
 @role_required(allowed_roles=['Admin'])
 def AdminDashboardView(request):
-    
-
-    # ── Stats ──────────────────────────────────────────────
     total_listings        = Listing.objects.count()
     live_listings         = Listing.objects.filter(status='live').count()
     total_buyers          = CoreUser.objects.filter(role='Buyer').count()
@@ -31,42 +33,35 @@ def AdminDashboardView(request):
     total_transactions    = Transaction.objects.count()
     total_revenue         = Transaction.objects.aggregate(t=Sum('amount'))['t'] or 0
 
-    # ── Recent Listings (last 10) ───────────────────────────
     recent_listings = Listing.objects.select_related(
         'vehicle', 'seller', 'inspection'
     ).order_by('-created_at')[:10]
 
-    # ── Recent Users (last 8) ───────────────────────────────
-    recent_users = CoreUser.objects.exclude(
-        role='Admin'
-    ).order_by('-created_at')[:8]
+    recent_users = CoreUser.objects.exclude(role='Admin').order_by('-created_at')[:8]
 
-    # ── Recent Transactions (last 5) ───────────────────────
     recent_transactions = Transaction.objects.select_related(
         'listing__vehicle', 'buyer'
     ).order_by('-date')[:5]
 
-    # ── Recent Offers ───────────────────────────────────────
     recent_offers = Offer.objects.select_related(
         'listing__vehicle', 'buyer'
     ).order_by('-created_at')[:5]
 
     context = {
-        'total_listings':       total_listings,
-        'live_listings':        live_listings,
-        'total_buyers':         total_buyers,
-        'total_sellers':        total_sellers,
-        'pending_inspections':  pending_inspections,
-        'active_offers':        active_offers,
-        'total_transactions':   total_transactions,
-        'total_revenue':        total_revenue,
-        'recent_listings':      recent_listings,
-        'recent_users':         recent_users,
-        'recent_transactions':  recent_transactions,
-        'recent_offers':        recent_offers,
+        'total_listings':          total_listings,
+        'live_listings':           live_listings,
+        'total_buyers':            total_buyers,
+        'total_sellers':           total_sellers,
+        'pending_inspections':     pending_inspections,
+        'active_offers':           active_offers,
+        'total_transactions':      total_transactions,
+        'total_revenue':           total_revenue,
+        'recent_listings':         recent_listings,
+        'recent_users':            recent_users,
+        'recent_transactions':     recent_transactions,
+        'recent_offers':           recent_offers,
         'pending_review_count':    Listing.objects.filter(status='pending_review').count(),
-'pending_review_listings': Listing.objects.select_related('vehicle','seller','inspection').filter(status='pending_review').order_by('-created_at'),
-        
+        'pending_review_listings': Listing.objects.select_related('vehicle', 'seller', 'inspection').filter(status='pending_review').order_by('-created_at'),
     }
     return render(request, 'Scout/Admin/admin_dashboard.html', context)
 
@@ -117,6 +112,7 @@ def CreateAdminView(request):
 
     return render(request, 'scout/create_admin.html', {'key': key})
 
+
 @role_required(allowed_roles=['Admin'])
 def ApproveListingView(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id, status='pending_review')
@@ -135,8 +131,6 @@ def RejectListingView(request, listing_id):
         listing.status = 'rejected'
         listing.save()
         if reason:
-            from django.core.mail import send_mail
-            from django.conf import settings as django_settings
             try:
                 send_mail(
                     subject=f'Your listing was not approved — {listing.vehicle}',
@@ -157,6 +151,19 @@ def RejectListingView(request, listing_id):
         messages.success(request, f'{listing.vehicle} rejected.')
     return redirect('admin_dashboard')
 
+class AdminInspectionReportView(View):
+    @method_decorator(role_required('Admin'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, listing_id):
+        listing = get_object_or_404(Listing, id=listing_id)
+        report = getattr(listing, 'inspection', None)
+        return render(request, 'Scout/Admin/inspection_report.html', {
+            'listing': listing,
+            'vehicle': listing.vehicle,
+            'report': report,
+        })
 
 # ─── Seller ──────────────────────────────────────────────────────────────────
 
@@ -164,10 +171,10 @@ def RejectListingView(request, listing_id):
 def SellerDashboardView(request):
     listings = Listing.objects.filter(seller=request.user).select_related('vehicle', 'inspection').order_by('-created_at')
     context = {
-        'listings': listings,
+        'listings':       listings,
         'total_listings': listings.count(),
-        'live_listings': listings.filter(status='live').count(),
-        'total_views': sum(l.views_count for l in listings),
+        'live_listings':  listings.filter(status='live').count(),
+        'total_views':    sum(l.views_count for l in listings),
     }
     return render(request, 'Scout/Seller/seller_dashboard.html', context)
 
@@ -175,19 +182,19 @@ def SellerDashboardView(request):
 @role_required(allowed_roles=['Seller'])
 def AddListingView(request):
     if request.method == 'POST':
-        vehicle_form = VehicleForm(request.POST)
-        listing_form = ListingForm(request.POST, request.FILES)
+        vehicle_form    = VehicleForm(request.POST)
+        listing_form    = ListingForm(request.POST, request.FILES)
         inspection_form = InspectionInputForm(request.POST)
 
         if vehicle_form.is_valid() and listing_form.is_valid() and inspection_form.is_valid():
-            vehicle = vehicle_form.save()
-            listing = listing_form.save(commit=False)
-            listing.seller = request.user
-            listing.vehicle = vehicle
-            listing.status = 'ai_scanning'
+            vehicle          = vehicle_form.save()
+            listing          = listing_form.save(commit=False)
+            listing.seller   = request.user
+            listing.vehicle  = vehicle
+            listing.status   = 'ai_scanning'
             listing.save()
 
-            inspection = inspection_form.save(commit=False)
+            inspection         = inspection_form.save(commit=False)
             inspection.listing = listing
             inspection.save()
 
@@ -197,24 +204,23 @@ def AddListingView(request):
         else:
             messages.error(request, 'Please fill in all required fields.')
             return render(request, 'Scout/Seller/add_listing.html', {
-                'vehicle_form': vehicle_form,
-                'listing_form': listing_form,
+                'vehicle_form':    vehicle_form,
+                'listing_form':    listing_form,
                 'inspection_form': inspection_form,
             })
     else:
         return render(request, 'Scout/Seller/add_listing.html', {
-            'vehicle_form': VehicleForm(),
-            'listing_form': ListingForm(),
+            'vehicle_form':    VehicleForm(),
+            'listing_form':    ListingForm(),
             'inspection_form': InspectionInputForm(),
         })
 
 
 @role_required(allowed_roles=['Seller'])
 def SellerListingDetailView(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id, seller=request.user)
+    listing    = get_object_or_404(Listing, id=listing_id, seller=request.user)
     inspection = getattr(listing, 'inspection', None)
-    context = {'listing': listing, 'inspection': inspection}
-    return render(request, 'Scout/Seller/listing_detail.html', context)
+    return render(request, 'Scout/Seller/listing_detail.html', {'listing': listing, 'inspection': inspection})
 
 
 @role_required(allowed_roles=['Seller'])
@@ -263,14 +269,13 @@ def BuyerDashboardView(request):
     ).select_related('vehicle', 'inspection').order_by('-created_at')[:6]
 
     context = {
-        'wishlist_listings': wishlist_listings,
-        'recent_listings': recent_listings,
-        'wishlist_count': wishlist_ids.count(),
-        'price_alert_count': PriceAlert.objects.filter(buyer=request.user, is_triggered=False).count(),
+        'wishlist_listings':    wishlist_listings,
+        'recent_listings':      recent_listings,
+        'wishlist_count':       wishlist_ids.count(),
+        'price_alert_count':    PriceAlert.objects.filter(buyer=request.user, is_triggered=False).count(),
         'triggered_alert_count': PriceAlert.objects.filter(buyer=request.user, is_triggered=True).count(),
     }
     return render(request, 'Scout/Buyer/buyer_dashboard.html', context)
-
 
 @role_required(allowed_roles=['Buyer'])
 def BrowseListingsView(request):
@@ -283,16 +288,24 @@ def BrowseListingsView(request):
     min_price    = request.GET.get('min_price', '')
     max_price    = request.GET.get('max_price', '')
     sort         = request.GET.get('sort', '')
+    budget       = request.GET.get('budget', '')
+
+    # Hero search budget param → convert to min/max price filter
+    if budget:
+        if budget.endswith('+'):
+            listings = listings.filter(price__gte=int(budget[:-1]))
+        elif '-' in budget:
+            mn, mx = budget.split('-')
+            listings = listings.filter(price__gte=int(mn), price__lte=int(mx))
 
     if q:
         listings = listings.filter(
-            Q(vehicle__company__icontains=q) |
-            Q(vehicle__model__icontains=q)
+            Q(vehicle__make__icontains=q) | Q(vehicle__model__icontains=q)
         )
     if fuel:
-        listings = listings.filter(vehicle__fuel_type=fuel)
+        listings = listings.filter(vehicle__fuel_type__iexact=fuel)
     if transmission:
-        listings = listings.filter(vehicle__transmission=transmission)
+        listings = listings.filter(vehicle__transmission__iexact=transmission)
     if condition:
         listings = listings.filter(vehicle__condition__iexact=condition)
     if min_price:
@@ -311,26 +324,24 @@ def BrowseListingsView(request):
     else:
         listings = listings.order_by('-is_featured', '-created_at')
 
-    wishlist_ids = list(
-        Wishlist.objects.filter(buyer=request.user).values_list('listing_id', flat=True)
-    )
+    wishlist_ids = list(Wishlist.objects.filter(buyer=request.user).values_list('listing_id', flat=True))
 
-    paginator = Paginator(listings, 12)
+    paginator   = Paginator(listings, 12)
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj    = paginator.get_page(page_number)
 
     context = {
-        'listings': page_obj,
-        'page_obj': page_obj,
-        'wishlist_ids': wishlist_ids,
-        'total': paginator.count,
-        'filter_q': q,
-        'filter_fuel': fuel,
+        'listings':            page_obj,
+        'page_obj':            page_obj,
+        'wishlist_ids':        wishlist_ids,
+        'total':               paginator.count,
+        'filter_q':            q,
+        'filter_fuel':         fuel,
         'filter_transmission': transmission,
-        'filter_condition': condition,
-        'filter_min_price': min_price,
-        'filter_max_price': max_price,
-        'filter_sort': sort,
+        'filter_condition':    condition,
+        'filter_min_price':    min_price,
+        'filter_max_price':    max_price,
+        'filter_sort':         sort,
     }
     return render(request, 'Scout/Buyer/browse_listings.html', context)
 
@@ -344,15 +355,14 @@ def BuyerListingDetailView(request, listing_id):
     listing.views_count += 1
     listing.save(update_fields=['views_count'])
 
-    inspection = getattr(listing, 'inspection', None)
+    inspection  = getattr(listing, 'inspection', None)
     in_wishlist = Wishlist.objects.filter(buyer=request.user, listing=listing).exists()
 
-    context = {
-        'listing': listing,
+    return render(request, 'Scout/Buyer/listing_detail.html', {
+        'listing':    listing,
         'inspection': inspection,
         'in_wishlist': in_wishlist,
-    }
-    return render(request, 'Scout/Buyer/listing_detail.html', context)
+    })
 
 
 # ─── Wishlist ─────────────────────────────────────────────────────────────────
@@ -363,17 +373,13 @@ def WishlistView(request):
         buyer=request.user
     ).select_related('listing__vehicle', 'listing__inspection').order_by('-added_at')
 
-    alert_map = {
-        pa.listing_id: pa
-        for pa in PriceAlert.objects.filter(buyer=request.user)
-    }
+    alert_map = {pa.listing_id: pa for pa in PriceAlert.objects.filter(buyer=request.user)}
 
-    context = {
+    return render(request, 'Scout/Buyer/wishlist.html', {
         'wishlist_items': wishlist_items,
-        'alert_map': alert_map,
-        'total': wishlist_items.count(),
-    }
-    return render(request, 'Scout/Buyer/wishlist.html', context)
+        'alert_map':      alert_map,
+        'total':          wishlist_items.count(),
+    })
 
 
 @role_required(allowed_roles=['Buyer'])
@@ -407,28 +413,27 @@ def PriceAlertsView(request):
         buyer=request.user
     ).select_related('listing__vehicle').order_by('-created_at')
 
-    context = {
-        'alerts': alerts,
-        'triggered_count': alerts.filter(is_triggered=True).count(),
-        'active_count': alerts.filter(is_triggered=False).count(),
-    }
-    return render(request, 'Scout/Buyer/price_alerts.html', context)
+    return render(request, 'Scout/Buyer/price_alerts.html', {
+        'alerts':           alerts,
+        'triggered_count':  alerts.filter(is_triggered=True).count(),
+        'active_count':     alerts.filter(is_triggered=False).count(),
+    })
 
 
 @role_required(allowed_roles=['Buyer'])
 def SetPriceAlertView(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id, status='live')
+    listing  = get_object_or_404(Listing, id=listing_id, status='live')
     existing = PriceAlert.objects.filter(buyer=request.user, listing=listing).first()
 
     if request.method == 'POST':
         form = PriceAlertForm(request.POST, instance=existing)
         if form.is_valid():
-            alert = form.save(commit=False)
-            alert.buyer = request.user
-            alert.listing = listing
+            alert            = form.save(commit=False)
+            alert.buyer      = request.user
+            alert.listing    = listing
             alert.is_triggered = False
             alert.save()
-            messages.success(request, 'Price alert set! We\'ll notify you when the price drops.')
+            messages.success(request, "Price alert set! We'll notify you when the price drops.")
             return redirect('price_alerts')
         else:
             messages.error(request, 'Invalid price. Please enter a valid amount.')
@@ -453,7 +458,7 @@ def DeletePriceAlertView(request, alert_id):
 
 @role_required(allowed_roles=['Buyer'])
 def MakeOfferView(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id, status='live')
+    listing        = get_object_or_404(Listing, id=listing_id, status='live')
     existing_offer = Offer.objects.filter(
         listing=listing, buyer=request.user
     ).exclude(status='withdrawn').first()
@@ -461,10 +466,10 @@ def MakeOfferView(request, listing_id):
     if request.method == 'POST':
         form = MakeOfferForm(request.POST)
         if form.is_valid():
-            offer = form.save(commit=False)
-            offer.listing = listing
-            offer.buyer = request.user
-            offer.status = 'pending'
+            offer          = form.save(commit=False)
+            offer.listing  = listing
+            offer.buyer    = request.user
+            offer.status   = 'pending'
             offer.save()
             messages.success(request, 'Your offer has been submitted!')
             return redirect('buyer_offers')
@@ -474,9 +479,7 @@ def MakeOfferView(request, listing_id):
         form = MakeOfferForm()
 
     return render(request, 'Scout/Buyer/make_offer.html', {
-        'listing': listing,
-        'form': form,
-        'existing_offer': existing_offer,
+        'listing': listing, 'form': form, 'existing_offer': existing_offer,
     })
 
 
@@ -515,11 +518,10 @@ def SellerOffersView(request):
         listing__seller=request.user
     ).select_related('listing', 'listing__vehicle', 'buyer').order_by('-created_at')
 
-    context = {
-        'offers': offers,
+    return render(request, 'Scout/Seller/offers.html', {
+        'offers':        offers,
         'pending_count': offers.filter(status='pending').count(),
-    }
-    return render(request, 'Scout/Seller/offers.html', context)
+    })
 
 
 @role_required(allowed_roles=['Seller'])
@@ -551,7 +553,7 @@ def CounterOfferView(request, offer_id):
     if request.method == 'POST':
         form = CounterOfferForm(request.POST, instance=offer)
         if form.is_valid():
-            offer = form.save(commit=False)
+            offer        = form.save(commit=False)
             offer.status = 'countered'
             offer.save()
             messages.success(request, 'Counter offer sent to buyer.')
@@ -570,14 +572,13 @@ def CounterOfferView(request, offer_id):
 def BuyerInboxView(request):
     sent     = Message.objects.filter(sender=request.user).values('listing')
     received = Message.objects.filter(receiver=request.user).values('listing')
-    conversations = sent.union(received)
-    listing_ids = [c['listing'] for c in conversations]
+    listing_ids = [c['listing'] for c in sent.union(received)]
     listings = Listing.objects.filter(id__in=listing_ids).select_related('vehicle', 'seller')
 
     inbox = []
     for listing in listings:
         last_msg = Message.objects.filter(listing=listing).order_by('-created_at').first()
-        unread = Message.objects.filter(listing=listing, receiver=request.user, is_read=False).count()
+        unread   = Message.objects.filter(listing=listing, receiver=request.user, is_read=False).count()
         inbox.append({'listing': listing, 'last_msg': last_msg, 'unread': unread})
 
     return render(request, 'Scout/Buyer/inbox.html', {'inbox': inbox})
@@ -586,7 +587,7 @@ def BuyerInboxView(request):
 @role_required(allowed_roles=['Buyer'])
 def BuyerChatView(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
-    seller = listing.seller
+    seller  = listing.seller
 
     Message.objects.filter(
         listing=listing, sender=seller, receiver=request.user, is_read=False
@@ -606,8 +607,8 @@ def BuyerChatView(request, listing_id):
         return redirect('chat', listing_id=listing_id)
 
     return render(request, 'Scout/Buyer/chat.html', {
-        'listing': listing,
-        'messages': chat_messages,
+        'listing':    listing,
+        'messages':   chat_messages,
         'other_user': seller,
     })
 
@@ -623,12 +624,11 @@ def SellerInboxView(request):
     for listing_id, other_id in received:
         pairs.add((listing_id, other_id))
 
-    from core.models import User as CoreUser
     inbox = []
     for listing_id, buyer_id in pairs:
         try:
-            listing = Listing.objects.select_related('vehicle').get(id=listing_id)
-            buyer = CoreUser.objects.get(id=buyer_id)
+            listing  = Listing.objects.select_related('vehicle').get(id=listing_id)
+            buyer    = CoreUser.objects.get(id=buyer_id)
             last_msg = Message.objects.filter(
                 listing=listing,
                 sender__in=[request.user, buyer],
@@ -648,8 +648,7 @@ def SellerInboxView(request):
 @role_required(allowed_roles=['Seller'])
 def SellerChatView(request, listing_id, buyer_id):
     listing = get_object_or_404(Listing, id=listing_id, seller=request.user)
-    from core.models import User as CoreUser
-    buyer = get_object_or_404(CoreUser, id=buyer_id, role='Buyer')
+    buyer   = get_object_or_404(CoreUser, id=buyer_id, role='Buyer')
 
     Message.objects.filter(
         listing=listing, sender=buyer, receiver=request.user, is_read=False
@@ -669,8 +668,8 @@ def SellerChatView(request, listing_id, buyer_id):
         return redirect('seller_chat', listing_id=listing_id, buyer_id=buyer_id)
 
     return render(request, 'Scout/Seller/chat.html', {
-        'listing': listing,
-        'messages': chat_messages,
+        'listing':    listing,
+        'messages':   chat_messages,
         'other_user': buyer,
     })
 
@@ -679,8 +678,7 @@ def SellerChatView(request, listing_id, buyer_id):
 
 @role_required(allowed_roles=['Buyer'])
 def ScheduleTestDriveView(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id, status='live')
-
+    listing  = get_object_or_404(Listing, id=listing_id, status='live')
     existing = TestDrive.objects.filter(
         listing=listing, buyer=request.user, status__in=['pending', 'confirmed']
     ).first()
@@ -693,10 +691,10 @@ def ScheduleTestDriveView(request, listing_id):
     if request.method == 'POST':
         form = TestDriveForm(request.POST)
         if form.is_valid():
-            td = form.save(commit=False)
+            td         = form.save(commit=False)
             td.listing = listing
-            td.buyer = request.user
-            td.status = 'pending'
+            td.buyer   = request.user
+            td.status  = 'pending'
             td.save()
             messages.success(request, 'Test drive scheduled! Waiting for seller confirmation.')
             return redirect('buyer_test_drives')
@@ -705,9 +703,7 @@ def ScheduleTestDriveView(request, listing_id):
     else:
         form = TestDriveForm()
 
-    return render(request, 'Scout/Buyer/test_drive_schedule.html', {
-        'form': form, 'listing': listing,
-    })
+    return render(request, 'Scout/Buyer/test_drive_schedule.html', {'form': form, 'listing': listing})
 
 
 @role_required(allowed_roles=['Buyer'])
@@ -749,43 +745,164 @@ def UpdateTestDriveView(request, td_id):
     return redirect('seller_test_drives')
 
 
-# ─── Transactions ─────────────────────────────────────────────────────────────
+# ─── Transactions & Payments ──────────────────────────────────────────────────
+
+def _razorpay_client():
+    """Return an authenticated Razorpay client."""
+    return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
 
 @role_required(allowed_roles=['Buyer'])
-def InitiateTransactionView(request, offer_id):
+def PaymentSelectView(request, offer_id):
+    """
+    STEP 1 — Buyer lands here after an offer is accepted.
+    They choose: Cash  OR  Net Banking / UPI (Razorpay).
+    """
     offer = get_object_or_404(Offer, id=offer_id, buyer=request.user, status='accepted')
 
+    # Prevent double-payment
     if hasattr(offer, 'transaction'):
-        messages.info(request, 'Transaction already recorded for this offer.')
-        return redirect('buyer_transactions')
+        return redirect('transaction_receipt', txn_id=offer.transaction.pk)
 
-    if request.method == 'POST':
-        form = TransactionForm(request.POST)
-        if form.is_valid():
-            txn = form.save(commit=False)
-            txn.listing = offer.listing
-            txn.buyer = request.user
-            txn.offer = offer
-            txn.amount = offer.amount
-            txn.status = 'completed'
-            txn.reference_number = str(uuid.uuid4()).replace('-', '').upper()[:16]
-            txn.save()
-            messages.success(request, 'Transaction completed! 🎉')
-            return redirect('transaction_receipt', txn.id)
-        else:
-            messages.error(request, 'Please fill in all required fields.')
-    else:
-        form = TransactionForm()
+    final_amount = offer.counter_amount if offer.counter_amount else offer.amount
 
-    return render(request, 'Scout/Buyer/initiate_transaction.html', {
-        'form': form, 'offer': offer, 'listing': offer.listing,
+    return render(request, 'Scout/Payment/payment_select.html', {
+        'offer':        offer,
+        'listing':      offer.listing,
+        'final_amount': final_amount,
     })
 
 
 @role_required(allowed_roles=['Buyer'])
+def CashPaymentView(request, offer_id):
+    """
+    STEP 2a — Cash Payment.
+    Creates a completed Transaction immediately; no gateway involved.
+    """
+    if request.method != 'POST':
+        return redirect('payment_select', offer_id=offer_id)
+
+    offer = get_object_or_404(Offer, id=offer_id, buyer=request.user, status='accepted')
+
+    if hasattr(offer, 'transaction'):
+        return redirect('transaction_receipt', txn_id=offer.transaction.pk)
+
+    final_amount = offer.counter_amount if offer.counter_amount else offer.amount
+
+    txn = Transaction.objects.create(
+        listing=offer.listing,
+        buyer=request.user,
+        offer=offer,
+        amount=final_amount,
+        method='cash',
+        status='completed',
+        reference_number=f"CASH-{offer.id}-{request.user.id}",
+        notes='Paid in cash at time of vehicle handover.',
+    )
+    messages.success(request, '✅ Cash payment recorded. Your transaction is complete!')
+    return redirect('transaction_receipt', txn_id=txn.pk)
+
+
+@role_required(allowed_roles=['Buyer'])
+def RazorpayCreateOrderView(request, offer_id):
+    """
+    STEP 2b — Razorpay: Create Order (called via AJAX).
+    Returns JSON payload that the frontend JS uses to open the Razorpay modal.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+    
+    offer = get_object_or_404(Offer, id=offer_id, buyer=request.user, status='accepted')
+
+    if hasattr(offer, 'transaction'):
+        return JsonResponse({'error': 'Already paid'}, status=400)
+
+    final_amount  = offer.counter_amount if offer.counter_amount else offer.amount
+    amount_paise  = int(final_amount * 100)  # Razorpay works in paise
+
+    client = _razorpay_client()
+    razorpay_order = client.order.create(data={
+        'amount':   amount_paise,
+        'currency': 'INR',
+        'receipt':  f'offer_{offer.id}',
+        'notes': {
+            'offer_id':   str(offer.id),
+            'listing_id': str(offer.listing.id),
+            'buyer_id':   str(request.user.id),
+        },
+    })
+
+    return JsonResponse({
+        'order_id':    razorpay_order['id'],
+        'amount':      amount_paise,
+        'currency':    'INR',
+        'key_id':      settings.RAZORPAY_KEY_ID,
+        'offer_id':    offer.id,
+        'buyer_name':  request.user.name or request.user.email,
+        'buyer_email': request.user.email,
+    })
+
+
+@csrf_exempt   # HMAC signature provides the security guarantee here
+@role_required(allowed_roles=['Buyer'])
+def RazorpayVerifyView(request, offer_id):
+    """
+    STEP 3 — Razorpay: Verify Payment & Save Transaction.
+    Called by the frontend after the Razorpay modal succeeds.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
+
+    offer = get_object_or_404(Offer, id=offer_id, buyer=request.user, status='accepted')
+
+    if hasattr(offer, 'transaction'):
+        return JsonResponse({'redirect': f"/scout/transaction/{offer.transaction.pk}/receipt/"})
+
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = request.POST.dict()
+
+    razorpay_order_id   = data.get('razorpay_order_id', '')
+    razorpay_payment_id = data.get('razorpay_payment_id', '')
+    razorpay_signature  = data.get('razorpay_signature', '')
+
+    # ── Server-side HMAC-SHA256 signature verification ────────
+    body_to_sign = f"{razorpay_order_id}|{razorpay_payment_id}"
+    expected_sig = hmac.new(
+        key=settings.RAZORPAY_KEY_SECRET.encode('utf-8'),
+        msg=body_to_sign.encode('utf-8'),
+        digestmod=hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(expected_sig, razorpay_signature):
+        return JsonResponse({'error': 'Payment verification failed. Signature mismatch.'}, status=400)
+
+    # ── Signature verified — record transaction ───────────────
+    final_amount = offer.counter_amount if offer.counter_amount else offer.amount
+
+    txn = Transaction.objects.create(
+        listing=offer.listing,
+        buyer=request.user,
+        offer=offer,
+        amount=final_amount,
+        method='razorpay',
+        status='completed',
+        reference_number=razorpay_payment_id,
+        razorpay_order_id=razorpay_order_id,
+        razorpay_payment_id=razorpay_payment_id,
+        razorpay_signature=razorpay_signature,
+        notes='Paid via Razorpay (Net Banking / UPI).',
+    )
+
+    return JsonResponse({'success': True, 'redirect': f'/scout/transaction/{txn.pk}/receipt/'})
+
+
+@role_required(allowed_roles=['Buyer'])
 def TransactionReceiptView(request, txn_id):
+    """STEP 4 — Show the receipt after either payment method."""
     txn = get_object_or_404(Transaction, id=txn_id, buyer=request.user)
-    return render(request, 'Scout/Buyer/transaction_receipt.html', {'txn': txn})
+    return render(request, 'Scout/Payment/transaction_receipt.html', {'txn': txn})
 
 
 @role_required(allowed_roles=['Buyer'])
@@ -807,8 +924,7 @@ def SellerTransactionsView(request):
 # ─── Price Alert Trigger ──────────────────────────────────────────────────────
 
 def check_and_trigger_alerts(listing):
-    from django.core.mail import send_mail
-    from django.conf import settings as django_settings
+    
 
     alerts = PriceAlert.objects.filter(
         listing=listing,
@@ -824,8 +940,8 @@ def check_and_trigger_alerts(listing):
                 subject=f'🔔 Price Alert Triggered — {listing.vehicle}',
                 message=(
                     f"Hi {alert.buyer.name},\n\n"
-                    f"The {listing.vehicle} has dropped to ${listing.price:,} — "
-                    f"below your target of ${alert.target_price:,}.\n\n"
+                    f"The {listing.vehicle} has dropped to ₹{listing.price:,} — "
+                    f"below your target of ₹{alert.target_price:,}.\n\n"
                     f"Log in to CarScout now!\n\n— The CarScout Team"
                 ),
                 from_email=django_settings.EMAIL_HOST_USER,
@@ -834,3 +950,39 @@ def check_and_trigger_alerts(listing):
             )
         except Exception as e:
             print(f"[Price Alert Email Error] {e}")
+
+
+# ─── Compare cars ──────────────────────────────────────────────────────
+
+class CompareView(View):
+    @method_decorator(role_required('Buyer'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        id1 = request.GET.get('car1')
+        id2 = request.GET.get('car2')
+
+        # Show picker if both not selected yet
+        car1, car2 = None, None
+        if id1:
+            car1 = get_object_or_404(
+                Listing.objects.select_related('vehicle', 'inspection'),
+                id=id1, status='live'
+            )
+        if id2:
+            car2 = get_object_or_404(
+                Listing.objects.select_related('vehicle', 'inspection'),
+                id=id2, status='live'
+            )
+
+        all_listings = Listing.objects.select_related('vehicle').filter(
+            status='live'
+        ).order_by('-created_at')
+
+        context = {
+            'car1': car1,
+            'car2': car2,
+            'all_listings': all_listings,
+        }
+        return render(request, 'Scout/Buyer/compare.html', context)

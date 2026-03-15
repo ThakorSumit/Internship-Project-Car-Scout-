@@ -1,11 +1,12 @@
 from django.urls import path
 from . import views
-
+from django.views.generic import TemplateView
 urlpatterns = [
     # Admin
     path('admin/', views.AdminDashboardView, name='admin_dashboard'),
     path('admin/listing/<int:listing_id>/approve/', views.ApproveListingView, name='approve_listing'),
     path('admin/listing/<int:listing_id>/reject/',  views.RejectListingView,  name='reject_listing'),
+    path('admin/listing/<int:listing_id>/inspection/', views.AdminInspectionReportView.as_view(), name='admin_inspection_report'),
     #http://localhost:8000/createadmin/?key=carscout
     
     # Seller
@@ -38,9 +39,15 @@ urlpatterns = [
     path('buyer/test-drives/<int:listing_id>/schedule/', views.ScheduleTestDriveView, name='test_drive'),
     path('buyer/test-drives/<int:td_id>/cancel/', views.CancelTestDriveView, name='cancel_test_drive'),
     path('buyer/transactions/', views.BuyerTransactionsView, name='buyer_transactions'),
-    path('buyer/transactions/<int:offer_id>/initiate/', views.InitiateTransactionView, name='initiate_transaction'),
-    path('buyer/transactions/receipt/<int:txn_id>/', views.TransactionReceiptView, name='transaction_receipt'),
+    path('buyer/compare/', views.CompareView.as_view(), name='compare'),
 
+    #payment
+    path('payment/<int:offer_id>/select/',          views.PaymentSelectView,       name='payment_select'),
+    path('payment/<int:offer_id>/cash/',            views.CashPaymentView,         name='cash_payment'),
+    path('payment/<int:offer_id>/razorpay/create/', views.RazorpayCreateOrderView, name='razorpay_create_order'),
+    path('payment/<int:offer_id>/razorpay/verify/', views.RazorpayVerifyView,      name='razorpay_verify'),
+    path('transaction/<int:txn_id>/receipt/',       views.TransactionReceiptView,  name='transaction_receipt'),
+    
     # Wishlist
     path('buyer/wishlist/', views.WishlistView, name='wishlist'),
     path('buyer/wishlist/toggle/<int:listing_id>/', views.ToggleWishlistView, name='toggle_wishlist'),
@@ -50,4 +57,9 @@ urlpatterns = [
     path('buyer/price-alerts/', views.PriceAlertsView, name='price_alerts'),
     path('buyer/price-alerts/set/<int:listing_id>/', views.SetPriceAlertView, name='set_price_alert'),
     path('buyer/price-alerts/delete/<int:alert_id>/', views.DeletePriceAlertView, name='delete_price_alert'),
+
+
+    #T&C and Privacy Policy
+    path('terms-and-conditions/', TemplateView.as_view(template_name='Scout/terms_and_conditions.html'), name='terms_and_conditions'),
+    path('privacy-policy/', TemplateView.as_view(template_name='Scout/privacy_policy.html'), name='privacy_policy'),
 ]

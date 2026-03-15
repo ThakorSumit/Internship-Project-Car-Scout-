@@ -29,9 +29,9 @@
             </div>
             <div class="offer-listing-info">
                 <h3>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
-                <p class="offer-listing-price">Listed at <strong>${{ listing.price|floatformat:0 }}</strong></p>
-                <p class="offer-listing-meta">{{ listing.vehicle.mileage|floatformat:0 }} mi · {{
-                    listing.vehicle.transmission }} · {{ listing.vehicle.fuel_type }}</p>
+                <p class="offer-listing-price">Listed at <strong>₹{{ listing.price|floatformat:0 }}</strong></p>
+                <p class="offer-listing-meta">{{ listing.vehicle.mileage|floatformat:0 }} mi · 
+                    {{ listing.vehicle.transmission }} · {{ listing.vehicle.fuel_type }}</p>
                 {% if listing.inspection %}
                 <span class="offer-ai-score">⚡ AI Score {{ listing.inspection.score }}/10</span>
                 {% endif %}
@@ -43,8 +43,8 @@
         <div class="offer-existing">
             <div class="offer-existing-icon">⚠️</div>
             <h3>You already have an active offer</h3>
-            <p>Your current offer of <strong>${{ existing_offer.amount|floatformat:0 }}</strong> is <strong>{{
-                    existing_offer.status|title }}</strong>.</p>
+            <p>Your current offer of <strong>₹{{ existing_offer.amount|floatformat:0 }}</strong> is <strong>
+                    {{ existing_offer.status|title }}</strong>.</p>
             <a href="{% url 'buyer_offers' %}" class="btn-offer-view">View My Offers →</a>
         </div>
 
@@ -56,15 +56,15 @@
                 {% csrf_token %}
 
                 <div class="offer-field">
-                    <label>Offer Amount ($)</label>
+                    <label>Offer Amount (₹)</label>
                     <div class="offer-amount-wrap">
-                        <span class="offer-currency">$</span>
+                        <span class="offer-currency">₹</span>
                         {{ form.amount }}
                     </div>
                     {% if form.amount.errors %}
                     <span class="offer-error">{{ form.amount.errors.0 }}</span>
                     {% endif %}
-                    <p class="offer-hint">Listed price: ${{ listing.price|floatformat:0 }}</p>
+                    <p class="offer-hint">Listed price: ₹{{ listing.price|floatformat:0 }}</p>
                 </div>
 
                 <div class="offer-field">

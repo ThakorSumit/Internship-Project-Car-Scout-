@@ -13,9 +13,13 @@
         <nav class="sidebar-nav">
             <a href="{% url 'buyer_dashboard' %}" class="snav-item"><span class="snav-icon">🏠</span> Dashboard</a>
             <a href="{% url 'browse_listings' %}" class="snav-item"><span class="snav-icon">🔍</span> Browse Cars</a>
-            <a href="#" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
-            <a href="#" class="snav-item"><span class="snav-icon">💬</span> Messages</a>
+            <a href="{% url 'wishlist' %}" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
+            <a href="{% url 'buyer_inbox' %}" class="snav-item"><span class="snav-icon">💬</span> Messages</a>
             <a href="{% url 'buyer_offers' %}" class="snav-item active"><span class="snav-icon">🤝</span> My Offers</a>
+            <a href="{% url 'price_alerts' %}" class="snav-item"><span class="snav-icon">🔔</span> Price Alerts</a>
+            <a href="{% url 'buyer_test_drives' %}" class="snav-item"><span class="snav-icon">🚗</span> Test Drives</a>
+            <a href="{% url 'compare' %}" class="snav-item"><span class="snav-icon">⚖️</span> Compare Cars</a>
+            
         </nav>
         <div class="sidebar-footer">
             <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>
@@ -48,7 +52,7 @@
                     <div>
                         <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{
                             offer.listing.vehicle.model }}</h4>
-                        <p>Listed at <strong>${{ offer.listing.price|floatformat:0 }}</strong></p>
+                        <p>Listed at <strong>₹{{ offer.listing.price|floatformat:0 }}</strong></p>
                         <a href="{% url 'buyer_listing_detail' offer.listing.id %}" class="offer-view-link">View Listing
                             →</a>
                     </div>
@@ -58,12 +62,12 @@
                 <div class="offer-amounts">
                     <div class="offer-amount-block">
                         <span class="oa-label">Your Offer</span>
-                        <span class="oa-value">${{ offer.amount|floatformat:0 }}</span>
+                        <span class="oa-value">₹{{ offer.amount|floatformat:0 }}</span>
                     </div>
                     {% if offer.counter_amount %}
                     <div class="offer-amount-block counter">
                         <span class="oa-label">Counter Offer</span>
-                        <span class="oa-value">${{ offer.counter_amount|floatformat:0 }}</span>
+                        <span class="oa-value">₹{{ offer.counter_amount|floatformat:0 }}</span>
                     </div>
                     {% endif %}
                 </div>
@@ -95,7 +99,7 @@
                     <a href="{% url 'transaction_receipt' offer.transaction.id %}" class="btn-offer-action accept">View
                         Receipt</a>
                     {% else %}
-                    <a href="{% url 'initiate_transaction' offer.id %}" class="btn-offer-action accept">💳 Complete
+                    <a href="{% url 'payment_select' offer.id %}" class="btn-offer-action accept">💳 Complete
                         Purchase</a>
                     {% endif %}
                     {% elif offer.status == "rejected" %}

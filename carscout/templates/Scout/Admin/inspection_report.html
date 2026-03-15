@@ -2,20 +2,195 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin/admin_dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+<link rel="stylesheet" href="{% static 'css/Admin/admin_dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="td-page">
-    <div class="td-card">
-        <div class="td-header">
-            <h2>Inspection Report</h2>
+
+<div style="max-width:900px; margin:100px auto 60px; padding:0 20px;">
+
+    <!-- Back -->
+    <a href="{% url 'admin_dashboard' %}"
+       style="display:inline-flex; align-items:center; gap:8px; color:var(--gold);
+              text-decoration:none; font-size:14px; margin-bottom:28px; opacity:0.8;">
+        ← Back to Dashboard
+    </a>
+
+    <!-- Vehicle Header -->
+    <div style="background:var(--bg-card); border:1px solid var(--gold-border);
+                border-radius:16px; padding:28px 32px; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+            <div>
+                <h1 style="font-family:var(--font-display); font-size:26px;
+                           color:var(--gold); margin:0 0 6px;">
+                    {{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}
+                </h1>
+                <p style="color:var(--text-muted); font-size:14px; margin:0;">
+                    {{ listing.location }} &nbsp;·&nbsp; ₹{{ listing.price|floatformat:0 }}
+                    &nbsp;·&nbsp; {{ vehicle.mileage|floatformat:0 }} km
+                </p>
+            </div>
+            <!-- Approval Status Badge -->
+            <span style="padding:6px 18px; border-radius:50px; font-size:13px; font-weight:600;
+                {% if listing.status == 'approved' %}
+                    background:rgba(34,197,94,0.12); color:#22c55e; border:1px solid rgba(34,197,94,0.3);
+                {% elif listing.status == 'rejected' %}
+                    background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.3);
+                {% else %}
+                    background:var(--gold-soft); color:var(--gold); border:1px solid var(--gold-border);
+                {% endif %}">
+                {{ listing.status|capfirst }}
+            </span>
         </div>
-        <form action="" method="post">
+    </div>
+
+    <!-- AI Report -->
+    {% if report %}
+    <div style="background:var(--bg-card); border:1px solid var(--gold-border);
+                border-radius:16px; padding:28px 32px;">
+
+        <h2 style="font-family:var(--font-display); font-size:18px;
+                   color:var(--gold); margin:0 0 20px; display:flex; align-items:center; gap:10px;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            AI Inspection Report
+        </h2>
+
+        <!-- Score + Condition + Risk row -->
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px;">
+            <div class="ai-section" style="text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">AI Score</div>
+                <div style="font-size:32px; font-weight:700; color:var(--gold); font-family:var(--font-display);">
+                    {{ report.score|default:"—" }}<span style="font-size:16px; opacity:0.5;">/10</span>
+                </div>
+            </div>
+            <div class="ai-section" style="text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Condition</div>
+                <div style="font-size:20px; font-weight:600; color:var(--text);">{{ report.overall_condition|default:"—" }}</div>
+            </div>
+            <div class="ai-section" style="text-align:center;">
+                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Risk Level</div>
+                <div style="font-size:20px; font-weight:600;
+                    {% if report.risk_level == 'low' %}color:#22c55e;
+                    {% elif report.risk_level == 'medium' %}color:#f59e0b;
+                    {% else %}color:#ef4444;{% endif %}">
+                    {{ report.get_risk_level_display|default:"—" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        {% if report.ai_summary %}
+        <div class="ai-section">
+            <h4 style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">Summary</h4>
+            <p style="color:var(--text); line-height:1.7; margin:0;">{{ report.ai_summary }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Recommendation -->
+        {% if report.recommendation %}
+        <div class="ai-section">
+            <h4 style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">Recommendation</h4>
+            <div class="ai-recommendation rec-{{ report.recommendation }}">
+                {{ report.get_recommendation_display }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Positives & Issues -->
+        <div class="ai-section ai-split">
+            {% if report.positives %}
+            <div>
+                <h4 style="color:#22c55e; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">✓ Positives</h4>
+                <ul style="margin:0; padding-left:18px; color:var(--text); line-height:1.9;">
+                    {% for item in report.positives %}<li>{{ item }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if report.issues_detected %}
+            <div>
+                <h4 style="color:#ef4444; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">⚠ Issues Detected</h4>
+                <ul style="margin:0; padding-left:18px; color:var(--text); line-height:1.9;">
+                    {% for item in report.issues_detected %}<li>{{ item }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Assessments -->
+        {% if report.mileage_assessment or report.price_assessment or report.accident_impact %}
+        <div class="ai-section">
+            <h4 style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 14px;">Assessments</h4>
+            <div class="ai-assessments">
+                {% if report.mileage_assessment %}
+                <div>
+                    <span style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Mileage</span>
+                    <p style="color:var(--text); margin:0; line-height:1.6;">{{ report.mileage_assessment }}</p>
+                </div>
+                {% endif %}
+                {% if report.price_assessment %}
+                <div>
+                    <span style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Price</span>
+                    <p style="color:var(--text); margin:0; line-height:1.6;">{{ report.price_assessment }}</p>
+                </div>
+                {% endif %}
+                {% if report.accident_impact %}
+                <div>
+                    <span style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">Accident Impact</span>
+                    <p style="color:var(--text); margin:0; line-height:1.6;">{{ report.accident_impact }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Buyer Tips -->
+        {% if report.buyer_tips %}
+        <div class="ai-section">
+            <h4 style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin:0 0 10px;">Buyer Tips</h4>
+            <ul class="buyer-tips-list">
+                {% for tip in report.buyer_tips %}<li>{{ tip }}</li>{% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <p style="color:var(--text-dim); font-size:11px; margin:16px 0 0; text-align:right;">
+            Generated: {{ report.generated_at|date:"d M Y, H:i" }}
+        </p>
+
+    </div>
+    {% else %}
+    <div style="background:var(--bg-card); border:1px solid var(--border);
+                border-radius:16px; padding:48px; text-align:center;">
+        <p style="color:var(--text-muted); margin:0;">No AI report generated for this listing yet.</p>
+    </div>
+    {% endif %}
+
+    <!-- Approve / Reject Buttons -->
+    {% if listing.status == 'pending' %}
+    <div style="display:flex; gap:12px; margin-top:24px; justify-content:flex-end;">
+        <form method="post" action="{% url 'reject_listing' listing.id %}">
             {% csrf_token %}
-            {{form.as_p}}
-            <input type="submit" value="Submit">
+            <button type="submit"
+                    style="padding:10px 28px; border-radius:8px; border:1px solid rgba(239,68,68,0.4);
+                           background:rgba(239,68,68,0.1); color:#ef4444; font-size:14px;
+                           font-weight:600; cursor:pointer;">
+                Reject
+            </button>
+        </form>
+        <form method="post" action="{% url 'approve_listing' listing.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    style="padding:10px 28px; border-radius:8px; border:none;
+                           background:var(--gold); color:#000; font-size:14px;
+                           font-weight:700; cursor:pointer;">
+                Approve
+            </button>
         </form>
     </div>
+    {% endif %}
+
 </div>
 {% endblock %}

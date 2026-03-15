@@ -1,0 +1,192 @@
+:root {
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --dark: #0d0d0d;
+    --card-bg: #161616;
+    --border: rgba(212, 175, 55, 0.2);
+    --green: #4ade80;
+}
+
+.receipt-page {
+    min-height: 100vh;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.receipt-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Success banner */
+.success-banner {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.success-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(74, 222, 128, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 16px;
+    border: 2px solid rgba(74, 222, 128, 0.4);
+}
+
+.success-banner h1 {
+    font-size: 1.6rem;
+    color: var(--green);
+    margin: 0 0 6px;
+}
+
+.success-banner p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Receipt rows */
+.receipt-section {
+    background: rgba(212, 175, 55, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+
+.receipt-section-title {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.72rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.receipt-row:last-child {
+    border-bottom: none;
+}
+
+.receipt-label {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.receipt-value {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-all;
+}
+
+.receipt-value.gold {
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+.receipt-value.green {
+    color: var(--green);
+}
+
+/* Method badge */
+.method-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.method-badge.cash {
+    background: rgba(74, 222, 128, 0.12);
+    color: var(--green);
+}
+
+.method-badge.razorpay {
+    background: rgba(82, 128, 255, 0.12);
+    color: #7ca3ff;
+}
+
+/* Actions */
+.action-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.btn-receipt {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-receipt {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000;
+}
+
+.btn-outline-receipt {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-receipt:hover {
+    transform: translateY(-2px);
+}
+
+@media print {
+    .action-row {
+        display: none;
+    }
+
+    body {
+        background: #fff !important;
+    }
+
+    .receipt-card {
+        box-shadow: none;
+        border: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .receipt-card {
+        padding: 28px 16px;
+    }
+
+    .action-row {
+        flex-direction: column;
+    }
+}

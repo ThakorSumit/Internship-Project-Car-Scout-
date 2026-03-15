@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -26,14 +25,14 @@
                 <span class="cic-label">Listed
                     At</span>
                 <span class="cic-value">
-                    ${{offer.listing.price|floatformat:0 }}</span>
+                    ₹{{offer.listing.price|floatformat:0 }}</span>
             </div>
 
             <div class="cic-card">
                 <span class="cic-label">Buyer's
                     Offer</span>
                 <span class="cic-value buyer-offer">
-                    ${{offer.amount|floatformat:0 }}</span>
+                    ₹{{offer.amount|floatformat:0 }}</span>
             </div>
 
             <div class="cic-card">
@@ -63,7 +62,7 @@
                 <!-- Counter Amount -->
                 <div class="cf-field">
                     <label class="cf-label">
-                        Counter Amount ($) *
+                        Counter Amount (₹) *
                     </label>
                     <input type="number" name="counter_amount" value="{{ form.counter_amount.value|default:'' }}"
                         placeholder="Enter your counter price" required class="cf-input">

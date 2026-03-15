@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+<link rel="stylesheet" href="{% static 'css//user/buyer.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,9 +13,13 @@
         <nav class="sidebar-nav">
             <a href="{% url 'buyer_dashboard' %}" class="snav-item"><span class="snav-icon">🏠</span> Dashboard</a>
             <a href="{% url 'browse_listings' %}" class="snav-item"><span class="snav-icon">🔍</span> Browse Cars</a>
-            <a href="#" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
+            <a href="{% url 'wishlist' %}" class="snav-item"><span class="snav-icon">❤️</span> Wishlist</a>
             <a href="{% url 'buyer_inbox' %}" class="snav-item active"><span class="snav-icon">💬</span> Messages</a>
             <a href="{% url 'buyer_offers' %}" class="snav-item"><span class="snav-icon">🤝</span> My Offers</a>
+            <a href="{% url 'buyer_test_drives' %}" class="snav-item"><span class="snav-icon">📅</span> Test
+                Drives</a>
+            <a href="{% url 'price_alerts' %}" class="snav-item"><span class="snav-icon">🔔</span> Price Alerts</a>
+            <a href="{% url 'compare' %}" class="snav-item"><span class="snav-icon">⚖️</span> Compare Cars</a>
         </nav>
         <div class="sidebar-footer">
             <a href="{% url 'logout' %}" class="snav-logout">Sign Out</a>

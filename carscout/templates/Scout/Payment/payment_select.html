@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payment/payment.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock extra_css %}
+{% block content %}
+<div class="payment-page">
+  <div class="payment-card">
+
+    <div class="payment-header">
+      <h1>💳 Complete Payment</h1>
+      <p>Select how you'd like to pay for your vehicle</p>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <div class="order-row">
+        <span class="order-label">Vehicle</span>
+        <span class="order-value">{{ listing.vehicle }}</span>
+      </div>
+      <div class="order-row">
+        <span class="order-label">Listed Price</span>
+        <span class="order-value">₹{{ listing.price|floatformat:0|intcomma }}</span>
+      </div>
+      <div class="order-row">
+        <span class="order-label">Your Offer</span>
+        <span class="order-value">₹{{ offer.amount|floatformat:0|intcomma }}</span>
+      </div>
+      {% if offer.counter_amount %}
+      <div class="order-row">
+        <span class="order-label">Agreed Price</span>
+        <span class="order-value">₹{{ offer.counter_amount|floatformat:0|intcomma }}</span>
+      </div>
+      {% endif %}
+      <div class="order-row total">
+        <span class="order-label">Amount Due</span>
+        <span class="order-value">₹{{ final_amount|floatformat:0|intcomma }}</span>
+      </div>
+    </div>
+
+    <!-- Payment Method Selection -->
+    <p class="method-title">Choose Payment Method</p>
+    <div class="method-grid">
+      <div class="method-card" id="card-cash" onclick="selectMethod('cash')">
+        <span class="icon">💵</span>
+        <div class="label">Cash</div>
+        <div class="sublabel">Pay at handover</div>
+      </div>
+      <div class="method-card" id="card-razorpay" onclick="selectMethod('razorpay')">
+        <span class="icon">🏦</span>
+        <div class="label">Net Banking / UPI</div>
+        <div class="sublabel">Powered by Razorpay</div>
+      </div>
+    </div>
+
+    <!-- Pay Button -->
+    <button class="pay-btn" id="pay-btn" disabled onclick="handlePayment()">
+      Select a payment method
+    </button>
+
+    <p class="secure-note">🔒 All transactions are secured and encrypted</p>
+  </div>
+</div>
+
+<!-- Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+  var selectedMethod = null;
+
+  function selectMethod(method) {
+    selectedMethod = method;
+
+    // Remove selected from both cards
+    document.getElementById('card-cash').classList.remove('selected');
+    document.getElementById('card-razorpay').classList.remove('selected');
+
+    // Add selected to clicked card
+    document.getElementById('card-' + method).classList.add('selected');
+
+    var btn = document.getElementById('pay-btn');
+    btn.disabled = false;
+
+    if (method === 'cash') {
+      btn.textContent = '✅ Confirm Cash Payment';
+    } else {
+      btn.textContent = '🔐 Pay Securely with Razorpay';
+    }
+  }
+
+  function handlePayment() {
+    if (!selectedMethod) return;
+
+    if (selectedMethod === 'cash') {
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/scout/payment/{{ offer.id }}/cash/';
+      var csrf = document.createElement('input');
+      csrf.type  = 'hidden';
+      csrf.name  = 'csrfmiddlewaretoken';
+      csrf.value = '{{ csrf_token }}';
+      form.appendChild(csrf);
+      document.body.appendChild(form);
+      form.submit();
+      return;
+    }
+
+    // ── Razorpay flow ──
+    var btn = document.getElementById('pay-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating order…';
+
+    fetch('/scout/payment/{{ offer.id }}/razorpay/create/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(order) {
+
+      if (order.error) {
+        alert('Error: ' + order.error);
+        btn.disabled = false;
+        btn.textContent = '🔐 Pay Securely with Razorpay';
+        return;
+      }
+
+      var options = {
+        key:         order.key_id,
+        amount:      order.amount,
+        currency:    order.currency,
+        name:        'Car Scout',
+        description: 'Vehicle Purchase — {{ listing.vehicle }}',
+        order_id:    order.order_id,
+        prefill: {
+          name:  order.buyer_name,
+          email: order.buyer_email,
+        },
+        theme: { color: '#d4af37' },
+
+        handler: function(response) {
+          btn.innerHTML = '<span class="spinner"></span> Verifying…';
+
+          fetch('/scout/payment/{{ offer.id }}/razorpay/verify/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature:  response.razorpay_signature,
+            }),
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(result) {
+            if (result.success) {
+              window.location.href = result.redirect;
+            } else {
+              alert('Verification failed: ' + (result.error || 'Unknown error'));
+              btn.disabled = false;
+              btn.textContent = '🔐 Pay Securely with Razorpay';
+            }
+          });
+        },
+
+        modal: {
+          ondismiss: function() {
+            btn.disabled = false;
+            btn.textContent = '🔐 Pay Securely with Razorpay';
+          }
+        }
+      };
+
+      var rzp = new Razorpay(options);
+      rzp.open();
+    })
+    .catch(function(err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = '🔐 Pay Securely with Razorpay';
+    });
+  }
+</script>
+{% endblock content %}

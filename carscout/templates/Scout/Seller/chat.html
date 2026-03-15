@@ -2,83 +2,94 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/user/selller.css' %}">
+<link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="seller-chat-wrap">
 
-  <!-- Sidebar -->
-  <aside class="dash-sidebar">
-    <div class="sidebar-logo">CAR<span>SCOUT</span></div>
-    <nav class="dash-nav">
-      <a href="{% url 'seller_dashboard' %}" class="nav-item">Inventory Console</a>
-      <a href="{% url 'seller_offers' %}" class="nav-item">Offers</a>
-      <a href="{% url 'seller_inbox' %}" class="nav-item active">Messages</a>
-      <a href="{% url 'add_listing' %}" class="nav-item">+ List New Car</a>
-    </nav>
-  </aside>
-
-  <!-- Chat area -->
-  <div class="seller-chat-area">
-
-    <!-- Header -->
-    <div class="seller-chat-header">
-      <a href="{% url 'seller_inbox' %}" class="sch-back">←</a>
-
-      <div class="sch-thumb">
-        {% if listing.image %}<img src="{{ listing.image.url }}" alt="">
-        {% else %}🚗{% endif %}
-      </div>
-
-      <div class="sch-info">
-        <h3>
-          {{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}
-        </h3>
-        <p>
-          Chatting with <strong>{{ other_user.name }}</strong> · ${{ listing.price|floatformat:0 }}
-        </p>
-      </div>
-
-      <a href="{% url 'seller_listing_detail' listing.id %}" class="sch-view-link">View Listing →</a>
-    </div>
-
-    <!-- Messages -->
-    <div id="chatMessages" class="seller-chat-messages">
-      {% if messages %}
-      {% for msg in messages %}
-      <div class="scm-bubble-wrap mine">
-        {% if msg.sender == request.user %}<div class="scm-bubble mine">{% else %}<div class="scm-bubble theirs">{%
-            endif %}
-            {{ msg.body }}
-          </div>
-          <span class="scm-time">{{ msg.created_at|date:"M d, g:i A" }}</span>
+    <aside class="seller-sidebar">
+        <div class="sidebar-head">
+            <div class="s-wordmark">CAR<span>SCOUT</span></div>
+            <div class="s-role-tag">SELLER PORTAL</div>
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="scm-empty">
-          <p>No messages yet. Start the conversation!</p>
+        <div class="s-section-label">Console</div>
+        <nav class="s-nav">
+            <a href="{% url 'seller_dashboard' %}" class="s-nav-item">
+                <span class="s-nav-icon">▦</span> Inventory Console
+            </a>
+            <a href="{% url 'seller_offers' %}" class="s-nav-item">
+                <span class="s-nav-icon">🤝</span> Offers
+            </a>
+            <a href="{% url 'seller_inbox' %}" class="s-nav-item active">
+                <span class="s-nav-icon">✉</span> Messages
+            </a>
+            <a href="{% url 'seller_test_drives' %}" class="s-nav-item">
+                <span class="s-nav-icon">◈</span> Test Drives
+            </a>
+            <a href="{% url 'seller_transactions' %}" class="s-nav-item">
+                <span class="s-nav-icon">💰</span> Transactions
+            </a>
+            <a href="{% url 'add_listing' %}" class="s-nav-item">
+                <span class="s-nav-icon">＋</span> List New Car
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="seller-profile-row">
+                <div class="seller-avatar">{{ request.user.name|first|upper }}</div>
+                <div class="seller-info">
+                    <strong>{{ request.user.name|truncatechars:18 }}</strong>
+                    <span>SELLER</span>
+                </div>
+            </div>
         </div>
-        {% endif %}
-      </div>
+    </aside>
 
-      <!-- Input -->
-      <div class="seller-chat-input">
-        <form method="POST" action="" class="sci-form">
-          {% csrf_token %}
-          <input type="text" name="body" placeholder="Type your message..." autocomplete="off" required
-            class="sci-input">
-          <button type="submit" class="sci-send">
-            Send →
-          </button>
-        </form>
-      </div>
+    <div class="seller-chat-area">
+
+        <div class="seller-chat-header">
+            <a href="{% url 'seller_inbox' %}" class="sch-back">←</a>
+            <div class="sch-thumb">
+                {% if listing.image %}<img src="{{ listing.image.url }}" alt="">
+                {% else %}🚗{% endif %}
+            </div>
+            <div class="sch-info">
+                <h3>{{ listing.vehicle.year }} {{ listing.vehicle.company }} {{ listing.vehicle.model }}</h3>
+                <p>Chatting with <strong>{{ other_user.name }}</strong> · ${{ listing.price|floatformat:0 }}</p>
+            </div>
+            <a href="{% url 'seller_listing_detail' listing.id %}" class="sch-view-link">View Listing →</a>
+        </div>
+
+        <div id="chatMessages" class="seller-chat-messages">
+            {% if messages %}
+                {% for msg in messages %}
+                <div class="scm-bubble-wrap">
+                    <div class="scm-bubble {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}">
+                        {{ msg.body }}
+                    </div>
+                    <span class="scm-time">{{ msg.created_at|date:"M d, g:i A" }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="scm-empty">
+                <p>No messages yet. Start the conversation!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="seller-chat-input">
+            <form method="POST" action="" class="sci-form">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Type your message..." autocomplete="off" required class="sci-input">
+                <button type="submit" class="sci-send">Send →</button>
+            </form>
+        </div>
 
     </div>
-  </div>
+</div>
 
-  <script>
+<script>
     const chatEl = document.getElementById('chatMessages');
     if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
-  </script>
-  {% endblock %}
+</script>
+{% endblock %}

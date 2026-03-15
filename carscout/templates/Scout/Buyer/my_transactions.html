@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
+{% endblock extra_css %}
 {% block content %}
 <div class="td-page">
     <div class="td-list-header">
@@ -27,7 +31,7 @@
                 <p class="td-meta">{{ txn.date|date:"d M Y, H:i" }}</p>
             </div>
             <div class="td-item-right">
-                <span class="txn-price" class="txn-amount-inline">${{
+                <span class="txn-price" class="txn-amount-inline">₹{{
                     txn.amount|floatformat:0 }}</span>
                 <span class="td-badge td-badge-confirmed">{{ txn.get_status_display }}</span>
                 <a href="{% url 'transaction_receipt' txn.id %}" class="btn-ghost">Receipt</a>
