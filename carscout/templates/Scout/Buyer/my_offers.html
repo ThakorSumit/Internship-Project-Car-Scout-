@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}My Offers{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/user/buyer.css' %}">
 {% endblock %}
@@ -50,8 +51,8 @@
                         {% endif %}
                     </div>
                     <div>
-                        <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }} {{
-                            offer.listing.vehicle.model }}</h4>
+                        <h4>{{ offer.listing.vehicle.year }} {{ offer.listing.vehicle.company }}
+                            {{ offer.listing.vehicle.model }}</h4>
                         <p>Listed at <strong>₹{{ offer.listing.price|floatformat:0 }}</strong></p>
                         <a href="{% url 'buyer_listing_detail' offer.listing.id %}" class="offer-view-link">View Listing
                             →</a>

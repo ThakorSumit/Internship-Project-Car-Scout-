@@ -41,12 +41,12 @@
                 <div class="inbox-thumb">
                     {% if item.listing.image %}
                     <img src="{{ item.listing.image.url }}" alt="">
-                    {% else %}<span>🚗</span>{% endif %}
+                {% else %}<span>🚗</span>{% endif %}
                 </div>
                 <div class="inbox-info">
                     <div class="inbox-title-row">
-                        <h4>{{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} {{
-                            item.listing.vehicle.model }}</h4>
+                        <h4>{{ item.listing.vehicle.year }} {{ item.listing.vehicle.company }} 
+                            {{ item.listing.vehicle.model }}</h4>
                         {% if item.unread %}<span class="inbox-badge">{{ item.unread }}</span>{% endif %}
                     </div>
                     <p class="inbox-seller">Seller: {{ item.listing.seller.name }}</p>

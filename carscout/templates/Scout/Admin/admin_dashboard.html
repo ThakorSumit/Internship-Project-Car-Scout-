@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
+{% block title %}Admin Dashboard{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/admin/admin_dashboard.css' %}">
 {% endblock %}
@@ -152,6 +154,7 @@
                     {% for listing in pending_review_listings %}
                     <tr>
                         <td>
+                            <a href="{% url 'admin_inspection_report' listing.id %}">
                             <div class="vehicle-cell">
                                 {% if listing.image %}
                                 <img class="vehicle-thumb" src="{{ listing.image.url }}" alt="{{ listing.vehicle }}">

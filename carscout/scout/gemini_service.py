@@ -4,7 +4,7 @@ from groq import Groq
 from django.conf import settings
 from datetime import date
 from scout.models import Listing, InspectionReport
-
+import traceback
 
 def run_ai_inspection(listing_id):
     thread = threading.Thread(target=_inspect, args=(listing_id,))
@@ -45,18 +45,19 @@ def _inspect(listing_id):
         )
 
         # Rough Indian market price benchmarks by age
+        price=float(listing.price)
         if vehicle_age <= 1:
-            market_low, market_high = listing.price * 0.90, listing.price * 1.10
+            market_low, market_high = price * 0.90, price * 1.10
         elif vehicle_age <= 3:
             depreciation = 0.75
-            market_low = listing.price * 0.85
-            market_high = listing.price * 1.10
+            market_low = price * 0.85
+            market_high = price * 1.10
         elif vehicle_age <= 6:
-            market_low = listing.price * 0.80
-            market_high = listing.price * 1.15
+            market_low = price * 0.80
+            market_high = price * 1.15
         else:
-            market_low = listing.price * 0.75
-            market_high = listing.price * 1.20
+            market_low = price * 0.75
+            market_high = price * 1.20
 
         prompt = f"""
             You are SCOUT-AI, a senior automotive inspection engine for CarScout — a premium used car marketplace in India.
@@ -188,7 +189,7 @@ def _inspect(listing_id):
         report.positives          = data.get('positives', [])
         report.mileage_assessment = data.get('mileage_assessment', '')
         report.price_assessment   = data.get('price_assessment', '')
-        report.accident_impact    = data.get('accident_impact', '')
+        report.accident_impact    = data.get('accident_impact') or ' '
         report.buyer_tips         = data.get('buyer_tips', [])
         report.save()
 
@@ -201,10 +202,8 @@ def _inspect(listing_id):
 
     except Exception as e:
         print(f"[AI Inspection Error] listing_id={listing_id}: {e}")
-        import traceback
         traceback.print_exc()
         try:
-            from scout.models import Listing
             listing = Listing.objects.get(id=listing_id)
             listing.status = 'pending_review'
             listing.save()

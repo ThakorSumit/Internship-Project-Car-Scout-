@@ -93,7 +93,7 @@ class Listing(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.vehicle} — ${self.price}"
+        return f"{self.vehicle} — ₹{self.price}"
 
 
 # ─────────────────────────────────────────
@@ -200,7 +200,7 @@ class Offer(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Offer ${self.amount} on {self.listing.vehicle} — {self.status}"
+        return f"Offer ₹{self.amount} on {self.listing.vehicle} — {self.status}"
 
 
 # ─────────────────────────────────────────
@@ -314,7 +314,7 @@ class PriceAlert(models.Model):
         verbose_name_plural = 'Price Alerts'
 
     def __str__(self):
-        return f"Alert — {self.buyer} wants {self.listing.vehicle} under ${self.target_price}"
+        return f"Alert — {self.buyer} wants {self.listing.vehicle} under ₹{self.target_price}"
 
 
 # ─────────────────────────────────────────

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}Add Listing{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/user/seller.css' %}">
 {% endblock %}
@@ -86,7 +88,7 @@
                         {{ vehicle_form.engine_size }}
                     </div>
                     <div class="field-group">
-                        <label>Mileage (miles) *</label>
+                        <label>Mileage (km) *</label>
                         {{ vehicle_form.mileage }}
                     </div>
                     <div class="field-group">
@@ -169,9 +171,9 @@
                 </div>
                 <div class="fields-grid">
                     <div class="field-group">
-                        <label>Asking Price (USD) *</label>
+                        <label>Asking Price *</label>
                         <div class="price-input-wrap">
-                            <span class="currency-sign">$</span>
+                            <span class="currency-sign">₹</span>
                             {{ listing_form.price }}
                         </div>
                         {% if listing_form.price.errors %}<span class="field-error">{{ listing_form.price.errors.0
