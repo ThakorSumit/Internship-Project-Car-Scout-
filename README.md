@@ -233,7 +233,7 @@ This project helped me gain practical experience in:
 **Sumit Thakor**
 
 - GitHub: https://github.com/ThakorSumit
-- LinkedIn:
+- LinkedIn: https://www.linkedin.com/in/sumit-thakor/
 
 ---
 
