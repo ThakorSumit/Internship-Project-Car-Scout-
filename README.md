@@ -230,10 +230,9 @@ This project helped me gain practical experience in:
 
 ## 👨‍💻 Author
 
-**Sumit Thakor**
-
-- GitHub: https://github.com/ThakorSumit
-- LinkedIn: https://www.linkedin.com/in/sumit-thakor-a62872280
+**Sumit Thakor**  
+[GitHub](https://github.com/ThakorSumit)
+[LinkedIn](https://linkedin.com/in/sumitthakor)
 
 ---
 
